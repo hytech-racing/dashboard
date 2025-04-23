@@ -1,4 +1,4 @@
-# Copyright (c) HyTech
+# Copyright (c) HyTech Racing
 # SPDX-License-Identifier: Apache-2.0
 
 identifier: Dashboard
@@ -6,8 +6,8 @@ name: HyTech Dashboard
 vendor: st
 type: mcu
 arch: arm
-ram: 372 #TODO: check
-flash: 1024 #TODO: check
+ram: 192
+flash: 512
 toolchain:
   - zephyr
   - gnuarmemb

@@ -1,17 +1,18 @@
 /*
- * Copyright (c) HyTech
+ * Copyright (c) HyTech Racing
  * SPDX-License-Identifier: Apache-2.0
  */
 
 /dts-v1/;
-#include <st/h7/stm32h723Xg.dtsi> #TODO: check
-#include <st/h7/stm32h723zgtx-pinctrl.dtsi> #TODO: check
-#include "Dash_PinCtrl.dtsi"
-#include <zephyr/dt-bindings/input/input-event-codes.h> #TODO: check
+#include <st/h7/stm32h723.dtsi> 
+#include <st/h7/stm32h723Xe.dtsi>
+#include <st/h7/stm32h723zgtx-pinctrl.dtsi> //std pinctrl for the chip 
+#include "dashboard-pinctrl.dtsi" //custom define of what the pins do in our case
+#include <zephyr/dt-bindings/input/input-event-codes.h> //imports commands and macros to make code more readable
 
 / {
-	model = "Dashboard";
-	compatible = "vendor,Dashboard";
+	model = "dashboard";
+	compatible = "hytech,Dashboard";
 
 	chosen {
 		zephyr,console = &usart3;
