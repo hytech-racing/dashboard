@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 board:
-  name: custom_plank
-  vendor: vendor
+  name: Dashboard
+  full_name: HyTech Dashboard
+  vendor: st
   socs:
-    - name: nrf52840
+    - name: stm32h723xx

@@ -1,0 +1,29 @@
+# Copyright (c) HyTech
+# SPDX-License-Identifier: Apache-2.0
+
+identifier: Dashboard
+name: HyTech Dashboard
+vendor: st
+type: mcu
+arch: arm
+ram: 372 #TODO: check
+flash: 1024 #TODO: check
+toolchain:
+  - zephyr
+  - gnuarmemb
+  - xtools
+supported:
+  - arduino_gpio
+  - arduino_i2c
+  - arduino_spi
+  - uart
+  - gpio
+  - counter
+  - i2c
+  - pwm
+  - spi
+  - netif:eth
+  - backup_sram
+  - usb_device
+  - rtc
+  - can

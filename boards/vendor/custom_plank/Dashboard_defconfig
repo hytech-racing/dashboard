@@ -1,13 +1,21 @@
-# Copyright (c) 2021 Nordic Semiconductor ASA
+# Copyright (c) HyTech
 # SPDX-License-Identifier: Apache-2.0
 
+# Enable MPU
 CONFIG_ARM_MPU=y
+# Enable HW stack protection
 CONFIG_HW_STACK_PROTECTION=y
 
 # Enable UART console on all configurations for convenience. This is usually
 # done at board level upstream so that all samples output printed messages to
 # the configured #zephyr,console. In production boards, this may be enabled at
 # application level or in a debug configuration overlay.
+
+# Enable UART
 CONFIG_SERIAL=y
+# Console
 CONFIG_CONSOLE=y
 CONFIG_UART_CONSOLE=y
+
+# Enable GPIO #TODO: Check
+CONFIG_GPIO=y
