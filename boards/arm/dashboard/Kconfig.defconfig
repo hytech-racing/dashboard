@@ -1,0 +1,9 @@
+if BOARD_DASHBOARD
+
+config SOC
+    default "stm32h723xx"
+
+config ARCH
+    default "arm"
+
+endif

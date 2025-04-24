@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 board:
-  name: Dashboard
-  full_name: HyTech Dashboard
+  name: dashboard
+  full_name: HyTech Hashboard
   vendor: st
   socs:
     - name: stm32h723xx

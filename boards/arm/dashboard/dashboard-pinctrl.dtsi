@@ -1,0 +1,19 @@
+/*
+ * Copyright (c) HyTech Racing
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
+*TODO: please do pin control states. These are from base and we likely want something else
+*/
+
+
+&pinctrl {
+    usart1_tx_pa9: usart1_tx_pa9 {
+        pinmux = <STM32_PINMUX('A', 9, AF7)>;
+    };
+    
+    usart1_rx_pa10: usart1_rx_pa10 {
+        pinmux = <STM32_PINMUX('A', 10, AF7)>;
+    };
+};

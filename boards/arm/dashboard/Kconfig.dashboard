@@ -1,0 +1,6 @@
+# Copyright (c) HyTech Racing
+# SPDX-License-Identifier: Apache-2.0
+
+config BOARD_DASHBOARD
+	bool "STM32H723VE Dashboard Board"
+	depends on SOC_STM32H723XX

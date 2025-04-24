@@ -8,6 +8,8 @@ set(OPENOCD_STM32_TARGET "stm32h7x") #TODO: Check
 board_runner_args(openocd "--use-elf") #allows for flashing through openocd
 board_runner_args(openocd "--cmd-pre-init=source [find target/stm32h7x.cfg]")
 
+
+
 include(${ZEPHYR_BASE}/boards/common/nrfjprog.board.cmake)
 include(${ZEPHYR_BASE}/boards/common/jlink.board.cmake) #support for jlink runner
 include(${ZEPHYR_BASE}/boards/common/pyocd.board.cmake) #support for pyocd runner
