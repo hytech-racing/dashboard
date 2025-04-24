@@ -4,7 +4,7 @@
  */
 
 /dts-v1/;
-#include <st/h7/stm32h723.dtsi> 
+#include <st/h7/stm32h723.dtsi>
 #include <st/h7/stm32h723Xe.dtsi>
 #include <st/h7/stm32h723vetx-pinctrl.dtsi> //std pinctrl for the chip 
 #include "dashboard-pinctrl.dtsi" //custom define of what the pins do in our case
