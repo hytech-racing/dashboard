@@ -15,6 +15,5 @@ include(${ZEPHYR_BASE}/boards/common/jlink.board.cmake) #support for jlink runne
 include(${ZEPHYR_BASE}/boards/common/pyocd.board.cmake) #support for pyocd runner
 include(${ZEPHYR_BASE}/boards/common/openocd.board.cmake) #support for openocd runner
 
-
 #Template to add more runners alter
 #include(${CMAKE_CURRENT_LIST_DIR}/../../common/example_runner.board.cmake) 

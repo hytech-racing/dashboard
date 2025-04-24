@@ -3,6 +3,7 @@
 
 identifier: Dashboard
 name: HyTech Dashboard
+soc:stm32h723xx
 vendor: st
 type: mcu
 arch: arm

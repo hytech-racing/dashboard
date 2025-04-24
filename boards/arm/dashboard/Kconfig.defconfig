@@ -6,4 +6,9 @@ config SOC
 config ARCH
     default "arm"
 
+config ARM
+    default y
+
+config CPU_CORTEX_M
+    default y
 endif
