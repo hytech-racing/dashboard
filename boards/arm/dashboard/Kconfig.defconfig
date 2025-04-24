@@ -1,7 +1,7 @@
 if BOARD_DASHBOARD
 
 config SOC
-    default "stm32h723xx"
+    default "stm32h723ve"
 
 config ARCH
     default "arm"
@@ -11,4 +11,7 @@ config ARM
 
 config CPU_CORTEX_M
     default y
-endif
+
+CONFIG_NUM_IRQS=100
+
+endif # BOARD_DASHBOARD

@@ -4,8 +4,8 @@
  */
 
 /dts-v1/;
-#include <arm/st/h7/stm32h723.dtsi> 
-#include <arm/st/h7/stm32h723Xe.dtsi>
+#include <st/h7/stm32h723.dtsi> 
+#include <st/h7/stm32h723Xe.dtsi>
 #include <st/h7/stm32h723vetx-pinctrl.dtsi> //std pinctrl for the chip 
 #include "dashboard-pinctrl.dtsi" //custom define of what the pins do in our case
 #include <zephyr/dt-bindings/input/input-event-codes.h> //imports commands and macros to make code more readable

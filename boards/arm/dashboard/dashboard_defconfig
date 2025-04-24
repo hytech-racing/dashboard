@@ -4,7 +4,7 @@
 # Disable MPU
 CONFIG_ARM_MPU=n
 # Disable HW stack protection
-CONFIG_HW_STACK_PROTECTION=n
+CONFIG_HW_STACK_PROTECTION=y
 
 # Enable UART console on all configurations for convenience. This is usually
 # done at board level upstream so that all samples output printed messages to
@@ -20,5 +20,6 @@ CONFIG_UART_CONSOLE=y
 # Enable GPIO #TODO: Check
 CONFIG_GPIO=y
 
+CONFIG_NUM_IRQS=100
 
 CONFIG_BOARD_DASHBOARD=y

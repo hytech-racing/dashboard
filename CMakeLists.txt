@@ -18,4 +18,4 @@ target_sources(app PRIVATE src/main.c)
 zephyr_library()
 
 # Tell Zephyr to pick up your local Kconfig
-zephyr_library_sources_ifdef(CONFIG_BLINK blink.c)
+zephyr_library_sources_ifdef(CONFIG_BLINK main.c)
