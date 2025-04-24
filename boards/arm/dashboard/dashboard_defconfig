@@ -12,7 +12,7 @@ CONFIG_HW_STACK_PROTECTION=n
 # application level or in a debug configuration overlay.
 
 # Enable UART
-CONFIG_SERIAL=n
+CONFIG_SERIAL=y
 # Console
 CONFIG_CONSOLE=y
 CONFIG_UART_CONSOLE=y

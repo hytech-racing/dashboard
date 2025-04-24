@@ -4,6 +4,8 @@
 board_runner_args(jlink "--device=STM32H723HE" "--speed=4000") #allows flashing and debugging with jlink
 board_runner_args(pyocd "--target=stm32h723ve" "--frequency=4000000") #allows flashing and debugging with pyocd
 
+board_runner_args(openocd --target-handle=_CHIPNAME.cpu0)
+
 set(OPENOCD_STM32_TARGET "stm32h7x") #TODO: Check
 board_runner_args(openocd "--use-elf") #allows for flashing through openocd
 board_runner_args(openocd "--cmd-pre-init=source [find target/stm32h7x.cfg]")
