@@ -6,16 +6,11 @@
 
 cmake_minimum_required(VERSION 3.13.1)
 
-set(BOARD dashboard)
-set(BOARD_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
+#set(BOARD_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
+
+project(dashboard)
     
+
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
-
-project(dashboad_app)
-
 target_sources(app PRIVATE src/main.c)
-
-zephyr_library()
-
-# Tell Zephyr to pick up your local Kconfig
-zephyr_library_sources_ifdef(CONFIG_BLINK main.c)
+target_include_directories(app PRIVATE include)

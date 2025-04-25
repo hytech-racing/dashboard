@@ -12,6 +12,6 @@ config ARM
 config CPU_CORTEX_M
     default y
 
-CONFIG_NUM_IRQS=100
+
 
 endif # BOARD_DASHBOARD
