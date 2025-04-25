@@ -13,5 +13,4 @@ config CPU_CORTEX_M
     default y
 
 
-
 endif # BOARD_DASHBOARD

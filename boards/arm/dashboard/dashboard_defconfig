@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Disable MPU
-CONFIG_ARM_MPU=n
+CONFIG_ARM_MPU=y
 # Disable HW stack protection
 CONFIG_HW_STACK_PROTECTION=y
 
@@ -23,3 +23,5 @@ CONFIG_GPIO=y
 CONFIG_NUM_IRQS=100
 
 CONFIG_BOARD_DASHBOARD=y
+
+
