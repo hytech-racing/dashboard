@@ -4,6 +4,6 @@
 board:
   name: dashboard
   full_name: HyTech Dashboard
-  vendor: st
+  vendor: HyTech
   socs:
     - name: stm32h723xx

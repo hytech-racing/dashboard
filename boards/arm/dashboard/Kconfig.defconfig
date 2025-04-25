@@ -1,14 +1,5 @@
 if BOARD_DASHBOARD
 
-config SOC
-    default "stm32h723ve"
-
-config ARCH
-    default "arm"
-
-config ARM
-    default y
-
 config CPU_CORTEX_M
     default y
 
