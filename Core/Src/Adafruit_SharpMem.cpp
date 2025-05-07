@@ -16,7 +16,7 @@ BSD license, check license.txt for more information
 All text above, and the splash screen must be included in any redistribution
 *********************************************************************/
 
-#include "Adafruit_SharpMem.hpp"
+#include "Adafruit_SharpMem.h"
 
 #ifndef _swap_int16_t
 #define _swap_int16_t(a, b)                                                    \
@@ -163,7 +163,7 @@ void Adafruit_SharpMem::drawPixel(int16_t x, int16_t y, uint16_t color) {
   case 3:
     _swap_int16_t(x, y);
     y = HEIGHT - 1 - y;
-    break;
+    break;q
   }
 
   if (color) {

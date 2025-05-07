@@ -2,7 +2,7 @@
 Yappity yap yap
  */
 
-#include "Adafruit_GFX.hpp"
+#include <Adafruit_GFX.h>
 
 // #include "glcdfont.c" //font stuff, get to it later
 
