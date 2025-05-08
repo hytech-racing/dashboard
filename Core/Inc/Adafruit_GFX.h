@@ -9,8 +9,7 @@
 //TODO: We need to
 //#include "gfxfont.h"
 
-
-#include <Adafruit_SPIDevice.h>
+#include <spi.h>
 
 /// A generic graphics superclass that can handle all sorts of drawing. At a
 /// minimum you can subclass and provide drawPixel(). At a maximum you can do a
@@ -38,12 +37,6 @@ class Adafruit_GFX : public Print {
 public:
 
   Adafruit_GFX(int16_t w, int16_t h); // Constructor
-
-// TODO: When you merge the constructors together, delete these. Numbers are here if u need them
-//   Adafruit_SharpMem(uint8_t clk, uint8_t mosi, uint8_t cs, uint16_t w = 96,
-//                     uint16_t h = 96, uint32_t freq = 2000000);
-//   Adafruit_SharpMem(SPIClass *theSPI, uint8_t cs, uint16_t w = 96,
-//                     uint16_t h = 96, uint32_t freq = 2000000);
 
   boolean begin();
   void drawPixel(int16_t x, int16_t y, uint16_t color);
@@ -328,114 +321,6 @@ private:
 
   bool currstate, laststate;
 
-
-/////////////////////////////////////////////////////////////////////////////////////
-// TODO: These are from SharpMem.h so keep what's necessary and remove what's not. //
-// (Everything aside from spidev should be necessary. spidev should be changed to  //
-// conform to STM's SPI HAL)                                                       //
-/////////////////////////////////////////////////////////////////////////////////////
-
-  Adafruit_SPIDevice *spidev = NULL;
   uint8_t *sharpmem_buffer = NULL;
-  uint8_t _cs;
   uint8_t _sharpmem_vcom;
 };
-
-
-/////////////////////////////////////////////////////////////////////////////
-// TODO: Deletable. Again, should prolly not use these, only as references //
-/////////////////////////////////////////////////////////////////////////////
-
-// /// A GFX 1-bit canvas context for graphics
-// class GFXcanvas1 : public Adafruit_GFX {
-// public:
-//   GFXcanvas1(uint16_t w, uint16_t h, bool allocate_buffer = true);
-//   ~GFXcanvas1(void);
-//   void drawPixel(int16_t x, int16_t y, uint16_t color);
-//   void fillScreen(uint16_t color);
-//   void drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-//   void drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-//   bool getPixel(int16_t x, int16_t y) const;
-//   /**********************************************************************/
-//   /*!
-//     @brief    Get a pointer to the internal buffer memory
-//     @returns  A pointer to the allocated buffer
-//   */
-//   /**********************************************************************/
-//   uint8_t *getBuffer(void) const { return buffer; }
-
-// protected:
-//   bool getRawPixel(int16_t x, int16_t y) const;
-//   void drawFastRawVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-//   void drawFastRawHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-//   uint8_t *buffer;   ///< Raster data: no longer private, allow subclass access
-//   bool buffer_owned; ///< If true, destructor will free buffer, else it will do
-//                      ///< nothing
-
-// private:
-// #ifdef __AVR__
-//   // Bitmask tables of 0x80>>X and ~(0x80>>X), because X>>Y is slow on AVR
-//   static const uint8_t PROGMEM GFXsetBit[], GFXclrBit[];
-// #endif
-// };
-
-// /// A GFX 8-bit canvas context for graphics
-// class GFXcanvas8 : public Adafruit_GFX {
-// public:
-//   GFXcanvas8(uint16_t w, uint16_t h, bool allocate_buffer = true);
-//   ~GFXcanvas8(void);
-//   void drawPixel(int16_t x, int16_t y, uint16_t color);
-//   void fillScreen(uint16_t color);
-//   void drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-//   void drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-//   uint8_t getPixel(int16_t x, int16_t y) const;
-//   /**********************************************************************/
-//   /*!
-//   @brief    Get a pointer to the internal buffer memory
-//   @returns  A pointer to the allocated buffer
-//   */
-//   /**********************************************************************/
-//   uint8_t *getBuffer(void) const { return buffer; }
-
-// protected:
-//   uint8_t getRawPixel(int16_t x, int16_t y) const;
-//   void drawFastRawVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-//   void drawFastRawHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-//   uint8_t *buffer;   ///< Raster data: no longer private, allow subclass access
-//   bool buffer_owned; ///< If true, destructor will free buffer, else it will do
-//                      ///< nothing
-// };
-
-// ///  A GFX 16-bit canvas context for graphics
-// class GFXcanvas16 : public Adafruit_GFX {
-// public:
-//   GFXcanvas16(uint16_t w, uint16_t h, bool allocate_buffer = true);
-//   ~GFXcanvas16(void);
-//   void drawPixel(int16_t x, int16_t y, uint16_t color);
-//   void fillScreen(uint16_t color);
-//   void byteSwap(void);
-//   void drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-//   void drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-//   uint16_t getPixel(int16_t x, int16_t y) const;
-//   /**********************************************************************/
-//   /*!
-//     @brief    Get a pointer to the internal buffer memory
-//     @returns  A pointer to the allocated buffer
-//   */
-//   /**********************************************************************/
-//   uint16_t *getBuffer(void) const { return buffer; }
-
-// protected:
-//   uint16_t getRawPixel(int16_t x, int16_t y) const;
-//   void drawFastRawVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-//   void drawFastRawHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
-//   uint16_t *buffer;  ///< Raster data: no longer private, allow subclass access
-//   bool buffer_owned; ///< If true, destructor will free buffer, else it will do
-//                      ///< nothing
-// };
-
-#endif // _ADAFRUIT_GFX_H
-
-#ifdef __cplusplus
-}
-#endif

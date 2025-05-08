@@ -31,7 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <Adafruit_GFX.h>
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
