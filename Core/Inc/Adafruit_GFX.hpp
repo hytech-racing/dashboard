@@ -1,8 +1,3 @@
-#ifdef __cplusplus
- extern "C" {
-#endif
-
-
 #ifndef _ADAFRUIT_GFX_H
 #define _ADAFRUIT_GFX_H
 
@@ -10,6 +5,7 @@
 //#include "gfxfont.h"
 
 #include <spi.h>
+#include <gfxfont.hpp>
 
 /// A generic graphics superclass that can handle all sorts of drawing. At a
 /// minimum you can subclass and provide drawPixel(). At a maximum you can do a
@@ -32,13 +28,13 @@
 ///////////////////////////////////////////////////////////////////////////
 
 
-class Adafruit_GFX : public Print {
+class Adafruit_GFX { //the Print dependency needs to be removed, it references an arduino library
 
 public:
 
   Adafruit_GFX(int16_t w, int16_t h); // Constructor
 
-  boolean begin();
+  bool begin();
   void drawPixel(int16_t x, int16_t y, uint16_t color);
   uint8_t getPixel(uint16_t x, uint16_t y);
   void refresh(void);
@@ -96,7 +92,7 @@ public:
   void drawRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h,
                      int16_t radius, uint16_t color);
   void fillRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h,
-                     int16_t radius, uint16_t color);
+                     int16_t radius, uint16_t color);void
   void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w,
                   int16_t h, uint16_t color);
   void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w,
@@ -324,3 +320,4 @@ private:
   uint8_t *sharpmem_buffer = NULL;
   uint8_t _sharpmem_vcom;
 };
+#endif

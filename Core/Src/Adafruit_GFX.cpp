@@ -2,9 +2,9 @@
 Yappity yap yap
  */
 
-#include <Adafruit_GFX.h>
-
-// #include "glcdfont.c" //font stuff, get to it later
+#include <Adafruit_GFX.hpp>
+#include <cstdint>
+#include "glcdfont.c" //font stuff, get to it later
 
 ////////////////////////////////////////////////////
 // I DON'T KNOW WHAT IS HAPPENING IN THIS SECTION //
@@ -22,15 +22,10 @@ Yappity yap yap
 // for compatibility with existing PROGMEM-reading AVR code.
 // Do our own checks and defines here for good measure...
 
-#ifndef pgm_read_byte
-#define pgm_read_byte(addr) (*(const unsigned char *)(addr))
-#endif
-#ifndef pgm_read_word
-#define pgm_read_word(addr) (*(const unsigned short *)(addr))
-#endif
-#ifndef pgm_read_dword
-#define pgm_read_dword(addr) (*(const unsigned long *)(addr))
-#endif
+
+#define pgm_read_byte(addr) (*(const uint8_t *)(addr))
+#define pgm_read_word(addr) (*(const uint16_t *)(addr))
+#define pgm_read_dword(addr) (*(const uint32_t *)(addr))
 
 // Pointers are a peculiar case...typically 16-bit on AVR boards,
 // 32 bits elsewhere.  Try to accommodate both...
@@ -1342,7 +1337,7 @@ void Adafruit_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
                             uint16_t color, uint16_t bg, uint8_t size_x,
                             uint8_t size_y) {
 
-  if (!gfxFont) { // 'Classic' built-in font
+  if (!font) { // 'Classic' built-in font
 
     if ((x >= _width) ||              // Clip right
         (y >= _height) ||             // Clip bottom

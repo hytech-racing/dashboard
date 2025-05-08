@@ -19,19 +19,21 @@
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __MAIN_H
-#define __MAIN_H
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#ifndef __MAIN_H
+#define __MAIN_H
+
+
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h7xx_hal.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <Adafruit_GFX.h>
+#include <Adafruit_GFX.hpp>
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
