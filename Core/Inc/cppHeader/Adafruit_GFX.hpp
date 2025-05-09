@@ -4,9 +4,10 @@
 //TODO: We need to
 //#include "gfxfont.h"
 
-#include <spi.h>
-#include <gfxfont.hpp>
-#include <string>
+#include "gfxfont.hpp"
+#include <stdint.h>
+#include "spi.h"
+
 
 
 /// A generic graphics superclass that can handle all sorts of drawing. At a
@@ -107,7 +108,7 @@ public:
   void drawRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h,
                      int16_t radius, uint16_t color);
   void fillRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h,
-                     int16_t radius, uint16_t color);void
+                     int16_t radius, uint16_t color);
   void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w,
                   int16_t h, uint16_t color);
   void drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w,
@@ -140,10 +141,10 @@ public:
                 uint16_t bg, uint8_t size_x, uint8_t size_y);
   void getTextBounds(const char *string, int16_t x, int16_t y, int16_t *x1,
                      int16_t *y1, uint16_t *w, uint16_t *h);
-  void getTextBounds(const __FlashStringHelper *s, int16_t x, int16_t y,
-                     int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h);
-  void getTextBounds(const String &str, int16_t x, int16_t y, int16_t *x1,
-                     int16_t *y1, uint16_t *w, uint16_t *h);
+//  void getTextBounds(const __FlashStringHelper *s, int16_t x, int16_t y,
+//                     int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h);
+//  void getTextBounds(const String &str, int16_t x, int16_t y, int16_t *x1,
+//                     int16_t *y1, uint16_t *w, uint16_t *h);
   void setTextSize(uint8_t s);
   void setTextSize(uint8_t sx, uint8_t sy);
   void setFont(const GFXfont *f = NULL);
@@ -154,11 +155,15 @@ public:
     @param  x    X coordinate in pixels
     @param  y    Y coordinate in pixels
   */
-  /**********************************************************************/
-  void setCursor(int16_t x, int16_t y) {
-    cursor_x = x;
-    cursor_y = y;
-  }
+//  void getTextBounds(const __FlashStringHelper *s, int16_t x, int16_t y,
+//		  //                     int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h);
+//		  //  void getTextBounds(const String &str, int16_t x, int16_t y, int16_t *x1,
+//		  //
+//  /**********************************************************************/
+//  void setCursor(int16_t x, int16_t y) {
+//    cursor_x = x;
+//    cursor_y = y;
+//  }
 
   /**********************************************************************/
   /*!

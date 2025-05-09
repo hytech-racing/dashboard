@@ -29,8 +29,10 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_spi.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_spi_ex.h \
- ../Core/Inc/Adafruit_GFX.hpp ../Core/Inc/spi.h ../Core/Inc/main.h \
- ../Core/Inc/gfxfont.hpp
+ /home/skse/STM32CubeIDE/workspace_1.12.0/dash2/Core/Inc/cppHeader/maincpp.hpp \
+ /home/skse/STM32CubeIDE/workspace_1.12.0/dash2/Core/Inc/cppHeader/Adafruit_GFX.hpp \
+ /home/skse/STM32CubeIDE/workspace_1.12.0/dash2/Core/Inc/cppHeader/gfxfont.hpp \
+ ../Core/Inc/spi.h
 ../Core/Inc/main.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
@@ -62,7 +64,7 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr_ex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_spi.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_spi_ex.h:
-../Core/Inc/Adafruit_GFX.hpp:
+/home/skse/STM32CubeIDE/workspace_1.12.0/dash2/Core/Inc/cppHeader/maincpp.hpp:
+/home/skse/STM32CubeIDE/workspace_1.12.0/dash2/Core/Inc/cppHeader/Adafruit_GFX.hpp:
+/home/skse/STM32CubeIDE/workspace_1.12.0/dash2/Core/Inc/cppHeader/gfxfont.hpp:
 ../Core/Inc/spi.h:
-../Core/Inc/main.h:
-../Core/Inc/gfxfont.hpp:

@@ -1,5 +1,7 @@
 Core/Src/Adafruit_GFX.o: ../Core/Src/Adafruit_GFX.cpp \
- ../Core/Inc/Adafruit_GFX.hpp ../Core/Inc/spi.h ../Core/Inc/main.h \
+ /home/skse/STM32CubeIDE/workspace_1.12.0/dash2/Core/Inc/cppHeader/Adafruit_GFX.hpp \
+ /home/skse/STM32CubeIDE/workspace_1.12.0/dash2/Core/Inc/cppHeader/gfxfont.hpp \
+ ../Core/Inc/spi.h ../Core/Inc/main.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
@@ -30,8 +32,9 @@ Core/Src/Adafruit_GFX.o: ../Core/Src/Adafruit_GFX.cpp \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_spi.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_spi_ex.h \
- ../Core/Inc/gfxfont.hpp ../Core/Src/glcdfont.c
-../Core/Inc/Adafruit_GFX.hpp:
+ ../Core/Src/glcdfont.c
+/home/skse/STM32CubeIDE/workspace_1.12.0/dash2/Core/Inc/cppHeader/Adafruit_GFX.hpp:
+/home/skse/STM32CubeIDE/workspace_1.12.0/dash2/Core/Inc/cppHeader/gfxfont.hpp:
 ../Core/Inc/spi.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
@@ -64,5 +67,4 @@ Core/Src/Adafruit_GFX.o: ../Core/Src/Adafruit_GFX.cpp \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr_ex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_spi.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_spi_ex.h:
-../Core/Inc/gfxfont.hpp:
 ../Core/Src/glcdfont.c:

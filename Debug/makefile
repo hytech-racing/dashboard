@@ -76,7 +76,7 @@ main-build: dash2.elf secondary-outputs
 
 # Tool invocations
 dash2.elf dash2.map: $(OBJS) $(USER_OBJS) /home/skse/STM32CubeIDE/workspace_1.12.0/dash2/STM32H723VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-g++ -o "dash2.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"/home/skse/STM32CubeIDE/workspace_1.12.0/dash2/STM32H723VETX_FLASH.ld" -Wl,-Map="dash2.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+	arm-none-eabi-g++ -o "dash2.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"/home/skse/STM32CubeIDE/workspace_1.12.0/dash2/STM32H723VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="dash2.map" -Wl,--gc-sections -static -lstdc++ -lsupc++ --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

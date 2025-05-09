@@ -19,10 +19,6 @@
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef __MAIN_H
 #define __MAIN_H
 
@@ -33,7 +29,6 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <Adafruit_GFX.hpp>
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -72,8 +67,5 @@ void Error_Handler(void);
 
 /* USER CODE END Private defines */
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* __MAIN_H */
