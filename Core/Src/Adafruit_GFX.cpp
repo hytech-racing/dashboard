@@ -131,7 +131,7 @@ Adafruit_GFX::Adafruit_GFX(int16_t w, int16_t h) : WIDTH(w), HEIGHT(h) {
     gfxFont = NULL;
 
     //relevant SPI stuff should already be initialized before this call in main
-    if(HAL_SPI_GetState(hspi2)==HAL_SPI_STATE_RESET){ // in case it's not not initialized
+    if(HAL_SPI_GetState(&hspi2)==HAL_SPI_STATE_RESET){ // in case it's not not initialized
         MX_SPI2_Init();
     }
     //CS Pin should already be initialized before this call in main
@@ -149,8 +149,8 @@ Adafruit_GFX::Adafruit_GFX(int16_t w, int16_t h) : WIDTH(w), HEIGHT(h) {
  *
  * @return boolean true: success false: failure
  */
-boolean Adafruit_SharpMem::begin(void) {
-  if (!(HAL_SPI_GetState(hspi2)==HAL_SPI_STATE_READY)) { //check all is good
+bool Adafruit_GFX::begin(void) {
+  if (!(HAL_SPI_GetState(&hspi2)==HAL_SPI_STATE_READY)) { //check all is good
     return false;
   }
   // this display is weird in that _cs is active HIGH not LOW like every other
@@ -183,7 +183,7 @@ boolean Adafruit_SharpMem::begin(void) {
     * **1**: White
 */
 /**************************************************************************/
-void Adafruit_SharpMem::drawPixel(int16_t x, int16_t y, uint16_t color) {
+void Adafruit_GFX::drawPixel(int16_t x, int16_t y, uint16_t color) {
     if ((x < 0) || (x >= _width) || (y < 0) || (y >= _height))
         return;
 
@@ -223,7 +223,7 @@ void Adafruit_SharpMem::drawPixel(int16_t x, int16_t y, uint16_t color) {
     @return     1 if the pixel is enabled, 0 if disabled
 */
 /**************************************************************************/
-uint8_t Adafruit_SharpMem::getPixel(uint16_t x, uint16_t y) {
+uint8_t Adafruit_GFX::getPixel(uint16_t x, uint16_t y) {
   if ((x >= _width) || (y >= _height))
     return 0; // <0 test not needed, unsigned
 
@@ -252,14 +252,14 @@ uint8_t Adafruit_SharpMem::getPixel(uint16_t x, uint16_t y) {
     @brief Renders the contents of the pixel buffer on the LCD
 */
 /**************************************************************************/
-void Adafruit_SharpMem::refresh(void) {
+void Adafruit_GFX::refresh(void) {
   uint16_t i, currentline;
 
   // Send the write command
   CS_HIGH
 
   uint8_t modeSelect = _sharpmem_vcom | SHARPMEM_BIT_WRITECMD;
-  HAL_SPI_Transmit(hspi2, &modeSelect, 1, SPITimeOut);
+  HAL_SPI_Transmit(&hspi2, &modeSelect, 1, SPITimeOut);
 //   spidev->transfer(_sharpmem_vcom | SHARPMEM_BIT_WRITECMD);
 
   TOGGLE_VCOM;
@@ -279,13 +279,13 @@ void Adafruit_SharpMem::refresh(void) {
     line[bytes_per_line + 1] = 0x00;
     // send it!
 
-    HAL_SPI_Transmit(hspi2, line, bytes_per_line + 2, SPITimeOut);
+    HAL_SPI_Transmit(&hspi2, line, bytes_per_line + 2, SPITimeOut);
     // spidev->transfer(line, bytes_per_line + 2);
   }
 
   // Send another trailing 8 bits for the last line
   modeSelect = 0;
-  HAL_SPI_Transmit(hspi2, &modeSelect, 1, SPITimeOut);
+  HAL_SPI_Transmit(&hspi2, &modeSelect, 1, SPITimeOut);
 //   spidev->transfer(0x00);
   CS_LOW
 }
