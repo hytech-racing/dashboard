@@ -1,27 +1,31 @@
 #include "DashCANInterfaceImpl.h"
 
-DashCAN::DashCAN(STM32_CAN* dashCAN)
-{
-    _dashCAN = dashCAN;
 
-    // begin can and set baud rate to 500kb
-    _dashCAN->begin();
-    _dashCAN->setBaudRate(500000);
-}
 
-void DashCAN::read_CAN()
+void DashCAN::dash_recv_switch(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned long millis)
 {
-    while (_dashCAN->read(_msg)) {
-        switch (_msg.id) {
-            case 0x7E8: // OBD-II request
-                // Handle OBD-II request
-                break;
-            case 0x7E0: // OBD-II response
-                // Handle OBD-II response
-                break;
-            default:
-                // Handle other messages
-                break;
-        }
-    }
+    switch (msg.id) {
+              // case DASHBOARD_BUZZER_CONTROL_CANID:
+              // {
+              //     interfaces.vcr_interface.receive_dash_control_data(_msg);
+              //     break;
+              // } 
+              case BMS_VOLTAGES_CANID:
+              {
+                  interfaces.acu_interface.receive_acu_voltages(msg);
+                  break;
+              }
+              case ACU_OK_CANID: 
+              {
+                  interfaces.acu_interface.receive_acu_ok_message(msg);
+                  break;
+              }
+              case PEDALS_SYSTEM_DATA_CANID: 
+              {
+                  interfaces.vcf_interface.receive_pedals_message(msg, millis);
+                  break;
+              }
+              default:
+                  break;
+          }
 }

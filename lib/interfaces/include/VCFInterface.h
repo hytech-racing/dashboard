@@ -2,6 +2,7 @@
 #define VCFINTERFACE_H
 
 
+#include "STM32_CAN.h"
 #include "SharedFirmwareTypes.h"
 #include "etl/singleton.h"
 
@@ -22,7 +23,6 @@ public:
         _curr_data.stamped_pedals.heartbeat_ok = false; // start out false
     };
 
-    bool is_start_button_pressed() { return _curr_data.dash_input_state.start_btn_is_pressed; }
     bool is_brake_pressed() {return _curr_data.stamped_pedals.pedals_data.brake_is_pressed; }
     bool is_drivetrain_reset_pressed() {return _curr_data.dash_input_state.mc_reset_btn_is_pressed; }
     bool is_recalibrate_pedals_button_pressed() {return _curr_data.dash_input_state.preset_btn_is_pressed; }
@@ -45,7 +45,7 @@ private:
     unsigned long _max_heartbeat_interval_ms;
     bool _first_received_message_heartbeat_init = false;
     
-};
+};  
 
 using VCFInterfaceInstance = etl::singleton<VCFInterface>;
 

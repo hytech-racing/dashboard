@@ -8,8 +8,6 @@
 #include <SPI.h>
 
 
-
-
 //SPIClass spi(MOSI, MISO, SCLK);
 
 // put function declarations here:

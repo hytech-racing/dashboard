@@ -6,14 +6,10 @@
 /* -------------------------------------------------- */
 /*                 Display Constants                  */
 /* -------------------------------------------------- */
-/*
-
-#define LED_PIN GPIO_PIN_3
-#define LED_GPIO_PORT GPIOA
-#define LED_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
-*/
 
 
+constexpr int NEOPIXEL_CONTROL_PIN = 0;
+constexpr int NEOPIXEL_COUNT = 12; // 12 neopixeles on dashboard
 
 
 

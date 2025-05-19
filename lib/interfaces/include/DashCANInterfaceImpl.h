@@ -3,19 +3,27 @@
 
 #include <STM32_CAN.h>
 #include "hytech.h"
+#include "VCFInterface.h"
+#include "ACUInterface.h"
+#include "VCRInterface.h"
 
 
 
-class DashCAN
-{
-    private:
-        STM32_CAN* _dashCAN;
-        CAN_message_t _msg;
-    public:
-        DashCAN(STM32_CAN* dashCAN);
-        void read_CAN();
-        void write_CAN();
+struct CANInterfaces {
+    explicit CANInterfaces(VCFInterface &vcf_int, ACUInterface &acu_int, VCRInterface &vcr_int)
+        : vcf_interface(vcf_int),
+          acu_interface(acu_int),
+          vcr_interface(vcr_int) {}
+
+    VCFInterface &vcf_interface;
+    ACUInterface &acu_interface;
+    VCRInterface &vcr_interface;
+};
+
+namespace DashCAN
+{ 
+    void can_setup();
+    void dash_recv_switch(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned long millis);
+    void write_CAN();
 }
 #endif
-
-
