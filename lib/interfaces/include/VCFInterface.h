@@ -2,9 +2,9 @@
 #define VCFINTERFACE_H
 
 
-#include "STM32_CAN.h"
-#include "SharedFirmwareTypes.h"
-#include "etl/singleton.h"
+#include <STM32_CAN.h>
+#include <SharedFirmwareTypes.h>
+#include <etl/singleton.h>
 
 
 struct VCFCANInterfaceData_s {

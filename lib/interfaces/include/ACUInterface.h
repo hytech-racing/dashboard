@@ -4,7 +4,7 @@
 #include "SharedFirmwareTypes.h"
 #include "etl/singleton.h"
 #include "hytech.h"
-#include "STM32_CAN.h"
+#include <STM32_CAN.h>
 #include "SystemTimeInterface.h"
 
 class ACUInterface  
@@ -21,9 +21,9 @@ class ACUInterface
 
         //ACUCoreData_s get_last_recvd_data() {return _last_recvd_data;}
 
-        //bool get_voltages_not_critical() {return _voltages_not_critical;}
+        bool get_voltages_not_critical() {return _voltages_not_critical;}
 
-        void receive_acu_voltages(const CAN_message_t &can_msg);
+        void receive_acu_voltages(const CAN_message_t &msg);
 
         bool bms_ok = true;
         bool imd_ok = true;

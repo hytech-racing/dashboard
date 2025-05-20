@@ -2,7 +2,7 @@
 
 
 
-void DashCAN::dash_recv_switch(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned long millis)
+void DashCAN::dash_read_switch(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned long millis)
 {
     switch (msg.id) {
               // case DASHBOARD_BUZZER_CONTROL_CANID:

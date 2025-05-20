@@ -3,6 +3,10 @@
 
 #include <STM32_CAN.h>
 #include "hytech.h"
+
+#include "etl/delegate.h"
+#include "etl/singleton.h"
+
 #include "VCFInterface.h"
 #include "ACUInterface.h"
 #include "VCRInterface.h"
@@ -19,11 +23,28 @@ struct CANInterfaces {
     ACUInterface &acu_interface;
     VCRInterface &vcr_interface;
 };
+    
+
+struct DashCANInterfaceObjects {
+
+    DashCANInterfaceObjects(etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)> recv_switch, STM32_CAN * stm_can): STM_CAN(stm_can),can_recv_switch(recv_switch) 
+    {} 
+
+    
+    STM32_CAN* STM_CAN;
+
+    static CAN_message_t CAN_inMsg;
+    etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)> can_recv_switch;
+    
+};
 
 namespace DashCAN
 { 
     void can_setup();
-    void dash_recv_switch(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned long millis);
+    void dash_read_switch(CANInterfaces &interfaces, const CAN_message_t &msg, unsigned long millis);
     void write_CAN();
+
+    using DashCANInterfaceObjectsInstance = etl::singleton<DashCANInterfaceObjects>;
+    using CANInterfacesInstance = etl::singleton<CANInterfaces>;
 }
-#endif
+#endif   

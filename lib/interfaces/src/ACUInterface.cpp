@@ -17,10 +17,10 @@ void ACUInterface::receive_acu_ok_message(const CAN_message_t &can_msg)
     }
 }
 
-void ACUInterface::receive_acu_voltages(const CAN_message_t &can_msg)
+void ACUInterface::receive_acu_voltages(const CAN_message_t &msg)
 {
     BMS_VOLTAGES_t unpacked_msg;
-    Unpack_BMS_VOLTAGES_hytech(&unpacked_msg, can_msg.buf, can_msg.len); // NOLINT (implicitly decay pointer)
+    Unpack_BMS_VOLTAGES_hytech(&unpacked_msg, msg.buf, msg.len); // NOLINT (implicitly decay pointer)
     
     constexpr float critical_cell_voltage = 3.3f;
     _voltages_not_critical = HYTECH_low_voltage_ro_fromS(unpacked_msg.low_voltage_ro) > critical_cell_voltage;

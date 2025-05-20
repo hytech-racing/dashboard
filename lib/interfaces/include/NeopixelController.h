@@ -23,7 +23,7 @@ enum LED_ID_e
     BOTS = 0, 
     LAUNCH_CTRL = 1, 
     TORQUE_MODE = 2, 
-    BRAKE_ENGAGE = 3, 
+    BRAKE = 3, 
     COCKPIT_BRB = 4, 
     INERTIA = 5, 
     GLV = 6, 
