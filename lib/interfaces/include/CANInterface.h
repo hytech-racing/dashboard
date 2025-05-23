@@ -39,15 +39,18 @@ void handle_stm_CAN_setup(CAN_DEVICE& CAN_dev, uint32_t baudrate, void (*on_recv
  * @param curr_millis current millis 
  * @param recv_switch_func the receive function that gets called and is given the interfaces ref, CAN message struct and millis timestamp. expected to contain switch statement.
  */
-template <typename CAN_dev, typename InterfaceContainer, typename msg_buffer>
-void process_ring_buffer(CAN_dev &can, msg_buffer &msg, InterfaceContainer &interfaces, unsigned long curr_millis, etl::delegate<void(InterfaceContainer& interfaces, const CAN_message_t& CAN_msg, unsigned long curr_millis)> recv_switch_func)
-{
-    if (can.read(msg))
-    {
-        CAN_message_t recvd_msg = msg;
-        recv_switch_func(interfaces, recvd_msg, curr_millis);
-    }
-}
+// template <typename CAN_dev, typename InterfaceContainer, typename msg_buffer>
+// void process_ring_buffer(CAN_dev &can, msg_buffer &msg, InterfaceContainer &interfaces, unsigned long curr_millis, etl::delegate<void(InterfaceContainer& interfaces, const CAN_message_t& CAN_msg, unsigned long curr_millis)> recv_switch_func)
+// {
+//     if (can.read(msg))
+//     {
+//         CAN_message_t recvd_msg = msg;
+//         uint8_t buf[sizeof(CAN_message_t)];
+//         rx_buffer.pop_front(buf, sizeof(CAN_message_t));
+//         memmove(&recvd_msg, buf, sizeof(recvd_msg));
+//         recv_switch_func(interfaces, recvd_msg, curr_millis);
+//     }
+// }
 
 namespace CAN_util
 {

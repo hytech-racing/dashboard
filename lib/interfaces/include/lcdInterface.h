@@ -26,7 +26,8 @@
 
 
 
-namespace dashDisplay {
+namespace dashDisplay 
+{
     void init();
     void startup();
     void hytech_animation();

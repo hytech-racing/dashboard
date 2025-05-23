@@ -5,13 +5,7 @@
 #include "NeopixelController.h"
 #include "SharedFirmwareTypes.h"
 
-HT_TASK::TaskResponse init_can_task()
-{
-    DashCAN::can_setup();
-
-    return HT_TASK::TaskResponse::YIELD;
-}
-
+#include "etl/delegate.h"
 
 
 HT_TASK::TaskResponse init_neopixels_task(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info)
@@ -25,6 +19,7 @@ HT_TASK::TaskResponse init_neopixels_task(const unsigned long& sys_micros, const
 
 HT_TASK::TaskResponse run_update_neopixels_task(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info)
 {
-    NeopixelControllerInstance::instance().refresh_neopixels(VCFData_sInstance::instance(), VCRData_sInstance::instance(), DashCAN::CANInterfacesInstance::instance());
+    NeopixelControllerInstance::instance().refresh_neopixels(VCFData_sInstance::instance(), VCRData_sInstance::instance(), CANInterfacesInstance::instance());
     return HT_TASK::TaskResponse::YIELD;
 }
+

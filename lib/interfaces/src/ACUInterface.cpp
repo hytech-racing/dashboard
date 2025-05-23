@@ -1,10 +1,10 @@
 #include "ACUInterface.h"
 
 
-void ACUInterface::receive_acu_ok_message(const CAN_message_t &can_msg) 
+void ACUInterface::receive_acu_ok_message(const CAN_message_t &msg) 
 {
     ACU_OK_t unpacked_msg;
-    Unpack_ACU_OK_hytech(&unpacked_msg, can_msg.buf, can_msg.len); // NOLINT (implicitly decay pointer)
+    Unpack_ACU_OK_hytech(&unpacked_msg, msg.buf, msg.len); // NOLINT (implicitly decay pointer)
 
     constexpr uint32_t acu_ok_init_timeout_ms = 2000;
     
