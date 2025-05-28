@@ -36,8 +36,8 @@ HT_TASK::TaskResponse read_can_task(const unsigned long& sysMicros, const HT_TAS
 {
     if (stm_can.read(telem_can_rx_msg))
     {
-      CANInterfaces& vcf_can_interfaces = CANInterfacesInstance::instance(); 
-      DashCAN::dash_read_switch(vcf_can_interfaces, telem_can_rx_msg, sysMicros);
+      CANInterfaces& dash_can_interfaces = CANInterfacesInstance::instance(); 
+      DashCAN::dash_read_switch(dash_can_interfaces, telem_can_rx_msg, sysMicros);
     }
     return HT_TASK::TaskResponse::YIELD;
 }
@@ -77,7 +77,6 @@ void setup() {
 }
 
 void loop() {
-    dashDisplay::display_refresh();
     delay(500); // 1/2 sec delay
     HT_SCHED::Scheduler::getInstance().run();
 }

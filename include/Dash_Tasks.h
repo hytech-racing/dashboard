@@ -14,5 +14,6 @@ HT_TASK::TaskResponse read_can_task(const unsigned long& sysMicros, const HT_TAS
 HT_TASK::TaskResponse init_neopixels_task(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
 HT_TASK::TaskResponse run_update_neopixels_task(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
 
+HT_TASK::TaskResponse sceen_refresh_task(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
 
 #endif /* DASH_TASKS_H */  

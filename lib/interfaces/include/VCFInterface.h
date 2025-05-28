@@ -31,7 +31,7 @@ public:
     
     void receive_pedals_message(const CAN_message_t& msg, unsigned long curr_millis);
     void receive_dashboard_message(const CAN_message_t& msg, unsigned long curr_millis);
-    
+        
     VCFCANInterfaceData_s get_latest_data();
 
     void send_buzzer_start_message();

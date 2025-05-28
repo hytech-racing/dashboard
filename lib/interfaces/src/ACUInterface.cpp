@@ -24,4 +24,6 @@ void ACUInterface::receive_acu_voltages(const CAN_message_t &msg)
     
     constexpr float critical_cell_voltage = 3.3f;
     _voltages_not_critical = HYTECH_low_voltage_ro_fromS(unpacked_msg.low_voltage_ro) > critical_cell_voltage;
+
+    _last_recvd_data.pack_voltage = HYTECH_total_voltage_ro_fromS(unpacked_msg.total_voltage_ro);
 }

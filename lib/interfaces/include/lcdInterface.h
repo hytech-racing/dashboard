@@ -32,6 +32,17 @@ namespace dashDisplay
     void startup();
     void hytech_animation();
     //void driver_animation(StartupAnimations);
+
+    void draw_background_bitmap();
+    void draw_vertical_pedal_bar(float val, int initial_x_coord);
+    void draw_battery_bar(int percent);
+
+    int curr_page = 0;
+};
+
+namespace lcdHelper
+{
+    void draw_rectangle_right_corner(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
     void display_refresh();
 };
 

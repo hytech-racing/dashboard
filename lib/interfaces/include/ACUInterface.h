@@ -19,7 +19,7 @@ class ACUInterface
         void receive_acu_ok_message(const CAN_message_t &msg);
 
 
-        //ACUCoreData_s get_last_recvd_data() {return _last_recvd_data;}
+        ACUCoreData_s get_last_recvd_data() {return _last_recvd_data;}
 
         bool get_voltages_not_critical() {return _voltages_not_critical;}
 

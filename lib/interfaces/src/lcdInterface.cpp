@@ -47,69 +47,38 @@ void dashDisplay::hytech_animation() {
     _display.clearDisplay();
 }
 
-// void dashDisplay::driver_animation(StartupAnimations animation) {
-//     switch (animation) {
-//         case StartupAnimations::DAVID_KNIGHT_GLIZZY:
-//             _display.drawBitmap(0,0, epd_bitmap_glizzy, 320, 240, BLACK);
-//             _display.refresh();
-//             delay(3000);
-//             break;
-//         case StartupAnimations::DAVID_KNIGHT_2:
-//             _display.drawBitmap(0,0, epd_bitmap_david, 320, 240, BLACK);
-//             _display.refresh();
-//             delay(3000);
-//             break;
-//         case StartupAnimations::MIKHAIL_CAT:
-//             _display.drawBitmap(60,25, epd_bitmap_cat, 200, 200, BLACK);
-//             _display.refresh();
-//             delay(3000);
-//             break;
-//         case StartupAnimations::ICE_SPICE:
-//             for (int i = 0; i < 10; i++) {
-//                 switch(i) {
-//                     case 1:
-//                         _display.drawBitmap(0,0, isp1, 320, 240, BLACK);
-//                         break;
-//                     case 2:
-//                         _display.drawBitmap(0,0, isp2, 320, 240, BLACK);
-//                         break;
-//                     case 3:
-//                         _display.drawBitmap(0,0, isp3, 320, 240, BLACK);
-//                         break;
-//                     case 4:
-//                         _display.drawBitmap(0,0, isp4, 320, 240, BLACK);
-//                         break;
-//                     case 5:
-//                         _display.drawBitmap(0,0, isp5, 320, 240, BLACK);
-//                         break;
-//                     case 6:
-//                         _display.drawBitmap(0,0, isp6, 320, 240, BLACK);
-//                         break;
-//                     case 7:
-//                         _display.drawBitmap(0,0, isp7, 320, 240, BLACK);
-//                         break;
-//                     case 8:
-//                         _display.drawBitmap(0,0, isp8, 320, 240, BLACK);
-//                         break;
-//                     case 9:
-//                         _display.drawBitmap(0,0, isp9, 320, 240, BLACK);
-//                         break;
-//                     case 10:
-//                         _display.drawBitmap(0,0, isp10, 320, 240, BLACK);
-//                         break;
-//                 }
-//             _display.refresh();
-//             delay(100);
-//             _display.clearDisplayBuffer();
-//             }
-//         default:
-//             break;
-//     }
-//     _display.clearDisplayBuffer();
-//     _display.drawBitmap(0,0, epd_bitmap_hytech_dashboard, 320, 240, BLACK);
-// }
+void dashDisplay::draw_background_bitmap() {
+    _display.clearDisplayBuffer();
+    _display.drawBitmap(0,0, epd_bitmap_hytech_dashboard, 320, 240, BLACK);
+    _display.fillRect(320-40, 30, 40, 200, WHITE);
+    _display.fillRect(283, 36, 305-283, 210-36, BLACK);
+    _display.fillRect(283-3, (36 + 210 - 36)/2+15, 25, 7, WHITE);
+    _display.fillRect(0, 215, 130, 25, WHITE);
+    // _display.fillRect(100, 5, 100, 20, BLACK);
+}
 
-void dashDisplay::display_refresh() {
+// draws white rect top down
+void dashDisplay::draw_vertical_pedal_bar(float val, int initial_x_coord) {
+    double ZERO_PERCENT_VAL = 175;
+    val = (val > 100) ? val = 100 : (val < 0) ? val = 0 : val = val;
+    int i = (int) (100-val) * (ZERO_PERCENT_VAL/100.0);
+    _display.fillRect(initial_x_coord, 35, 18, i, WHITE);
+}
 
+void dashDisplay::draw_battery_bar(int percent) {
+    // 0%: 59
+    // 100% 0
+    int w = (100-percent) * (59.0/100);
+    lcdHelper::draw_rectangle_right_corner(103, 220, w, 8, WHITE);
+}
+
+void lcdHelper::display_refresh() 
+{
     _display.refresh();
+}
+void lcdHelper::draw_rectangle_right_corner(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+    for (int16_t i = x; i > x-w; i--) {
+        _display.writeFastVLine(i, y, h, color);
+    }
+    // _display.refresh();
 }
