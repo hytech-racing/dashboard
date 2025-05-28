@@ -36,6 +36,7 @@ namespace dashDisplay
     void draw_battery_bar(int percent);
     void display_speeds(float rpm);
     extern uint8_t current_page;
+    void draw_icons();
 };
 
 namespace lcdHelper
@@ -43,6 +44,7 @@ namespace lcdHelper
     void draw_rectangle_right_corner(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
     void display_refresh();
     String twoDigits(int number);
+    void draw_popup(String title);
 };
 
 namespace conversions

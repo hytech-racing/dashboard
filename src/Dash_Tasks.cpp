@@ -40,6 +40,7 @@ HT_TASK::TaskResponse init_screen_task(const unsigned long& sys_micros, const HT
 
 HT_TASK::TaskResponse screen_refresh_task(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info)
 {
+    dashDisplay::draw_background_bitmap();
     dashDisplay::draw_vertical_pedal_bar(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.brake_percent, 17);
     dashDisplay::draw_battery_bar(ACUInterfaceInstance::instance().get_curr_data().pack_voltage * 100.0 / 530.0);
     

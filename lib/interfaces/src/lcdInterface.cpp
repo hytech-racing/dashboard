@@ -1,6 +1,6 @@
 #include "lcdInterface.h"
 
-Adafruit_SharpMem _display(SHARP_CLK, SHARP_MOSI, SHARP_CS, 400, 240);
+Adafruit_SharpMem _display(SHARP_CLK, SHARP_MOSI, SHARP_CS, 320, 240); //bigger display is 320x240 smaller one is 400x240
 
 
 void dashDisplay::init() {
@@ -54,7 +54,7 @@ void dashDisplay::draw_background_bitmap() {
     _display.fillRect(283, 36, 305-283, 210-36, BLACK);
     _display.fillRect(283-3, (36 + 210 - 36)/2+15, 25, 7, WHITE);
     _display.fillRect(0, 215, 130, 25, WHITE);
-    // _display.fillRect(100, 5, 100, 20, BLACK);
+    _display.fillRect(100, 5, 100, 20, BLACK);
 }
 
 // draws white rect top down
@@ -68,8 +68,8 @@ void dashDisplay::draw_vertical_pedal_bar(float val, int initial_x_coord) {
 void dashDisplay::draw_battery_bar(int percent) {
     // 0%: 59
     // 100% 0
-    int w = (100-percent) * (59.0/100);
-    lcdHelper::draw_rectangle_right_corner(103, 220, w, 8, WHITE);
+    int w = (100-percent) * (96.0/100);
+    lcdHelper::draw_rectangle_right_corner(197, 7, w, 16, WHITE);
 }
 
 
@@ -94,6 +94,43 @@ void dashDisplay::display_speeds(float rpm) {
     _display.setFont(&FreeSans12pt7b);
 }
 
+// void dashDisplay::draw_icons(MCU_STATUS_t *m, VN_STATUS_t *v) {
+
+//     /* no gps icon   = 0 */
+//     /* vn flashing   = 1 */
+//     /* vn solid      = 2 */
+
+//     /* all units are pixels */
+//     int offset = 3;
+//     int icon_size = 27;
+
+//     /* horizontal icons on top of the screen */
+//     int gps_icon_pos_x = 270 - icon_size - offset;
+//     int rtd_icon_pos_x = gps_icon_pos_x - icon_size - offset;
+//     int latched_icon_pos_x = rtd_icon_pos_x - icon_size - 1;
+//     int icon_pos_y = 40;
+
+//     if (v->vn_gps_status >= 2) {
+//         _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_gps, 27, 27, BLACK);
+//     } else if (v->vn_gps_status == 1){
+//         if (blink()) { _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_gps, 27, 27, BLACK); }
+//     } else if (v->vn_gps_status == 0) {
+//         _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_nogps, 27, 27, BLACK);
+//     }
+
+//     if (check_ready_to_drive(m)) {
+//         _display.drawBitmap(rtd_icon_pos_x, icon_pos_y, epd_bitmap_rtd, 27, 27, BLACK);
+//     } else {
+//         if (blink()) { _display.drawBitmap(rtd_icon_pos_x, icon_pos_y, epd_bitmap_rtd, 27, 27, BLACK); }
+//     }
+
+//     if (check_latched(m)) {
+//         _display.drawBitmap(latched_icon_pos_x, icon_pos_y, epd_bitmap_latch_symbol, 27, 27, BLACK);
+//     } else {
+//         if (blink()) { _display.drawBitmap(latched_icon_pos_x, icon_pos_y, epd_bitmap_latch_symbol, 27, 27, BLACK); }
+//     }
+// }
+
 void lcdHelper::display_refresh() 
 {
     _display.refresh();
@@ -115,4 +152,19 @@ String lcdHelper::twoDigits(int number) {
         return String(number/10);
     }
     return String(number);
+}
+
+void lcdHelper::draw_popup(String title) {
+    int width = 200;
+    int height = 150;
+    _display.fillRect(160-(width/2), 120 - (height/2), width, height, BLACK);
+    width-=10;
+    height-=10;
+    _display.fillRect(160-(width/2), 120 - (height/2), width, height, WHITE);
+    _display.setFont(&FreeSansBold12pt7b);
+    _display.setCursor(160-(width/2)+1, 120 - (height/2)+20);
+    int x = _display.getCursorX();
+    _display.println(title);
+    _display.setFont(&FreeSans12pt7b);
+    _display.setCursor(x, _display.getCursorY());
 }
