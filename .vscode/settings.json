@@ -5,6 +5,7 @@
         "atomic": "cpp",
         "istream": "cpp",
         "sstream": "cpp",
-        "streambuf": "cpp"
+        "streambuf": "cpp",
+        "compare": "cpp"
     }
 }

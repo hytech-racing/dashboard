@@ -24,8 +24,6 @@
 #define SHARP_MOSI PB0
 
 
-
-
 namespace dashDisplay 
 {
     void init();
@@ -36,15 +34,26 @@ namespace dashDisplay
     void draw_background_bitmap();
     void draw_vertical_pedal_bar(float val, int initial_x_coord);
     void draw_battery_bar(int percent);
-
-    int curr_page = 0;
+    void display_speeds(float rpm);
+    extern uint8_t current_page;
 };
 
 namespace lcdHelper
 {
     void draw_rectangle_right_corner(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
     void display_refresh();
+    String twoDigits(int number);
 };
+
+namespace conversions
+{
+        // MPH conversion
+    const float GEARBOX_RATIO =             11.86; //TODO: Need to update
+    const float WHEEL_DIAMETER =            0.4064; // meters NEED to update
+    const float RPM_TO_METERS_PER_SECOND =  WHEEL_DIAMETER * 3.1415 / GEARBOX_RATIO / 60.0; //TODO: Need to update
+    const float METERS_PER_SECOND_TO_RPM =  1.0 / RPM_TO_METERS_PER_SECOND;
+    const float METERS_PER_SECOND_TO_MPH =  2.2369;
+}
 
 enum StartupAnimations {
     NONE,

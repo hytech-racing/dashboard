@@ -44,7 +44,7 @@ HT_TASK::TaskResponse read_can_task(const unsigned long& sysMicros, const HT_TAS
 
 // Task Init
 HT_TASK::Task neopixels_task(&init_neopixels_task, &run_update_neopixels_task, NEOPIXEL_UPDATE_PRIORITY, NEOPIXEL_UPDATE_PERIOD);
-
+HT_TASK::Task screen_task(&init_screen_task, &screen_refresh_task, SCREEN_REFRESH_PRIORITY, SCREEN_REFRESH_PERIOD); // 100 ms period
 
 
 void setup() {
@@ -52,7 +52,7 @@ void setup() {
   // Create Interfaces
   ACUInterfaceInstance::create();
   VCRInterfaceInstance::create();
-  VCFInterfaceInstance::create(sys_time::hal_millis(), 50UL); //needs to be updated to use constexpr
+  VCFInterfaceInstance::create(sys_time::hal_millis(), 50UL); //TODO: needs to be updated to use constexpr
 
   VCRData_sInstance::create();
   VCFData_sInstance::create();
@@ -63,20 +63,16 @@ void setup() {
   //DashCANInterfaceObjectsInstance::create(main_can_recv, &stm_can); // NOLINT (Not sure why it's uninitialized. I think it is.)
 
 
-  dashDisplay::init();
-  dashDisplay::startup();
-
 
   // Setup scheduler
   HT_SCHED::Scheduler::getInstance().setTimingFunction(micros);
 
   HT_SCHED::Scheduler::getInstance().schedule(neopixels_task);
-
+  HT_SCHED::Scheduler::getInstance().schedule(screen_task);
 
 
 }
 
 void loop() {
-    delay(500); // 1/2 sec delay
     HT_SCHED::Scheduler::getInstance().run();
 }

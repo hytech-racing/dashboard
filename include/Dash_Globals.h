@@ -3,6 +3,7 @@
 
 #include <etl/singleton.h>
 #include "SharedFirmwareTypes.h"
+#include "variant_generic.h"
 
 /* Interface and system data structs */
 using VCFData_sInstance = etl::singleton<VCFData_s>;
@@ -14,4 +15,6 @@ constexpr int NEOPIXEL_COUNT = 12; // 12 neopixeles on dashboard
 
 /* Interface and system data structs */
 extern VCRData_s vcr_data; // NOLINT
+
+
 #endif

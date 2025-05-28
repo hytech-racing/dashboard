@@ -72,6 +72,28 @@ void dashDisplay::draw_battery_bar(int percent) {
     lcdHelper::draw_rectangle_right_corner(103, 220, w, 8, WHITE);
 }
 
+
+void dashDisplay::display_speeds(float rpm) {
+    _display.setFont(&FreeSans24pt7b);
+    _display.setTextSize(2);
+
+    _display.setCursor(100, 140);
+    /** TODO: convert from RPM to MPH*/
+    double wheelspeed = abs(rpm * conversions::RPM_TO_METERS_PER_SECOND);
+    // SerialUSB.println(wheelspeed);
+    uint16_t mph = (int) (wheelspeed * conversions::METERS_PER_SECOND_TO_MPH);
+    // SerialUSB.println(mph);
+    _display.println(lcdHelper::twoDigits(mph));
+    // _display.println(HYTECH_low_voltage_ro_fromS(bms_voltages->low_voltage_ro));
+
+    // _display.println(mph);
+    _display.setTextSize(1);
+    _display.setFont(&FreeSans12pt7b);
+    _display.setCursor(125, 165);
+    _display.print("MPH");
+    _display.setFont(&FreeSans12pt7b);
+}
+
 void lcdHelper::display_refresh() 
 {
     _display.refresh();
@@ -81,4 +103,16 @@ void lcdHelper::draw_rectangle_right_corner(int16_t x, int16_t y, int16_t w, int
         _display.writeFastVLine(i, y, h, color);
     }
     // _display.refresh();
+}
+String lcdHelper::twoDigits(int number) {
+    if(number <= 9) {
+        return "0" + String(number);
+    }
+    if(number >= 10 && number <= 99) {
+        return String(number);
+    }
+    if(number >=100 && number <=999) {
+        return String(number/10);
+    }
+    return String(number);
 }
