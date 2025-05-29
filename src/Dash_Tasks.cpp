@@ -50,6 +50,12 @@ HT_TASK::TaskResponse screen_refresh_task(const unsigned long& sys_micros, const
             dashDisplay::display_speeds(VCRInterfaceInstance::instance().get_curr_wheel_data().actual_speed);
             break;
     }
+
+    if (!(ACUInterfaceInstance::instance().imd_ok && ACUInterfaceInstance::instance().bms_ok))
+    {
+        lcdHelper::draw_popup("DANGER! GET OUT FAST!");
+    }
+
     lcdHelper::display_refresh();
     return HT_TASK::TaskResponse::YIELD;
 }
