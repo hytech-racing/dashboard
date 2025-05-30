@@ -36,7 +36,7 @@ namespace dashDisplay
     void draw_battery_bar(int percent);
     void display_speeds(float rpm);
     extern uint8_t current_page;
-    void draw_icons(uint8_t vn_status, uint8_t car_state, bool is_latched);
+    void draw_icons(uint8_t vn_status, uint8_t car_state, bool is_latched, bool db_in_ctrl);
 };
 
 namespace lcdHelper

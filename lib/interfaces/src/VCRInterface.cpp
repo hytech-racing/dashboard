@@ -14,4 +14,10 @@ void VCRInterface::receive_inv_dynamics(const CAN_message_t &can_msg, unsigned l
     _wheel_data.last_recv_millis = curr_millis;
 }
 
+void VCRInterface::receive_vehicle_state(const CAN_message_t &can_msg, unsigned long curr_millis)
+{
+    VEHICLE_STATE_t unpacked_msg;
+    Unpack_VEHICLE_STATE_hytech(&unpacked_msg, can_msg.buf, can_msg.len);
 
+    _car_state.drivetrain_state = unpacked_msg.drivetrain_state;    
+}

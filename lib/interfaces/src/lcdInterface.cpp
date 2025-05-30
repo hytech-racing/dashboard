@@ -97,7 +97,7 @@ void dashDisplay::display_speeds(float rpm) {
     _display.setFont(&FreeSans12pt7b);
 }
 
-void dashDisplay::draw_icons(uint8_t vn_status, uint8_t car_state, bool is_latched) {
+void dashDisplay::draw_icons(uint8_t vn_status, uint8_t car_state, bool is_latched, bool db_in_ctrl) {
 
     /* no gps icon   = 0 */
     /* vn flashing   = 1 */
@@ -121,11 +121,13 @@ void dashDisplay::draw_icons(uint8_t vn_status, uint8_t car_state, bool is_latch
         _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_nogps, 27, 27, BLACK);
     }
 
-    // if (check_ready_to_drive(m)) {
+    // if (car_state) {
     //     _display.drawBitmap(rtd_icon_pos_x, icon_pos_y, epd_bitmap_rtd, 27, 27, BLACK);
     // } else {
-    //     if (blink()) { _display.drawBitmap(rtd_icon_pos_x, icon_pos_y, epd_bitmap_rtd, 27, 27, BLACK); }
-    // }
+    //   if (lcdHelper::blink()) { _display.drawBitmap(rtd_icon_pos_x, icon_pos_y, epd_bitmap_rtd, 27, 27, BLACK); }
+
+
+    
 
     // if (check_latched(m)) {
     //     _display.drawBitmap(latched_icon_pos_x, icon_pos_y, epd_bitmap_latch_symbol, 27, 27, BLACK);
