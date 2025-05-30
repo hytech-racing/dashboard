@@ -17,7 +17,10 @@ struct MotorMechanics_s
     float actual_speed; //rpm
 };
 
-
+struct VectorNavStatus_s
+{
+    uint8_t vn_status;
+};
 class VCRInterface 
 {
     public:
@@ -28,6 +31,8 @@ class VCRInterface
         void receive_inv_dynamics(const CAN_message_t &can_msg, unsigned long curr_millis);
 
         MotorMechanics_s get_curr_wheel_data() {return _wheel_data;}
+
+        void receive_vn_status(const CAN_message_t &can_msg);
 
 
         // void receive_dash_control_data(const CAN_message_t &can_msg)
@@ -50,6 +55,7 @@ class VCRInterface
         TorqueLimit_e _torque_limit = TorqueLimit_e::TCMUX_LOW_TORQUE;
         bool _is_in_pedals_calibration_state = false;
         MotorMechanics_s _wheel_data; 
+        VectorNavStatus_s _vn_status;
 };
 
 

@@ -1,7 +1,7 @@
 #include "VCRInterface.h"
 
-void VCRInterface::receive_inv_dynamics(const CAN_message_t &can_msg, unsigned long curr_millis) {
-
+void VCRInterface::receive_inv_dynamics(const CAN_message_t &can_msg, unsigned long curr_millis) 
+{
     // Unpack the message
     INV1_DYNAMICS_t unpacked_msg;
     Unpack_INV1_DYNAMICS_hytech(&unpacked_msg, can_msg.buf, can_msg.len);
@@ -12,5 +12,12 @@ void VCRInterface::receive_inv_dynamics(const CAN_message_t &can_msg, unsigned l
     _wheel_data.actual_speed = unpacked_msg.actual_speed_rpm;
     _wheel_data.new_data = true;
     _wheel_data.last_recv_millis = curr_millis;
+}
 
+void VCRInterface::receive_vn_status(const CAN_message_t &can_msg)
+{
+    VN_STATUS_t unpacked_msg;
+    Unpack_VN_STATUS_hytech(&unpacked_msg, can_msg.buf, can_msg.len);
+
+    _vn_status.vn_status = unpacked_msg.vn_gps_status;
 }

@@ -1,6 +1,9 @@
 #include "lcdInterface.h"
 
-Adafruit_SharpMem _display(SHARP_CLK, SHARP_MOSI, SHARP_CS, 320, 240); //bigger display is 320x240 smaller one is 400x240
+Adafruit_SharpMem _display(SHARP_CLK, SHARP_MOSI, SHARP_CS, 400, 240); //bigger display is 320x240 smaller one is 400x240
+
+bool lcdHelper::last_blink = false;
+uint32_t lcdHelper::last_blink_millis = 0;
 
 
 void dashDisplay::init() {
@@ -94,42 +97,42 @@ void dashDisplay::display_speeds(float rpm) {
     _display.setFont(&FreeSans12pt7b);
 }
 
-// void dashDisplay::draw_icons(MCU_STATUS_t *m, VN_STATUS_t *v) {
+void dashDisplay::draw_icons(uint8_t vn_status, uint8_t car_state, bool is_latched) {
 
-//     /* no gps icon   = 0 */
-//     /* vn flashing   = 1 */
-//     /* vn solid      = 2 */
+    /* no gps icon   = 0 */
+    /* vn flashing   = 1 */
+    /* vn solid      = 2 */
 
-//     /* all units are pixels */
-//     int offset = 3;
-//     int icon_size = 27;
+    /* all units are pixels */
+    int offset = 3;
+    int icon_size = 27;
 
-//     /* horizontal icons on top of the screen */
-//     int gps_icon_pos_x = 270 - icon_size - offset;
-//     int rtd_icon_pos_x = gps_icon_pos_x - icon_size - offset;
-//     int latched_icon_pos_x = rtd_icon_pos_x - icon_size - 1;
-//     int icon_pos_y = 40;
+    /* horizontal icons on top of the screen */
+    int gps_icon_pos_x = 270 - icon_size - offset;
+    int rtd_icon_pos_x = gps_icon_pos_x - icon_size - offset;
+    int latched_icon_pos_x = rtd_icon_pos_x - icon_size - 1;
+    int icon_pos_y = 40;
 
-//     if (v->vn_gps_status >= 2) {
-//         _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_gps, 27, 27, BLACK);
-//     } else if (v->vn_gps_status == 1){
-//         if (blink()) { _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_gps, 27, 27, BLACK); }
-//     } else if (v->vn_gps_status == 0) {
-//         _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_nogps, 27, 27, BLACK);
-//     }
+    if (vn_status >= 2) {
+        _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_gps, 27, 27, BLACK);
+    } else if (vn_status == 1){
+        if (lcdHelper::blink()) { _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_gps, 27, 27, BLACK); }
+    } else if (vn_status == 0) {
+        _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_nogps, 27, 27, BLACK);
+    }
 
-//     if (check_ready_to_drive(m)) {
-//         _display.drawBitmap(rtd_icon_pos_x, icon_pos_y, epd_bitmap_rtd, 27, 27, BLACK);
-//     } else {
-//         if (blink()) { _display.drawBitmap(rtd_icon_pos_x, icon_pos_y, epd_bitmap_rtd, 27, 27, BLACK); }
-//     }
+    // if (check_ready_to_drive(m)) {
+    //     _display.drawBitmap(rtd_icon_pos_x, icon_pos_y, epd_bitmap_rtd, 27, 27, BLACK);
+    // } else {
+    //     if (blink()) { _display.drawBitmap(rtd_icon_pos_x, icon_pos_y, epd_bitmap_rtd, 27, 27, BLACK); }
+    // }
 
-//     if (check_latched(m)) {
-//         _display.drawBitmap(latched_icon_pos_x, icon_pos_y, epd_bitmap_latch_symbol, 27, 27, BLACK);
-//     } else {
-//         if (blink()) { _display.drawBitmap(latched_icon_pos_x, icon_pos_y, epd_bitmap_latch_symbol, 27, 27, BLACK); }
-//     }
-// }
+    // if (check_latched(m)) {
+    //     _display.drawBitmap(latched_icon_pos_x, icon_pos_y, epd_bitmap_latch_symbol, 27, 27, BLACK);
+    // } else {
+    //     if (blink()) { _display.drawBitmap(latched_icon_pos_x, icon_pos_y, epd_bitmap_latch_symbol, 27, 27, BLACK); }
+    // }
+}
 
 void lcdHelper::display_refresh() 
 {
@@ -167,4 +170,12 @@ void lcdHelper::draw_popup(String title) {
     _display.println(title);
     _display.setFont(&FreeSans12pt7b);
     _display.setCursor(x, _display.getCursorY());
+}
+
+bool lcdHelper::blink() {
+    if((millis() - lcdHelper::last_blink_millis) > 200) {
+        lcdHelper::last_blink = !last_blink;
+        lcdHelper::last_blink_millis = millis();
+    }
+    return lcdHelper::last_blink;
 }

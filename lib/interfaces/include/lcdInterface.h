@@ -36,7 +36,7 @@ namespace dashDisplay
     void draw_battery_bar(int percent);
     void display_speeds(float rpm);
     extern uint8_t current_page;
-    void draw_icons();
+    void draw_icons(uint8_t vn_status, uint8_t car_state, bool is_latched);
 };
 
 namespace lcdHelper
@@ -45,6 +45,9 @@ namespace lcdHelper
     void display_refresh();
     String twoDigits(int number);
     void draw_popup(String title);
+    bool blink();
+    extern bool last_blink;
+    extern uint32_t last_blink_millis;
 };
 
 namespace conversions
