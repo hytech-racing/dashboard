@@ -26,7 +26,7 @@ class ACUInterface
         void receive_acu_voltages(const CAN_message_t &msg);
 
         bool bms_ok = true;
-        bool imd_ok = true;
+        bool imd_ok = false;
     private: 
         ACUCoreData_s _last_recvd_data;
         bool _voltages_not_critical = false;

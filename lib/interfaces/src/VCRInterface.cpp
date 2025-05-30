@@ -14,10 +14,4 @@ void VCRInterface::receive_inv_dynamics(const CAN_message_t &can_msg, unsigned l
     _wheel_data.last_recv_millis = curr_millis;
 }
 
-void VCRInterface::receive_vn_status(const CAN_message_t &can_msg)
-{
-    VN_STATUS_t unpacked_msg;
-    Unpack_VN_STATUS_hytech(&unpacked_msg, can_msg.buf, can_msg.len);
 
-    _vn_status.vn_status = unpacked_msg.vn_gps_status;
-}

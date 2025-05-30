@@ -25,6 +25,17 @@ void DashCAN::dash_read_switch(CANInterfaces &interfaces, const CAN_message_t &m
                   interfaces.vcf_interface.receive_pedals_message(msg, millis);
                   break;
               }
+              case INV1_DYNAMICS_CANID:
+              {
+                interfaces.vcr_interface.receive_inv_dynamics(msg, millis);
+                break;
+              }
+              case DRIVEBRAIN_STATE_DATA_CANID:
+              {
+                interfaces.db_interface.receive_db_state_data(msg);
+                break;
+              }
+
               default:
                   break;
           }

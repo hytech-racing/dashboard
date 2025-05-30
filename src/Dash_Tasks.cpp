@@ -43,7 +43,7 @@ HT_TASK::TaskResponse screen_refresh_task(const unsigned long& sys_micros, const
     dashDisplay::draw_background_bitmap();
     dashDisplay::draw_vertical_pedal_bar(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.brake_percent, 17);
     dashDisplay::draw_battery_bar(ACUInterfaceInstance::instance().get_curr_data().pack_voltage * 100.0 / 530.0);
-    dashDisplay::draw_icons(1, 0, 0);
+    dashDisplay::draw_icons(DrivebrainInterfaceInstance::instance().get_db_state_data().vn_status, 0, 0);
     
     switch(dashDisplay::current_page)
     {
