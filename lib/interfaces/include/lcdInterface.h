@@ -14,9 +14,10 @@
 
 #include "bitmaps.h"
 
+#include "etl/singleton.h"
+
 // Defines
-#define BLACK 0
-#define WHITE 1
+
 
 #define LED_PIN PA3
 #define SHARP_CS PC4
@@ -24,8 +25,11 @@
 #define SHARP_MOSI PB0
 
 
-namespace dashDisplay 
+class DashboardDisplay
 {
+    public:
+    Adafruit_SharpMem _display; //bigger display is 320x240 smaller one is 400x240
+    DashboardDisplay(uint8_t CLK_PIN, uint8_t MOSI_PIN, uint8_t CS_PIN, uint16_t Width, uint16_t Height) : _display(CLK_PIN, MOSI_PIN, CS_PIN, Width, Height) {}
     void init();
     void startup();
     void hytech_animation();
@@ -35,20 +39,26 @@ namespace dashDisplay
     void draw_vertical_pedal_bar(float val, int initial_x_coord);
     void draw_battery_bar(int percent);
     void display_speeds(float rpm);
-    extern uint8_t current_page;
-    void draw_icons(uint8_t vn_status, uint8_t car_state, bool is_latched, bool db_in_ctrl);
+    void draw_icons(uint8_t vn_status, uint8_t car_state, bool db_in_ctrl, bool is_latched);
+    void invert_display(bool invert_criteria);
+    void draw_popup(String title);
+    void display_refresh();
+    uint8_t current_page = 0;
+    
+    private:
+        void draw_rectangle_right_corner(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+        String twoDigits(int number);
+        bool blink();
+
+
+        bool last_blink = false;
+        uint32_t last_blink_millis = 0;
+        uint16_t _black;
+        uint16_t _white;
 };
 
-namespace lcdHelper
-{
-    void draw_rectangle_right_corner(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
-    void display_refresh();
-    String twoDigits(int number);
-    void draw_popup(String title);
-    bool blink();
-    extern bool last_blink;
-    extern uint32_t last_blink_millis;
-};
+using dashDisplayInstance = etl::singleton<DashboardDisplay>;
+
 
 namespace conversions
 {

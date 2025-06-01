@@ -24,6 +24,7 @@ public:
     };
 
     bool is_brake_pressed() {return _curr_data.stamped_pedals.pedals_data.brake_is_pressed; }
+    bool is_mech_brake_pressed() {return _curr_data.stamped_pedals.pedals_data.mech_brake_is_active;}
     bool is_drivetrain_reset_pressed() {return _curr_data.dash_input_state.mc_reset_btn_is_pressed; }
     bool is_recalibrate_pedals_button_pressed() {return _curr_data.dash_input_state.preset_btn_is_pressed; }
     bool is_pedals_heartbeat_not_ok() {return !_curr_data.stamped_pedals.heartbeat_ok; }

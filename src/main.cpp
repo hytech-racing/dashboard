@@ -20,6 +20,11 @@
 #include "VCRInterface.h"
 
 
+#define LED_PIN PA3
+#define SHARP_CS PC4
+#define SHARP_CLK PC10
+#define SHARP_MOSI PB0
+
 STM32_CAN stm_can(CAN1, ALT, RX_SIZE_256, TX_SIZE_16);
 static CAN_message_t telem_can_rx_msg;
 
@@ -53,6 +58,7 @@ void setup() {
   ACUInterfaceInstance::create();
   VCRInterfaceInstance::create();
   VCFInterfaceInstance::create(sys_time::hal_millis(), 50UL); //TODO: needs to be updated to use constexpr
+  dashDisplayInstance::create(SHARP_CLK, SHARP_MOSI, SHARP_CS, 400, 240);
 
   VCRData_sInstance::create();
   VCFData_sInstance::create();
