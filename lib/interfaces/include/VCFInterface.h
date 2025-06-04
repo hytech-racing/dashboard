@@ -2,7 +2,7 @@
 #define VCFINTERFACE_H
 
 
-#include <STM32_CAN.h>
+#include "CANInterface.h"
 #include <SharedFirmwareTypes.h>
 #include <etl/singleton.h>
 

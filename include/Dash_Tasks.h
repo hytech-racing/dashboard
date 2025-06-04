@@ -1,7 +1,7 @@
 #ifndef DASH_TASKS_H
 #define DASH_TASKS_H
 
-#include <STM32_CAN.h>
+#include "CANInterface.h"
 #include "DashCANInterfaceImpl.h"
 #include <ht_sched.hpp>
 #include <ht_task.hpp>

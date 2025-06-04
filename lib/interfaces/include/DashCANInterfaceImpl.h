@@ -1,7 +1,7 @@
 #ifndef DASHCANINTERFACEIMPL_H
 #define DASHCANINTERFACEIMPL_H
 
-#include <STM32_CAN.h>
+#include "CANInterface.h"
 #include "hytech.h"
 
 #include "etl/delegate.h"

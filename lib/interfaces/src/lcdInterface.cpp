@@ -56,7 +56,7 @@ void DashboardDisplay::draw_background_bitmap() {
     _display.fillRect(283, 36, 305-283, 210-36, _black);
     _display.fillRect(283-3, (36 + 210 - 36)/2+15, 25, 7, _white);
     _display.fillRect(0, 215, 130, 25, _white);
-    //_display.fillRect(100, 5, 100, 20, _black);
+    _display.fillRect(100, 5, 100, 20, _black);
 }
 
 // draws _white rect top down

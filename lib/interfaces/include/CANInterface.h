@@ -1,77 +1,32 @@
-#ifndef CANINTERFACE
-#define CANINTERFACE
+#ifndef STM32_CAN_H
+#define STM32_CAN_H
 
-#include <cstdint>
-#include "STM32_CAN.h"
+#include "stm32h7xx_hal.h"
+#include "stm32h750xx.h"
+#include <stdint.h>
 
-#include "etl/delegate.h"
+#define FDCAN_TypeDef FDCAN_GlobalTypeDef
+#include "stm32h7xx_hal_fdcan.h"
+// You can adjust this to fit your message structure
+typedef struct {
+    uint32_t id;
+    uint8_t extended;
+    uint8_t dlc;
+    uint8_t data[64];
+    uint8_t* buf;
+    uint8_t len;
+} CAN_message_t;
 
+class STM32_CAN {
+public:
+    STM32_CAN(FDCAN_TypeDef* instance);
 
-/**
- * @brief CAN setup function for stm32 devices
- * 
- * @tparam CAN_DEVICE the type of the CAN device being used 
- * @param CAN_dev ref to the CAN device to be setup
- * @param baudrate the baudrate to set the device to have
- * @param on_recv_func the receive function callback that will get registered to be ran on the receive of a CAN message
- */
-template <typename CAN_DEVICE>
-void handle_stm_CAN_setup(CAN_DEVICE& CAN_dev, uint32_t baudrate, void (*on_recv_func)(const CAN_message_t &msg))
-{
-    CAN_dev.begin();
-    CAN_dev.setBaudRate(baudrate);
-}
+    bool begin();
+    bool read(CAN_message_t& msg);
+    bool write(const CAN_message_t& msg);
 
-// reads from receive buffer updating the current message frame from a specific receive buffer
-// TODO ensure that all of the repeated interfaces are at the correct IDs
-/*
- Reads from the s    CAN_dev.onReceive(on_recv_func);pecified receive buffer and passes through messages to
- the callback associated with the CAN message ID.
-*/
+private:
+    FDCAN_HandleTypeDef hfdcan;
+};
 
-/**
- * @brief handles reading from a receive buffer updating the current message frame from a specific receive buffer. pass through messages to the callback specified using the delegate function
- * 
- * @tparam BufferType CAN message receive buffer type (::pop_front(buf, len))
- * @tparam InterfaceContainer the type of struct holding refs / pointers to CAN interfaces that have receive callbacks
- * @param rx_buffer ref to receive buffer being received from
- * @param interfaces ref to interfaces struct (passed to the recv_switch_function)
- * @param curr_millis current millis 
- * @param recv_switch_func the receive function that gets called and is given the interfaces ref, CAN message struct and millis timestamp. expected to contain switch statement.
- */
-// template <typename CAN_dev, typename InterfaceContainer, typename msg_buffer>
-// void process_ring_buffer(CAN_dev &can, msg_buffer &msg, InterfaceContainer &interfaces, unsigned long curr_millis, etl::delegate<void(InterfaceContainer& interfaces, const CAN_message_t& CAN_msg, unsigned long curr_millis)> recv_switch_func)
-// {
-//     if (can.read(msg))
-//     {
-//         CAN_message_t recvd_msg = msg;
-//         uint8_t buf[sizeof(CAN_message_t)];
-//         rx_buffer.pop_front(buf, sizeof(CAN_message_t));
-//         memmove(&recvd_msg, buf, sizeof(recvd_msg));
-//         recv_switch_func(interfaces, recvd_msg, curr_millis);
-//     }
-// }
-
-namespace CAN_util
-{
-    template <typename can_struct, typename queue_type>
-    void enqueue_msg(can_struct* structure, uint32_t (* pack_function)(can_struct*, uint8_t*, uint8_t*, uint8_t*), queue_type& CAN_msg_out_queue) {
-        CAN_message_t can_msg;
-        can_msg.id = pack_function(structure, can_msg.buf, &can_msg.len, (uint8_t*) &can_msg.flags.extended);
-        uint8_t buf[sizeof(CAN_message_t)] = {};
-        memmove(buf, &can_msg, sizeof(CAN_message_t));
-        CAN_msg_out_queue.push_back(buf, sizeof(CAN_message_t));
-    }
-
-    template <typename can_struct, typename queue_type>
-    void enqueue_msg(can_struct* structure, uint32_t (* pack_function)(can_struct*, uint8_t*, uint8_t*, uint8_t*), queue_type& CAN_msg_out_queue, uint32_t id) {
-        CAN_message_t can_msg;
-        pack_function(structure, can_msg.buf, &can_msg.len, (uint8_t*) &can_msg.flags.extended);
-        can_msg.id = id;
-        uint8_t buf[sizeof(CAN_message_t)] = {};
-        memmove(buf, &can_msg, sizeof(CAN_message_t));
-        CAN_msg_out_queue.push_back(buf, sizeof(CAN_message_t));
-    }
-}
-
-#endif /* CANINTERFACE */
+#endif

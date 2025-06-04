@@ -6,6 +6,7 @@
         "istream": "cpp",
         "sstream": "cpp",
         "streambuf": "cpp",
-        "compare": "cpp"
+        "compare": "cpp",
+        "stm32h7xx_hal_fdcan.h": "c"
     }
 }

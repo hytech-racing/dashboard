@@ -2,7 +2,7 @@
 #define VCR_INTERFACE_H
 
 #include "etl/singleton.h"
-#include "STM32_CAN.h"
+#include "CANInterface.h"
 #include "SharedFirmwareTypes.h"
 #include "hytech.h"
 

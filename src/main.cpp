@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include <SPI.h>
-#include <STM32_CAN.h>
+#include "CANInterface.h"
 #include <cstdint>
 #include "Dash_Constants.h"
 #include "Dash_Globals.h"
@@ -25,15 +25,14 @@
 #define SHARP_CLK PC10
 #define SHARP_MOSI PB0
 
-STM32_CAN stm_can(CAN1, ALT, RX_SIZE_256, TX_SIZE_16);
 static CAN_message_t telem_can_rx_msg;
+STM32_CAN stm_can(FDCAN1);
 
 
 
 HT_TASK::TaskResponse init_can_task()
 {
     stm_can.begin();
-    stm_can.setBaudRate(115200);
     return HT_TASK::TaskResponse::YIELD;
 }
 
@@ -58,7 +57,7 @@ void setup() {
   ACUInterfaceInstance::create();
   VCRInterfaceInstance::create();
   VCFInterfaceInstance::create(sys_time::hal_millis(), 50UL); //TODO: needs to be updated to use constexpr
-  dashDisplayInstance::create(SHARP_CLK, SHARP_MOSI, SHARP_CS, 400, 240);
+  dashDisplayInstance::create(SHARP_CLK, SHARP_MOSI, SHARP_CS, 320, 240); 
 
   VCRData_sInstance::create();
   VCFData_sInstance::create();
