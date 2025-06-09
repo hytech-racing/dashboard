@@ -20,9 +20,9 @@
 
 
 #define LED_PIN PA3
-#define SHARP_CS PC4
-#define SHARP_CLK PC10
-#define SHARP_MOSI PB0
+#define SHARP_CS PB7
+#define SHARP_CLK PB10
+#define SHARP_MOSI PB15
 
 
 class DashboardDisplay

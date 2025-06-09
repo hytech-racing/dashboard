@@ -1,4 +1,4 @@
-#include "CanInterface.h"
+#include "CANInterface.h"
 
 // Constructor: sets up the instance pointer
 STM32_CAN::STM32_CAN(FDCAN_TypeDef* instance) {

@@ -7,7 +7,8 @@
 
 #define FDCAN_TypeDef FDCAN_GlobalTypeDef
 #include "stm32h7xx_hal_fdcan.h"
-// You can adjust this to fit your message structure
+
+
 typedef struct {
     uint32_t id;
     uint8_t extended;
