@@ -4,7 +4,7 @@
 #include "SharedFirmwareTypes.h"
 #include "etl/singleton.h"
 #include "hytech.h"
-#include "CANInterface.h"
+#include "H7FDCAN.h"
 #include "SystemTimeInterface.h"
 
 class ACUInterface  

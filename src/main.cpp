@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include <SPI.h>
-#include "CANInterface.h"
+#include "H7FDCAN.h"
 #include <cstdint>
 #include "Dash_Constants.h"
 #include "Dash_Globals.h"
@@ -9,11 +9,11 @@
 #include "SharedFirmwareTypes.h"
 #include "Dash_Tasks.h"
 #include "etl/singleton.h"
-
+d
 #include "ht_task.hpp"
 #include "ht_sched.hpp"
 
-#include "CANInterface.h"
+#include "H7FDCAN.h"
 #include "lcdInterface.h"
 #include "VCFInterface.h"
 #include "ACUInterface.h"
@@ -26,13 +26,13 @@
 #define SHARP_MOSI PB15
 
 static CAN_message_t telem_can_rx_msg;
-STM32_CAN stm_can(FDCAN1);
+STM32_FDCAN stm_can(FDCAN1);
 
 
 
 HT_TASK::TaskResponse init_can_task()
 {
-    stm_can.begin();
+    stm_can.init();
     return HT_TASK::TaskResponse::YIELD;
 }
 

@@ -1,7 +1,7 @@
 #include "Dash_Tasks.h"
 #include "Dash_Constants.h"
 #include "Dash_Globals.h"
-#include "CANInterface.h"
+#include "H7FDCAN.h"
 #include "DashCANInterfaceImpl.h"
 #include "NeopixelController.h"
 #include "SharedFirmwareTypes.h"
