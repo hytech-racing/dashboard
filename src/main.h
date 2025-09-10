@@ -3,8 +3,11 @@
 
 #include "stm32h7xx_hal.h"
 
+
 #define LED_PIN                                GPIO_PIN_3
 #define LED_GPIO_PORT                          GPIOA
 #define LED_GPIO_CLK_ENABLE()                  __HAL_RCC_GPIOA_CLK_ENABLE()
+
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 #endif // MAIN_H
