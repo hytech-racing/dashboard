@@ -1,4 +1,5 @@
- #include "main.h"
+#include "main.h"
+#include "usb_device.h"
 // #include "led.h"
 
 // #include "usbd_core.h"
@@ -20,9 +21,9 @@
 
 TIM_HandleTypeDef htim2;
 
+
 void LED_Init(void);
 void SystemClock_Config(void);
-void USB_CDC_Init(void);
 void Error_Handler(void);
 static void MX_TIM2_Init(void);
 static void MPU_Config(void);
@@ -33,6 +34,7 @@ int main(void)
   HAL_Init();
   SystemClock_Config();
   MX_TIM2_Init();
+  MX_USB_DEVICE_Init();
   //LED_Init();
 
 
@@ -87,6 +89,7 @@ void SysTick_Handler(void)
 
 void Error_Handler(void)
 {
+    __disable_irq();
   while (1)
   {
     HAL_GPIO_TogglePin(LED_GPIO_PORT, LED_PIN);
@@ -118,7 +121,16 @@ void SystemClock_Config(void)
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 5;
+  RCC_OscInitStruct.PLL.PLLN = 48;
+  RCC_OscInitStruct.PLL.PLLP = 14;
+  RCC_OscInitStruct.PLL.PLLQ = 5;
+  RCC_OscInitStruct.PLL.PLLR = 2;
+  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_2;
+  RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
+  RCC_OscInitStruct.PLL.PLLFRACN = 0;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -191,6 +203,8 @@ static void MX_TIM2_Init(void)
   HAL_TIM_MspPostInit(&htim2);
 
 }
+
+/* MPU Configuration */
 
 void MPU_Config(void)
 {

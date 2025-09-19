@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.asm": "riscv",
+        "usb_device.h": "c"
+    }
+}

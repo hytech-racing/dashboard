@@ -9,5 +9,6 @@
 #define LED_GPIO_CLK_ENABLE()                  __HAL_RCC_GPIOA_CLK_ENABLE()
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+void Error_Handler(void);
 
 #endif // MAIN_H
