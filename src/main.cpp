@@ -36,7 +36,7 @@ DMA_HandleTypeDef hdma_spi2_tx;
 
 void custom_handle_error(int num) {
   while(1) {
-    Serial.printf("Error at: %d\n", num);
+    SerialUSB.printf("Error at: %d\n", num);
     delay(100);
   }
 }
@@ -72,7 +72,7 @@ extern "C" void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
     GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_14|GPIO_PIN_15;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
@@ -129,42 +129,48 @@ HT_TASK::Task neopixels_task(&init_neopixels_task, &run_update_neopixels_task, N
 
 
 void setup() {
+
+  pinMode(PB7, OUTPUT);
+  digitalWrite(PB7, HIGH);
+
+  SerialUSB.begin(115200);
+
   
   // Create Interfaces
   ACUInterfaceInstance::create();
   VCRInterfaceInstance::create();
   VCFInterfaceInstance::create(sys_time::hal_millis(), 50UL); //TODO: needs to be updated to use constexpr
   // dashDisplayInstance::create(SHARP_CLK, SHARP_MOSI, SHARP_CS, 320, 240); 
-
+  
   VCRData_sInstance::create();
   VCFData_sInstance::create();
-
+  
   // Create can singletons
   CANInterfacesInstance::create(VCFInterfaceInstance::instance(), ACUInterfaceInstance::instance(), VCRInterfaceInstance::instance(), DrivebrainInterfaceInstance::instance()); 
   auto main_can_recv = etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)>::create<DashCAN::dash_read_switch>();
   //DashCANInterfaceObjectsInstance::create(main_can_recv, &stm_can); // NOLINT (Not sure why it's uninitialized. I think it is.)
-
-
-
+  
+  
+  
   // Setup scheduler
   HT_SCHED::Scheduler::getInstance().setTimingFunction(micros);
-
+  
   HT_SCHED::Scheduler::getInstance().schedule(neopixels_task);
   // HT_SCHED::Scheduler::getInstance().schedule(screen_task);
-
+  
   // Initialize SPI and DMA
   // __HAL_RCC_GPIOB_CLK_ENABLE(); // IDK if this is done already or not
-
+  
   // Init DMA for SPI2
   __HAL_RCC_DMA1_CLK_ENABLE();
-
+  
   HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
-
+  
   hspi2.Instance = SPI2;
   hspi2.Init.Mode = SPI_MODE_MASTER;
   hspi2.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi2.Init.DataSize = SPI_DATASIZE_4BIT;
+  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi2.Init.NSS = SPI_NSS_SOFT;
@@ -183,19 +189,30 @@ void setup() {
   hspi2.Init.MasterReceiverAutoSusp = SPI_MASTER_RX_AUTOSUSP_DISABLE;
   hspi2.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_DISABLE;
   hspi2.Init.IOSwap = SPI_IO_SWAP_DISABLE;
-
+  
   if (HAL_SPI_Init(&hspi2) != HAL_OK)
   {
     custom_handle_error(1);
   }
 
-
+  __HAL_SPI_ENABLE(&hspi2);
+  
+  
+  
 }
 
 void loop() {
     // HT_SCHED::Scheduler::getInstance().run();
 
-    bool tx_success = HAL_SPI_Transmit_DMA(&hspi2, test_tx, sizeof(test_tx)) == HAL_OK;
-    printf("SPI data send successful: %d\n", tx_success);
+
+    digitalWrite(PB7, LOW);
+    // bool tx_success = HAL_SPI_Transmit_DMA(&hspi2, test_tx, sizeof(test_tx)) == HAL_OK;
+    HAL_SPI_Transmit(&hspi2, test_tx, sizeof(test_tx), HAL_MAX_DELAY);
+    digitalWrite(PB7, HIGH);
     delay(500);
-}
+    // SerialUSB.println("TEST");
+    // // delay(500);
+    
+  }
+
+  
