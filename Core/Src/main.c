@@ -28,6 +28,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -61,7 +62,7 @@ static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_FDCAN1_Init(void);
 /* USER CODE BEGIN PFP */
-
+static void FDCAN_Config(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -96,6 +97,8 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+  /* Initialize all configured peripherals */
+
 
   /* USER CODE END SysInit */
 
@@ -108,6 +111,23 @@ int main(void)
   uint8_t send_default[] = "still running\r\n";
   uint8_t send_default_len = sizeof(send_default);
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
+
+  FDCAN_FilterTypeDef sFilterConfig;
+
+  sFilterConfig.IdType = FDCAN_STANDARD_ID;
+  sFilterConfig.FilterIndex = 0;
+  sFilterConfig.FilterType = FDCAN_FILTER_MASK;
+  sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+  sFilterConfig.FilterID1 = 0x22;
+  sFilterConfig.FilterID2 = 0x22;
+  sFilterConfig.RxBufferIndex = 0;
+if (HAL_FDCAN_ConfigFilter(&hfdcan1, &sFilterConfig) != HAL_OK)
+{
+  /* Filter configuration Error */
+  Error_Handler();
+}
+  //HAL_FDCAN_Start(&hfdcan1);
+  FDCAN_Config();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -125,9 +145,26 @@ int main(void)
             __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, duty);
             HAL_Delay(1);
         }
+
+    // Transmit CAN message
+    TxData[0] = 0xAB;  // Example data
+    TxData[1] = 0xCD;  // Example data
+
+    uint32_t free_level = HAL_FDCAN_GetTxFifoFreeLevel(&hfdcan1);
+char debug_msg[64];
+snprintf(debug_msg, sizeof(debug_msg), "TX FIFO Free Level: %lu\r\n", free_level);
+CDC_Transmit_FS((uint8_t *)debug_msg, strlen(debug_msg));
+
+
+if (HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, TxData) != HAL_OK) {
+    char error_msg[] = "CAN TX Error\r\n";
+    CDC_Transmit_FS((uint8_t *)error_msg, strlen(error_msg));
+    HAL_Delay(100);  // Add a delay to prevent spamming
+}
+    CDC_Transmit_FS(send_default, send_default_len);
+    HAL_Delay(100);
     /* USER CODE END WHILE */
-      CDC_Transmit_FS(send_default, send_default_len);
-      HAL_Delay(100);
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -161,7 +198,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 5;
   RCC_OscInitStruct.PLL.PLLN = 48;
-  RCC_OscInitStruct.PLL.PLLP = 14;
+  RCC_OscInitStruct.PLL.PLLP = 2;
   RCC_OscInitStruct.PLL.PLLQ = 5;
   RCC_OscInitStruct.PLL.PLLR = 2;
   RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_2;
@@ -177,7 +214,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2
                               |RCC_CLOCKTYPE_D3PCLK1|RCC_CLOCKTYPE_D1PCLK1;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSE;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.SYSCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV1;
@@ -185,7 +222,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV1;
   RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
     Error_Handler();
   }
@@ -209,29 +246,29 @@ static void MX_FDCAN1_Init(void)
   hfdcan1.Instance = FDCAN1;
   hfdcan1.Init.FrameFormat = FDCAN_FRAME_CLASSIC;
   hfdcan1.Init.Mode = FDCAN_MODE_NORMAL;
-  hfdcan1.Init.AutoRetransmission = DISABLE;
+  hfdcan1.Init.AutoRetransmission = ENABLE;
   hfdcan1.Init.TransmitPause = DISABLE;
   hfdcan1.Init.ProtocolException = DISABLE;
-  hfdcan1.Init.NominalPrescaler = 6;
-  hfdcan1.Init.NominalSyncJumpWidth = 1;
-  hfdcan1.Init.NominalTimeSeg1 = 3;
-  hfdcan1.Init.NominalTimeSeg2 = 4;
-  hfdcan1.Init.DataPrescaler = 1;
-  hfdcan1.Init.DataSyncJumpWidth = 1;
-  hfdcan1.Init.DataTimeSeg1 = 1;
-  hfdcan1.Init.DataTimeSeg2 = 1;
+  hfdcan1.Init.NominalPrescaler = 1;
+  hfdcan1.Init.NominalSyncJumpWidth = 7;
+  hfdcan1.Init.NominalTimeSeg1 = 42;
+  hfdcan1.Init.NominalTimeSeg2 = 7;
+  hfdcan1.Init.DataPrescaler = 2;
+  hfdcan1.Init.DataSyncJumpWidth = 8;
+  hfdcan1.Init.DataTimeSeg1 = 16;
+  hfdcan1.Init.DataTimeSeg2 = 8;
   hfdcan1.Init.MessageRAMOffset = 0;
-  hfdcan1.Init.StdFiltersNbr = 0;
+  hfdcan1.Init.StdFiltersNbr = 1;
   hfdcan1.Init.ExtFiltersNbr = 0;
-  hfdcan1.Init.RxFifo0ElmtsNbr = 0;
+  hfdcan1.Init.RxFifo0ElmtsNbr = 1;
   hfdcan1.Init.RxFifo0ElmtSize = FDCAN_DATA_BYTES_8;
   hfdcan1.Init.RxFifo1ElmtsNbr = 0;
   hfdcan1.Init.RxFifo1ElmtSize = FDCAN_DATA_BYTES_8;
-  hfdcan1.Init.RxBuffersNbr = 0;
+  hfdcan1.Init.RxBuffersNbr = 16;
   hfdcan1.Init.RxBufferSize = FDCAN_DATA_BYTES_8;
   hfdcan1.Init.TxEventsNbr = 0;
   hfdcan1.Init.TxBuffersNbr = 0;
-  hfdcan1.Init.TxFifoQueueElmtsNbr = 0;
+  hfdcan1.Init.TxFifoQueueElmtsNbr = 1;
   hfdcan1.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
   hfdcan1.Init.TxElmtSize = FDCAN_DATA_BYTES_8;
   if (HAL_FDCAN_Init(&hfdcan1) != HAL_OK)
@@ -239,7 +276,20 @@ static void MX_FDCAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN FDCAN1_Init 2 */
+char debug_msg[] = "Initializing FDCAN...\r\n";
+CDC_Transmit_FS((uint8_t *)debug_msg, strlen(debug_msg));
 
+if (HAL_FDCAN_Init(&hfdcan1) != HAL_OK)
+{
+    char error_msg[] = "FDCAN Init Failed\r\n";
+    CDC_Transmit_FS((uint8_t *)error_msg, strlen(error_msg));
+    Error_Handler();
+}
+else
+{
+    char success_msg[] = "FDCAN Init Successful\r\n";
+    CDC_Transmit_FS((uint8_t *)success_msg, strlen(success_msg));
+}
   /* USER CODE END FDCAN1_Init 2 */
 
 }
@@ -321,33 +371,7 @@ static void MX_GPIO_Init(void)
   * @retval None
   */
 static void FDCAN_Config(void)
-{
-  FDCAN_FilterTypeDef sFilterConfig;
-
-  /* Configure Rx filter */
-  sFilterConfig.IdType = FDCAN_STANDARD_ID;
-  sFilterConfig.FilterIndex = 0;
-  sFilterConfig.FilterType = FDCAN_FILTER_RANGE;
-  sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
-  sFilterConfig.FilterID1 = 0xc0;
-  sFilterConfig.FilterID2 = 0x300;
-  if (HAL_FDCAN_ConfigFilter(&hfdcan1, &sFilterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /* Start the FDCAN module */
-  if (HAL_FDCAN_Start(&hfdcan1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  if (HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /* Prepare Tx Header */
+{  
   TxHeader.Identifier = 0x321;
   TxHeader.IdType = FDCAN_STANDARD_ID;
   TxHeader.TxFrameType = FDCAN_DATA_FRAME;
@@ -357,27 +381,76 @@ static void FDCAN_Config(void)
   TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
   TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
   TxHeader.MessageMarker = 0;
+  if (HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_ACCEPT_IN_RX_FIFO0, FDCAN_ACCEPT_IN_RX_FIFO0, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  if (HAL_FDCAN_Start(&hfdcan1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  if (HAL_FDCAN_ActivateNotification(&hfdcan1, 
+                                     FDCAN_IT_RX_FIFO0_NEW_MESSAGE | 
+                                     FDCAN_IT_BUS_OFF | 
+                                     FDCAN_IT_ERROR_PASSIVE | 
+                                     FDCAN_IT_ERROR_WARNING, 
+                                     0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
 }
 
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 {
-  if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET)
-  {
-    /* Retrieve Rx messages from RX FIFO0 */
-    if (HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &RxHeader, RxData) != HAL_OK)
+    if (RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE)
     {
-    Error_Handler();
+        /* Retrieve Rx messages from RX FIFO0 */
+        if (HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &RxHeader, RxData) != HAL_OK)
+        {
+            Error_Handler();
+        }
+
+        /* Convert DLC to actual data length */
+        uint8_t data_length = (RxHeader.DataLength >> 16) & 0xF;
+
+        /* Print received message over USB */
+        char msg[64];
+        int len = snprintf(msg, sizeof(msg), "ID: 0x%03X, DLC: %d, Data: ", RxHeader.Identifier, data_length);
+        for (int i = 0; i < data_length; i++)
+        {
+            len += snprintf(msg + len, sizeof(msg) - len, "%02X ", RxData[i]);
+        }
+        snprintf(msg + len, sizeof(msg) - len, "\r\n");
+
+        CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
     }
 
-    /* Display LEDx */
-    if ((RxHeader.Identifier == 0x321) && (RxHeader.IdType == FDCAN_STANDARD_ID) && (RxHeader.DataLength == FDCAN_DLC_BYTES_2))
+    if (RxFifo0ITs & FDCAN_IT_BUS_OFF)
     {
-      uint8_t can_got[] = "still running\r\n";
-      uint8_t can_got_len = sizeof(can_got);
-      CDC_Transmit_FS(can_got, can_got_len);
+        char error_msg[] = "CAN Bus-Off Error\r\n";
+        CDC_Transmit_FS((uint8_t *)error_msg, strlen(error_msg));
+        HAL_FDCAN_Stop(hfdcan);  // Stop the CAN peripheral
+        HAL_Delay(1000);         // Wait before attempting recovery
+        HAL_FDCAN_Start(hfdcan); // Restart the CAN peripheral
     }
-  }
+
+    if (RxFifo0ITs & FDCAN_IT_ERROR_PASSIVE)
+    {
+        char error_msg[] = "CAN Error Passive\r\n";
+        CDC_Transmit_FS((uint8_t *)error_msg, strlen(error_msg));
+    }
+
+    if (RxFifo0ITs & FDCAN_IT_ERROR_WARNING)
+    {
+        char error_msg[] = "CAN Error Warning\r\n";
+        CDC_Transmit_FS((uint8_t *)error_msg, strlen(error_msg));
+    }
 }
+
+
 /* USER CODE END 4 */
 
  /* MPU Configuration */
@@ -417,10 +490,14 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
+    while (1)
   {
+    char error_msg[] = "Error occurred\r\n";
+    CDC_Transmit_FS((uint8_t *)error_msg, strlen(error_msg));
+    HAL_Delay(1000);  // Wait for the message to be sent
   }
+  //__disable_irq();
+
   /* USER CODE END Error_Handler_Debug */
 }
 #ifdef USE_FULL_ASSERT

@@ -1,0 +1,954 @@
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 1
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"main.c"
+  15              		.text
+  16              		.section	.text.MX_GPIO_Init,"ax",%progbits
+  17              		.align	1
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  22              	MX_GPIO_Init:
+  23              		@ args = 0, pretend = 0, frame = 16
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 84B0     		sub	sp, sp, #16
+  27 0002 134B     		ldr	r3, .L3
+  28 0004 D3F8E020 		ldr	r2, [r3, #224]
+  29 0008 42F08002 		orr	r2, r2, #128
+  30 000c C3F8E020 		str	r2, [r3, #224]
+  31 0010 D3F8E020 		ldr	r2, [r3, #224]
+  32 0014 02F08002 		and	r2, r2, #128
+  33 0018 0192     		str	r2, [sp, #4]
+  34 001a 019A     		ldr	r2, [sp, #4]
+  35 001c D3F8E020 		ldr	r2, [r3, #224]
+  36 0020 42F00102 		orr	r2, r2, #1
+  37 0024 C3F8E020 		str	r2, [r3, #224]
+  38 0028 D3F8E020 		ldr	r2, [r3, #224]
+  39 002c 02F00102 		and	r2, r2, #1
+  40 0030 0292     		str	r2, [sp, #8]
+  41 0032 029A     		ldr	r2, [sp, #8]
+  42 0034 D3F8E020 		ldr	r2, [r3, #224]
+  43 0038 42F00802 		orr	r2, r2, #8
+  44 003c C3F8E020 		str	r2, [r3, #224]
+  45 0040 D3F8E030 		ldr	r3, [r3, #224]
+  46 0044 03F00803 		and	r3, r3, #8
+  47 0048 0393     		str	r3, [sp, #12]
+  48 004a 039B     		ldr	r3, [sp, #12]
+  49 004c 04B0     		add	sp, sp, #16
+  50              		@ sp needed
+  51 004e 7047     		bx	lr
+  52              	.L4:
+  53              		.align	2
+  54              	.L3:
+  55 0050 00440258 		.word	1476543488
+  57              		.section	.text.MPU_Config,"ax",%progbits
+  58              		.align	1
+  59              		.syntax unified
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 2
+
+
+  60              		.thumb
+  61              		.thumb_func
+  63              	MPU_Config:
+  64              		@ args = 0, pretend = 0, frame = 16
+  65              		@ frame_needed = 0, uses_anonymous_args = 0
+  66 0000 30B5     		push	{r4, r5, lr}
+  67 0002 85B0     		sub	sp, sp, #20
+  68 0004 0024     		movs	r4, #0
+  69 0006 0094     		str	r4, [sp]
+  70 0008 0194     		str	r4, [sp, #4]
+  71 000a 0294     		str	r4, [sp, #8]
+  72 000c 0394     		str	r4, [sp, #12]
+  73 000e FFF7FEFF 		bl	HAL_MPU_Disable
+  74 0012 0123     		movs	r3, #1
+  75 0014 8DF80030 		strb	r3, [sp]
+  76 0018 8DF80140 		strb	r4, [sp, #1]
+  77 001c 0194     		str	r4, [sp, #4]
+  78 001e 1F22     		movs	r2, #31
+  79 0020 8DF80820 		strb	r2, [sp, #8]
+  80 0024 8722     		movs	r2, #135
+  81 0026 8DF80920 		strb	r2, [sp, #9]
+  82 002a 8DF80A40 		strb	r4, [sp, #10]
+  83 002e 8DF80B40 		strb	r4, [sp, #11]
+  84 0032 8DF80C30 		strb	r3, [sp, #12]
+  85 0036 8DF80D30 		strb	r3, [sp, #13]
+  86 003a 8DF80E40 		strb	r4, [sp, #14]
+  87 003e 8DF80F40 		strb	r4, [sp, #15]
+  88 0042 6846     		mov	r0, sp
+  89 0044 FFF7FEFF 		bl	HAL_MPU_ConfigRegion
+  90 0048 0420     		movs	r0, #4
+  91 004a FFF7FEFF 		bl	HAL_MPU_Enable
+  92 004e 05B0     		add	sp, sp, #20
+  93              		@ sp needed
+  94 0050 30BD     		pop	{r4, r5, pc}
+  96              		.section	.rodata.Error_Handler.str1.4,"aMS",%progbits,1
+  97              		.align	2
+  98              	.LC0:
+  99 0000 4572726F 		.ascii	"Error occurred\015\012\000"
+  99      72206F63 
+  99      63757272 
+  99      65640D0A 
+  99      00
+ 100              		.section	.text.Error_Handler,"ax",%progbits
+ 101              		.align	1
+ 102              		.global	Error_Handler
+ 103              		.syntax unified
+ 104              		.thumb
+ 105              		.thumb_func
+ 107              	Error_Handler:
+ 108              		@ Volatile: function does not return.
+ 109              		@ args = 0, pretend = 0, frame = 24
+ 110              		@ frame_needed = 0, uses_anonymous_args = 0
+ 111 0000 00B5     		push	{lr}
+ 112 0002 87B0     		sub	sp, sp, #28
+ 113              	.L8:
+ 114 0004 0DF1040C 		add	ip, sp, #4
+ 115 0008 094C     		ldr	r4, .L10
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 3
+
+
+ 116 000a 0FCC     		ldmia	r4!, {r0, r1, r2, r3}
+ 117 000c ACE80F00 		stmia	ip!, {r0, r1, r2, r3}
+ 118 0010 2368     		ldr	r3, [r4]
+ 119 0012 8CF80030 		strb	r3, [ip]
+ 120 0016 01AC     		add	r4, sp, #4
+ 121 0018 2046     		mov	r0, r4
+ 122 001a FFF7FEFF 		bl	strlen
+ 123 001e 81B2     		uxth	r1, r0
+ 124 0020 2046     		mov	r0, r4
+ 125 0022 FFF7FEFF 		bl	CDC_Transmit_FS
+ 126 0026 4FF47A70 		mov	r0, #1000
+ 127 002a FFF7FEFF 		bl	HAL_Delay
+ 128 002e E9E7     		b	.L8
+ 129              	.L11:
+ 130              		.align	2
+ 131              	.L10:
+ 132 0030 00000000 		.word	.LC0
+ 134              		.section	.text.MX_TIM2_Init,"ax",%progbits
+ 135              		.align	1
+ 136              		.syntax unified
+ 137              		.thumb
+ 138              		.thumb_func
+ 140              	MX_TIM2_Init:
+ 141              		@ args = 0, pretend = 0, frame = 40
+ 142              		@ frame_needed = 0, uses_anonymous_args = 0
+ 143 0000 00B5     		push	{lr}
+ 144 0002 8BB0     		sub	sp, sp, #44
+ 145 0004 0023     		movs	r3, #0
+ 146 0006 0793     		str	r3, [sp, #28]
+ 147 0008 0893     		str	r3, [sp, #32]
+ 148 000a 0993     		str	r3, [sp, #36]
+ 149 000c 0093     		str	r3, [sp]
+ 150 000e 0193     		str	r3, [sp, #4]
+ 151 0010 0293     		str	r3, [sp, #8]
+ 152 0012 0393     		str	r3, [sp, #12]
+ 153 0014 0493     		str	r3, [sp, #16]
+ 154 0016 0593     		str	r3, [sp, #20]
+ 155 0018 0693     		str	r3, [sp, #24]
+ 156 001a 1848     		ldr	r0, .L20
+ 157 001c 4FF08042 		mov	r2, #1073741824
+ 158 0020 0260     		str	r2, [r0]
+ 159 0022 1922     		movs	r2, #25
+ 160 0024 4260     		str	r2, [r0, #4]
+ 161 0026 8360     		str	r3, [r0, #8]
+ 162 0028 40F2E732 		movw	r2, #999
+ 163 002c C260     		str	r2, [r0, #12]
+ 164 002e 0361     		str	r3, [r0, #16]
+ 165 0030 8361     		str	r3, [r0, #24]
+ 166 0032 FFF7FEFF 		bl	HAL_TIM_PWM_Init
+ 167 0036 D8B9     		cbnz	r0, .L17
+ 168 0038 0023     		movs	r3, #0
+ 169 003a 0793     		str	r3, [sp, #28]
+ 170 003c 0993     		str	r3, [sp, #36]
+ 171 003e 07A9     		add	r1, sp, #28
+ 172 0040 0E48     		ldr	r0, .L20
+ 173 0042 FFF7FEFF 		bl	HAL_TIMEx_MasterConfigSynchronization
+ 174 0046 A8B9     		cbnz	r0, .L18
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 4
+
+
+ 175 0048 6023     		movs	r3, #96
+ 176 004a 0093     		str	r3, [sp]
+ 177 004c 4FF4FA73 		mov	r3, #500
+ 178 0050 0193     		str	r3, [sp, #4]
+ 179 0052 0023     		movs	r3, #0
+ 180 0054 0293     		str	r3, [sp, #8]
+ 181 0056 0493     		str	r3, [sp, #16]
+ 182 0058 0C22     		movs	r2, #12
+ 183 005a 6946     		mov	r1, sp
+ 184 005c 0748     		ldr	r0, .L20
+ 185 005e FFF7FEFF 		bl	HAL_TIM_PWM_ConfigChannel
+ 186 0062 48B9     		cbnz	r0, .L19
+ 187 0064 0548     		ldr	r0, .L20
+ 188 0066 FFF7FEFF 		bl	HAL_TIM_MspPostInit
+ 189 006a 0BB0     		add	sp, sp, #44
+ 190              		@ sp needed
+ 191 006c 5DF804FB 		ldr	pc, [sp], #4
+ 192              	.L17:
+ 193 0070 FFF7FEFF 		bl	Error_Handler
+ 194              	.L18:
+ 195 0074 FFF7FEFF 		bl	Error_Handler
+ 196              	.L19:
+ 197 0078 FFF7FEFF 		bl	Error_Handler
+ 198              	.L21:
+ 199              		.align	2
+ 200              	.L20:
+ 201 007c 00000000 		.word	htim2
+ 203              		.section	.rodata.MX_FDCAN1_Init.str1.4,"aMS",%progbits,1
+ 204              		.align	2
+ 205              	.LC1:
+ 206 0000 496E6974 		.ascii	"Initializing FDCAN...\015\012\000"
+ 206      69616C69 
+ 206      7A696E67 
+ 206      20464443 
+ 206      414E2E2E 
+ 207              		.align	2
+ 208              	.LC3:
+ 209 0018 46444341 		.ascii	"FDCAN Init Successful\015\012\000"
+ 209      4E20496E 
+ 209      69742053 
+ 209      75636365 
+ 209      73736675 
+ 210              		.align	2
+ 211              	.LC2:
+ 212 0030 46444341 		.ascii	"FDCAN Init Failed\015\012\000"
+ 212      4E20496E 
+ 212      69742046 
+ 212      61696C65 
+ 212      640D0A00 
+ 213              		.section	.text.MX_FDCAN1_Init,"ax",%progbits
+ 214              		.align	1
+ 215              		.syntax unified
+ 216              		.thumb
+ 217              		.thumb_func
+ 219              	MX_FDCAN1_Init:
+ 220              		@ args = 0, pretend = 0, frame = 48
+ 221              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 5
+
+
+ 222 0000 30B5     		push	{r4, r5, lr}
+ 223 0002 8DB0     		sub	sp, sp, #52
+ 224 0004 2F4C     		ldr	r4, .L28
+ 225 0006 304B     		ldr	r3, .L28+4
+ 226 0008 2360     		str	r3, [r4]
+ 227 000a 0023     		movs	r3, #0
+ 228 000c A360     		str	r3, [r4, #8]
+ 229 000e E360     		str	r3, [r4, #12]
+ 230 0010 2374     		strb	r3, [r4, #16]
+ 231 0012 6374     		strb	r3, [r4, #17]
+ 232 0014 A374     		strb	r3, [r4, #18]
+ 233 0016 0A22     		movs	r2, #10
+ 234 0018 6261     		str	r2, [r4, #20]
+ 235 001a 0121     		movs	r1, #1
+ 236 001c A161     		str	r1, [r4, #24]
+ 237 001e 0822     		movs	r2, #8
+ 238 0020 E261     		str	r2, [r4, #28]
+ 239 0022 2262     		str	r2, [r4, #32]
+ 240 0024 6162     		str	r1, [r4, #36]
+ 241 0026 A162     		str	r1, [r4, #40]
+ 242 0028 E162     		str	r1, [r4, #44]
+ 243 002a 2163     		str	r1, [r4, #48]
+ 244 002c 6363     		str	r3, [r4, #52]
+ 245 002e A363     		str	r3, [r4, #56]
+ 246 0030 E363     		str	r3, [r4, #60]
+ 247 0032 1020     		movs	r0, #16
+ 248 0034 2064     		str	r0, [r4, #64]
+ 249 0036 0421     		movs	r1, #4
+ 250 0038 6164     		str	r1, [r4, #68]
+ 251 003a A064     		str	r0, [r4, #72]
+ 252 003c E164     		str	r1, [r4, #76]
+ 253 003e 2065     		str	r0, [r4, #80]
+ 254 0040 6165     		str	r1, [r4, #84]
+ 255 0042 A265     		str	r2, [r4, #88]
+ 256 0044 E265     		str	r2, [r4, #92]
+ 257 0046 2266     		str	r2, [r4, #96]
+ 258 0048 6366     		str	r3, [r4, #100]
+ 259 004a A166     		str	r1, [r4, #104]
+ 260 004c 0DF1180C 		add	ip, sp, #24
+ 261 0050 1E4D     		ldr	r5, .L28+8
+ 262 0052 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 263 0054 ACE80F00 		stmia	ip!, {r0, r1, r2, r3}
+ 264 0058 95E80300 		ldm	r5, {r0, r1}
+ 265 005c 8CE80300 		stm	ip, {r0, r1}
+ 266 0060 06AD     		add	r5, sp, #24
+ 267 0062 2846     		mov	r0, r5
+ 268 0064 FFF7FEFF 		bl	strlen
+ 269 0068 81B2     		uxth	r1, r0
+ 270 006a 2846     		mov	r0, r5
+ 271 006c FFF7FEFF 		bl	CDC_Transmit_FS
+ 272 0070 2046     		mov	r0, r4
+ 273 0072 FFF7FEFF 		bl	HAL_FDCAN_Init
+ 274 0076 A0B9     		cbnz	r0, .L26
+ 275 0078 6C46     		mov	r4, sp
+ 276 007a 154D     		ldr	r5, .L28+12
+ 277 007c 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 278 007e 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 6
+
+
+ 279 0080 95E80300 		ldm	r5, {r0, r1}
+ 280 0084 84E80300 		stm	r4, {r0, r1}
+ 281 0088 6846     		mov	r0, sp
+ 282 008a FFF7FEFF 		bl	strlen
+ 283 008e 81B2     		uxth	r1, r0
+ 284 0090 6846     		mov	r0, sp
+ 285 0092 FFF7FEFF 		bl	CDC_Transmit_FS
+ 286 0096 0B48     		ldr	r0, .L28
+ 287 0098 FFF7FEFF 		bl	HAL_FDCAN_Init
+ 288 009c 80B9     		cbnz	r0, .L27
+ 289 009e 0DB0     		add	sp, sp, #52
+ 290              		@ sp needed
+ 291 00a0 30BD     		pop	{r4, r5, pc}
+ 292              	.L26:
+ 293 00a2 6C46     		mov	r4, sp
+ 294 00a4 0B4D     		ldr	r5, .L28+16
+ 295 00a6 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 296 00a8 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 297 00aa 2B68     		ldr	r3, [r5]
+ 298 00ac 2360     		str	r3, [r4]
+ 299 00ae 6846     		mov	r0, sp
+ 300 00b0 FFF7FEFF 		bl	strlen
+ 301 00b4 81B2     		uxth	r1, r0
+ 302 00b6 6846     		mov	r0, sp
+ 303 00b8 FFF7FEFF 		bl	CDC_Transmit_FS
+ 304 00bc FFF7FEFF 		bl	Error_Handler
+ 305              	.L27:
+ 306 00c0 FFF7FEFF 		bl	Error_Handler
+ 307              	.L29:
+ 308              		.align	2
+ 309              	.L28:
+ 310 00c4 00000000 		.word	hfdcan1
+ 311 00c8 00A00040 		.word	1073782784
+ 312 00cc 00000000 		.word	.LC1
+ 313 00d0 18000000 		.word	.LC3
+ 314 00d4 30000000 		.word	.LC2
+ 316              		.section	.text.FDCAN_Config,"ax",%progbits
+ 317              		.align	1
+ 318              		.syntax unified
+ 319              		.thumb
+ 320              		.thumb_func
+ 322              	FDCAN_Config:
+ 323              		@ args = 0, pretend = 0, frame = 0
+ 324              		@ frame_needed = 0, uses_anonymous_args = 0
+ 325 0000 00B5     		push	{lr}
+ 326 0002 83B0     		sub	sp, sp, #12
+ 327 0004 0123     		movs	r3, #1
+ 328 0006 0093     		str	r3, [sp]
+ 329 0008 0022     		movs	r2, #0
+ 330 000a 1146     		mov	r1, r2
+ 331 000c 1348     		ldr	r0, .L38
+ 332 000e FFF7FEFF 		bl	HAL_FDCAN_ConfigGlobalFilter
+ 333 0012 E0B9     		cbnz	r0, .L35
+ 334 0014 1148     		ldr	r0, .L38
+ 335 0016 FFF7FEFF 		bl	HAL_FDCAN_Start
+ 336 001a D0B9     		cbnz	r0, .L36
+ 337 001c 0022     		movs	r2, #0
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 7
+
+
+ 338 001e 1049     		ldr	r1, .L38+4
+ 339 0020 0E48     		ldr	r0, .L38
+ 340 0022 FFF7FEFF 		bl	HAL_FDCAN_ActivateNotification
+ 341 0026 B0B9     		cbnz	r0, .L37
+ 342 0028 0E4B     		ldr	r3, .L38+8
+ 343 002a 40F22132 		movw	r2, #801
+ 344 002e 1A60     		str	r2, [r3]
+ 345 0030 0022     		movs	r2, #0
+ 346 0032 5A60     		str	r2, [r3, #4]
+ 347 0034 9A60     		str	r2, [r3, #8]
+ 348 0036 0221     		movs	r1, #2
+ 349 0038 D960     		str	r1, [r3, #12]
+ 350 003a 4FF00041 		mov	r1, #-2147483648
+ 351 003e 1961     		str	r1, [r3, #16]
+ 352 0040 5A61     		str	r2, [r3, #20]
+ 353 0042 9A61     		str	r2, [r3, #24]
+ 354 0044 DA61     		str	r2, [r3, #28]
+ 355 0046 1A62     		str	r2, [r3, #32]
+ 356 0048 03B0     		add	sp, sp, #12
+ 357              		@ sp needed
+ 358 004a 5DF804FB 		ldr	pc, [sp], #4
+ 359              	.L35:
+ 360 004e FFF7FEFF 		bl	Error_Handler
+ 361              	.L36:
+ 362 0052 FFF7FEFF 		bl	Error_Handler
+ 363              	.L37:
+ 364 0056 FFF7FEFF 		bl	Error_Handler
+ 365              	.L39:
+ 366 005a 00BF     		.align	2
+ 367              	.L38:
+ 368 005c 00000000 		.word	hfdcan1
+ 369 0060 01008003 		.word	58720257
+ 370 0064 00000000 		.word	TxHeader
+ 372              		.section	.text.SystemClock_Config,"ax",%progbits
+ 373              		.align	1
+ 374              		.global	SystemClock_Config
+ 375              		.syntax unified
+ 376              		.thumb
+ 377              		.thumb_func
+ 379              	SystemClock_Config:
+ 380              		@ args = 0, pretend = 0, frame = 112
+ 381              		@ frame_needed = 0, uses_anonymous_args = 0
+ 382 0000 00B5     		push	{lr}
+ 383 0002 9DB0     		sub	sp, sp, #116
+ 384 0004 4C22     		movs	r2, #76
+ 385 0006 0021     		movs	r1, #0
+ 386 0008 09A8     		add	r0, sp, #36
+ 387 000a FFF7FEFF 		bl	memset
+ 388 000e 2022     		movs	r2, #32
+ 389 0010 0021     		movs	r1, #0
+ 390 0012 01A8     		add	r0, sp, #4
+ 391 0014 FFF7FEFF 		bl	memset
+ 392 0018 0220     		movs	r0, #2
+ 393 001a FFF7FEFF 		bl	HAL_PWREx_ConfigSupply
+ 394 001e 0023     		movs	r3, #0
+ 395 0020 0093     		str	r3, [sp]
+ 396 0022 244B     		ldr	r3, .L47
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 8
+
+
+ 397 0024 DA6A     		ldr	r2, [r3, #44]
+ 398 0026 22F00102 		bic	r2, r2, #1
+ 399 002a DA62     		str	r2, [r3, #44]
+ 400 002c DB6A     		ldr	r3, [r3, #44]
+ 401 002e 03F00103 		and	r3, r3, #1
+ 402 0032 0093     		str	r3, [sp]
+ 403 0034 204A     		ldr	r2, .L47+4
+ 404 0036 9369     		ldr	r3, [r2, #24]
+ 405 0038 23F44043 		bic	r3, r3, #49152
+ 406 003c 43F48043 		orr	r3, r3, #16384
+ 407 0040 9361     		str	r3, [r2, #24]
+ 408 0042 9369     		ldr	r3, [r2, #24]
+ 409 0044 03F44043 		and	r3, r3, #49152
+ 410 0048 0093     		str	r3, [sp]
+ 411 004a 009B     		ldr	r3, [sp]
+ 412              	.L41:
+ 413 004c 1A4B     		ldr	r3, .L47+4
+ 414 004e 9B69     		ldr	r3, [r3, #24]
+ 415 0050 13F4005F 		tst	r3, #8192
+ 416 0054 FAD0     		beq	.L41
+ 417 0056 0123     		movs	r3, #1
+ 418 0058 0993     		str	r3, [sp, #36]
+ 419 005a 4FF48033 		mov	r3, #65536
+ 420 005e 0A93     		str	r3, [sp, #40]
+ 421 0060 0223     		movs	r3, #2
+ 422 0062 1293     		str	r3, [sp, #72]
+ 423 0064 1393     		str	r3, [sp, #76]
+ 424 0066 0522     		movs	r2, #5
+ 425 0068 1492     		str	r2, [sp, #80]
+ 426 006a 3021     		movs	r1, #48
+ 427 006c 1591     		str	r1, [sp, #84]
+ 428 006e 1693     		str	r3, [sp, #88]
+ 429 0070 1792     		str	r2, [sp, #92]
+ 430 0072 1893     		str	r3, [sp, #96]
+ 431 0074 0823     		movs	r3, #8
+ 432 0076 1993     		str	r3, [sp, #100]
+ 433 0078 0023     		movs	r3, #0
+ 434 007a 1A93     		str	r3, [sp, #104]
+ 435 007c 1B93     		str	r3, [sp, #108]
+ 436 007e 09A8     		add	r0, sp, #36
+ 437 0080 FFF7FEFF 		bl	HAL_RCC_OscConfig
+ 438 0084 90B9     		cbnz	r0, .L45
+ 439 0086 3F23     		movs	r3, #63
+ 440 0088 0193     		str	r3, [sp, #4]
+ 441 008a 0323     		movs	r3, #3
+ 442 008c 0293     		str	r3, [sp, #8]
+ 443 008e 0023     		movs	r3, #0
+ 444 0090 0393     		str	r3, [sp, #12]
+ 445 0092 0493     		str	r3, [sp, #16]
+ 446 0094 0593     		str	r3, [sp, #20]
+ 447 0096 0693     		str	r3, [sp, #24]
+ 448 0098 0793     		str	r3, [sp, #28]
+ 449 009a 0893     		str	r3, [sp, #32]
+ 450 009c 0221     		movs	r1, #2
+ 451 009e 01A8     		add	r0, sp, #4
+ 452 00a0 FFF7FEFF 		bl	HAL_RCC_ClockConfig
+ 453 00a4 20B9     		cbnz	r0, .L46
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 9
+
+
+ 454 00a6 1DB0     		add	sp, sp, #116
+ 455              		@ sp needed
+ 456 00a8 5DF804FB 		ldr	pc, [sp], #4
+ 457              	.L45:
+ 458 00ac FFF7FEFF 		bl	Error_Handler
+ 459              	.L46:
+ 460 00b0 FFF7FEFF 		bl	Error_Handler
+ 461              	.L48:
+ 462              		.align	2
+ 463              	.L47:
+ 464 00b4 00040058 		.word	1476396032
+ 465 00b8 00480258 		.word	1476544512
+ 467              		.section	.rodata.main.str1.4,"aMS",%progbits,1
+ 468              		.align	2
+ 469              	.LC5:
+ 470 0000 54582046 		.ascii	"TX FIFO Free Level: %lu\015\012\000"
+ 470      49464F20 
+ 470      46726565 
+ 470      204C6576 
+ 470      656C3A20 
+ 471 001a 0000     		.align	2
+ 472              	.LC4:
+ 473 001c 7374696C 		.ascii	"still running\015\012\000"
+ 473      6C207275 
+ 473      6E6E696E 
+ 473      670D0A00 
+ 474              		.align	2
+ 475              	.LC6:
+ 476 002c 43414E20 		.ascii	"CAN TX Error\015\012\000"
+ 476      54582045 
+ 476      72726F72 
+ 476      0D0A00
+ 477              		.section	.text.main,"ax",%progbits
+ 478              		.align	1
+ 479              		.global	main
+ 480              		.syntax unified
+ 481              		.thumb
+ 482              		.thumb_func
+ 484              	main:
+ 485              		@ args = 0, pretend = 0, frame = 96
+ 486              		@ frame_needed = 0, uses_anonymous_args = 0
+ 487 0000 70B5     		push	{r4, r5, r6, lr}
+ 488 0002 98B0     		sub	sp, sp, #96
+ 489 0004 FFF7FEFF 		bl	MPU_Config
+ 490 0008 FFF7FEFF 		bl	HAL_Init
+ 491 000c FFF7FEFF 		bl	SystemClock_Config
+ 492 0010 FFF7FEFF 		bl	MX_GPIO_Init
+ 493 0014 FFF7FEFF 		bl	MX_TIM2_Init
+ 494 0018 FFF7FEFF 		bl	MX_FDCAN1_Init
+ 495 001c FFF7FEFF 		bl	MX_USB_DEVICE_Init
+ 496 0020 FFF7FEFF 		bl	FDCAN_Config
+ 497 0024 2C4B     		ldr	r3, .L57
+ 498 0026 0FCB     		ldm	r3, {r0, r1, r2, r3}
+ 499 0028 18AC     		add	r4, sp, #96
+ 500 002a 04E90F00 		stmdb	r4, {r0, r1, r2, r3}
+ 501 002e 0C21     		movs	r1, #12
+ 502 0030 2A48     		ldr	r0, .L57+4
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 10
+
+
+ 503 0032 FFF7FEFF 		bl	HAL_TIM_PWM_Start
+ 504 0036 4DE0     		b	.L55
+ 505              	.L51:
+ 506 0038 284B     		ldr	r3, .L57+4
+ 507 003a 1B68     		ldr	r3, [r3]
+ 508 003c 1C64     		str	r4, [r3, #64]
+ 509 003e 0120     		movs	r0, #1
+ 510 0040 FFF7FEFF 		bl	HAL_Delay
+ 511 0044 0134     		adds	r4, r4, #1
+ 512 0046 A4B2     		uxth	r4, r4
+ 513              	.L50:
+ 514 0048 B4F57A7F 		cmp	r4, #1000
+ 515 004c F4D3     		bcc	.L51
+ 516 004e 4FF47A74 		mov	r4, #1000
+ 517 0052 07E0     		b	.L52
+ 518              	.L53:
+ 519 0054 214B     		ldr	r3, .L57+4
+ 520 0056 1B68     		ldr	r3, [r3]
+ 521 0058 1C64     		str	r4, [r3, #64]
+ 522 005a 0120     		movs	r0, #1
+ 523 005c FFF7FEFF 		bl	HAL_Delay
+ 524 0060 013C     		subs	r4, r4, #1
+ 525 0062 A4B2     		uxth	r4, r4
+ 526              	.L52:
+ 527 0064 002C     		cmp	r4, #0
+ 528 0066 F5D1     		bne	.L53
+ 529 0068 1D4C     		ldr	r4, .L57+8
+ 530 006a AB23     		movs	r3, #171
+ 531 006c 2370     		strb	r3, [r4]
+ 532 006e CD23     		movs	r3, #205
+ 533 0070 6370     		strb	r3, [r4, #1]
+ 534 0072 1C4E     		ldr	r6, .L57+12
+ 535 0074 3046     		mov	r0, r6
+ 536 0076 FFF7FEFF 		bl	HAL_FDCAN_GetTxFifoFreeLevel
+ 537 007a 0346     		mov	r3, r0
+ 538 007c 04AD     		add	r5, sp, #16
+ 539 007e 1A4A     		ldr	r2, .L57+16
+ 540 0080 4021     		movs	r1, #64
+ 541 0082 2846     		mov	r0, r5
+ 542 0084 FFF7FEFF 		bl	snprintf
+ 543 0088 2846     		mov	r0, r5
+ 544 008a FFF7FEFF 		bl	strlen
+ 545 008e 81B2     		uxth	r1, r0
+ 546 0090 2846     		mov	r0, r5
+ 547 0092 FFF7FEFF 		bl	CDC_Transmit_FS
+ 548 0096 2246     		mov	r2, r4
+ 549 0098 1449     		ldr	r1, .L57+20
+ 550 009a 3046     		mov	r0, r6
+ 551 009c FFF7FEFF 		bl	HAL_FDCAN_AddMessageToTxFifoQ
+ 552 00a0 88B1     		cbz	r0, .L54
+ 553 00a2 134B     		ldr	r3, .L57+24
+ 554 00a4 6C46     		mov	r4, sp
+ 555 00a6 0FCB     		ldm	r3, {r0, r1, r2, r3}
+ 556 00a8 07C4     		stmia	r4!, {r0, r1, r2}
+ 557 00aa 24F8023B 		strh	r3, [r4], #2	@ movhi
+ 558 00ae 1B0C     		lsrs	r3, r3, #16
+ 559 00b0 2370     		strb	r3, [r4]
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 11
+
+
+ 560 00b2 6846     		mov	r0, sp
+ 561 00b4 FFF7FEFF 		bl	strlen
+ 562 00b8 81B2     		uxth	r1, r0
+ 563 00ba 6846     		mov	r0, sp
+ 564 00bc FFF7FEFF 		bl	CDC_Transmit_FS
+ 565 00c0 6420     		movs	r0, #100
+ 566 00c2 FFF7FEFF 		bl	HAL_Delay
+ 567              	.L54:
+ 568 00c6 1021     		movs	r1, #16
+ 569 00c8 14A8     		add	r0, sp, #80
+ 570 00ca FFF7FEFF 		bl	CDC_Transmit_FS
+ 571 00ce 6420     		movs	r0, #100
+ 572 00d0 FFF7FEFF 		bl	HAL_Delay
+ 573              	.L55:
+ 574 00d4 0024     		movs	r4, #0
+ 575 00d6 B7E7     		b	.L50
+ 576              	.L58:
+ 577              		.align	2
+ 578              	.L57:
+ 579 00d8 1C000000 		.word	.LC4
+ 580 00dc 00000000 		.word	htim2
+ 581 00e0 00000000 		.word	TxData
+ 582 00e4 00000000 		.word	hfdcan1
+ 583 00e8 00000000 		.word	.LC5
+ 584 00ec 00000000 		.word	TxHeader
+ 585 00f0 2C000000 		.word	.LC6
+ 587              		.section	.rodata.HAL_FDCAN_RxFifo0Callback.str1.4,"aMS",%progbits,1
+ 588              		.align	2
+ 589              	.LC7:
+ 590 0000 49443A20 		.ascii	"ID: 0x%03X, DLC: %d, Data: \000"
+ 590      30782530 
+ 590      33582C20 
+ 590      444C433A 
+ 590      2025642C 
+ 591              		.align	2
+ 592              	.LC8:
+ 593 001c 25303258 		.ascii	"%02X \000"
+ 593      2000
+ 594 0022 0000     		.align	2
+ 595              	.LC9:
+ 596 0024 0D0A00   		.ascii	"\015\012\000"
+ 597 0027 00       		.align	2
+ 598              	.LC10:
+ 599 0028 43414E20 		.ascii	"CAN Bus-Off Error\015\012\000"
+ 599      4275732D 
+ 599      4F666620 
+ 599      4572726F 
+ 599      720D0A00 
+ 600              		.align	2
+ 601              	.LC11:
+ 602 003c 43414E20 		.ascii	"CAN Error Passive\015\012\000"
+ 602      4572726F 
+ 602      72205061 
+ 602      73736976 
+ 602      650D0A00 
+ 603              		.align	2
+ 604              	.LC12:
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 12
+
+
+ 605 0050 43414E20 		.ascii	"CAN Error Warning\015\012\000"
+ 605      4572726F 
+ 605      72205761 
+ 605      726E696E 
+ 605      670D0A00 
+ 606              		.section	.text.HAL_FDCAN_RxFifo0Callback,"ax",%progbits
+ 607              		.align	1
+ 608              		.global	HAL_FDCAN_RxFifo0Callback
+ 609              		.syntax unified
+ 610              		.thumb
+ 611              		.thumb_func
+ 613              	HAL_FDCAN_RxFifo0Callback:
+ 614              		@ args = 0, pretend = 0, frame = 64
+ 615              		@ frame_needed = 0, uses_anonymous_args = 0
+ 616 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 617 0004 92B0     		sub	sp, sp, #72
+ 618 0006 8046     		mov	r8, r0
+ 619 0008 0E46     		mov	r6, r1
+ 620 000a 11F0010F 		tst	r1, #1
+ 621 000e 0BD1     		bne	.L68
+ 622              	.L60:
+ 623 0010 16F0007F 		tst	r6, #33554432
+ 624 0014 3AD1     		bne	.L69
+ 625              	.L64:
+ 626 0016 16F4000F 		tst	r6, #8388608
+ 627 001a 50D1     		bne	.L70
+ 628              	.L65:
+ 629 001c 16F0807F 		tst	r6, #16777216
+ 630 0020 5CD1     		bne	.L71
+ 631              	.L59:
+ 632 0022 12B0     		add	sp, sp, #72
+ 633              		@ sp needed
+ 634 0024 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 635              	.L68:
+ 636 0028 344B     		ldr	r3, .L73
+ 637 002a 354A     		ldr	r2, .L73+4
+ 638 002c 4021     		movs	r1, #64
+ 639 002e FFF7FEFF 		bl	HAL_FDCAN_GetRxMessage
+ 640 0032 68B9     		cbnz	r0, .L72
+ 641 0034 324B     		ldr	r3, .L73+4
+ 642 0036 9F7B     		ldrb	r7, [r3, #14]	@ zero_extendqisi2
+ 643 0038 07F00F07 		and	r7, r7, #15
+ 644 003c 0097     		str	r7, [sp]
+ 645 003e 1B68     		ldr	r3, [r3]
+ 646 0040 304A     		ldr	r2, .L73+8
+ 647 0042 4021     		movs	r1, #64
+ 648 0044 02A8     		add	r0, sp, #8
+ 649 0046 FFF7FEFF 		bl	snprintf
+ 650 004a 0446     		mov	r4, r0
+ 651 004c 0025     		movs	r5, #0
+ 652 004e 0CE0     		b	.L62
+ 653              	.L72:
+ 654 0050 FFF7FEFF 		bl	Error_Handler
+ 655              	.L63:
+ 656 0054 294B     		ldr	r3, .L73
+ 657 0056 5B5D     		ldrb	r3, [r3, r5]	@ zero_extendqisi2
+ 658 0058 2B4A     		ldr	r2, .L73+12
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 13
+
+
+ 659 005a C4F14001 		rsb	r1, r4, #64
+ 660 005e 02A8     		add	r0, sp, #8
+ 661 0060 2044     		add	r0, r0, r4
+ 662 0062 FFF7FEFF 		bl	snprintf
+ 663 0066 0444     		add	r4, r4, r0
+ 664 0068 0135     		adds	r5, r5, #1
+ 665              	.L62:
+ 666 006a AF42     		cmp	r7, r5
+ 667 006c F2DC     		bgt	.L63
+ 668 006e 02AD     		add	r5, sp, #8
+ 669 0070 264A     		ldr	r2, .L73+16
+ 670 0072 C4F14001 		rsb	r1, r4, #64
+ 671 0076 2819     		adds	r0, r5, r4
+ 672 0078 FFF7FEFF 		bl	snprintf
+ 673 007c 2846     		mov	r0, r5
+ 674 007e FFF7FEFF 		bl	strlen
+ 675 0082 81B2     		uxth	r1, r0
+ 676 0084 2846     		mov	r0, r5
+ 677 0086 FFF7FEFF 		bl	CDC_Transmit_FS
+ 678 008a C1E7     		b	.L60
+ 679              	.L69:
+ 680 008c 02AC     		add	r4, sp, #8
+ 681 008e 204D     		ldr	r5, .L73+20
+ 682 0090 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 683 0092 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 684 0094 2B68     		ldr	r3, [r5]
+ 685 0096 2360     		str	r3, [r4]
+ 686 0098 02AC     		add	r4, sp, #8
+ 687 009a 2046     		mov	r0, r4
+ 688 009c FFF7FEFF 		bl	strlen
+ 689 00a0 81B2     		uxth	r1, r0
+ 690 00a2 2046     		mov	r0, r4
+ 691 00a4 FFF7FEFF 		bl	CDC_Transmit_FS
+ 692 00a8 4046     		mov	r0, r8
+ 693 00aa FFF7FEFF 		bl	HAL_FDCAN_Stop
+ 694 00ae 4FF47A70 		mov	r0, #1000
+ 695 00b2 FFF7FEFF 		bl	HAL_Delay
+ 696 00b6 4046     		mov	r0, r8
+ 697 00b8 FFF7FEFF 		bl	HAL_FDCAN_Start
+ 698 00bc ABE7     		b	.L64
+ 699              	.L70:
+ 700 00be 02AC     		add	r4, sp, #8
+ 701 00c0 144D     		ldr	r5, .L73+24
+ 702 00c2 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 703 00c4 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 704 00c6 2B68     		ldr	r3, [r5]
+ 705 00c8 2360     		str	r3, [r4]
+ 706 00ca 02AC     		add	r4, sp, #8
+ 707 00cc 2046     		mov	r0, r4
+ 708 00ce FFF7FEFF 		bl	strlen
+ 709 00d2 81B2     		uxth	r1, r0
+ 710 00d4 2046     		mov	r0, r4
+ 711 00d6 FFF7FEFF 		bl	CDC_Transmit_FS
+ 712 00da 9FE7     		b	.L65
+ 713              	.L71:
+ 714 00dc 02AC     		add	r4, sp, #8
+ 715 00de 0E4D     		ldr	r5, .L73+28
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 14
+
+
+ 716 00e0 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 717 00e2 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 718 00e4 2B68     		ldr	r3, [r5]
+ 719 00e6 2360     		str	r3, [r4]
+ 720 00e8 02AC     		add	r4, sp, #8
+ 721 00ea 2046     		mov	r0, r4
+ 722 00ec FFF7FEFF 		bl	strlen
+ 723 00f0 81B2     		uxth	r1, r0
+ 724 00f2 2046     		mov	r0, r4
+ 725 00f4 FFF7FEFF 		bl	CDC_Transmit_FS
+ 726 00f8 93E7     		b	.L59
+ 727              	.L74:
+ 728 00fa 00BF     		.align	2
+ 729              	.L73:
+ 730 00fc 00000000 		.word	RxData
+ 731 0100 00000000 		.word	RxHeader
+ 732 0104 00000000 		.word	.LC7
+ 733 0108 1C000000 		.word	.LC8
+ 734 010c 24000000 		.word	.LC9
+ 735 0110 28000000 		.word	.LC10
+ 736 0114 3C000000 		.word	.LC11
+ 737 0118 50000000 		.word	.LC12
+ 739              		.global	TxData
+ 740              		.section	.bss.TxData,"aw",%nobits
+ 741              		.align	2
+ 744              	TxData:
+ 745 0000 00000000 		.space	8
+ 745      00000000 
+ 746              		.global	TxHeader
+ 747              		.section	.bss.TxHeader,"aw",%nobits
+ 748              		.align	2
+ 751              	TxHeader:
+ 752 0000 00000000 		.space	36
+ 752      00000000 
+ 752      00000000 
+ 752      00000000 
+ 752      00000000 
+ 753              		.global	RxData
+ 754              		.section	.bss.RxData,"aw",%nobits
+ 755              		.align	2
+ 758              	RxData:
+ 759 0000 00000000 		.space	8
+ 759      00000000 
+ 760              		.global	RxHeader
+ 761              		.section	.bss.RxHeader,"aw",%nobits
+ 762              		.align	2
+ 765              	RxHeader:
+ 766 0000 00000000 		.space	40
+ 766      00000000 
+ 766      00000000 
+ 766      00000000 
+ 766      00000000 
+ 767              		.global	htim2
+ 768              		.section	.bss.htim2,"aw",%nobits
+ 769              		.align	2
+ 772              	htim2:
+ 773 0000 00000000 		.space	76
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 15
+
+
+ 773      00000000 
+ 773      00000000 
+ 773      00000000 
+ 773      00000000 
+ 774              		.global	hfdcan1
+ 775              		.section	.bss.hfdcan1,"aw",%nobits
+ 776              		.align	2
+ 779              	hfdcan1:
+ 780 0000 00000000 		.space	160
+ 780      00000000 
+ 780      00000000 
+ 780      00000000 
+ 780      00000000 
+ 781              		.global	TxBufferLen
+ 782              		.section	.data.TxBufferLen,"aw"
+ 785              	TxBufferLen:
+ 786 0000 3D       		.byte	61
+ 787              		.global	TxBuffer
+ 788              		.section	.data.TxBuffer,"aw"
+ 789              		.align	2
+ 792              	TxBuffer:
+ 793 0000 48656C6C 		.ascii	"Hello World! From STM32 USB CDC Device To Virtual C"
+ 793      6F20576F 
+ 793      726C6421 
+ 793      2046726F 
+ 793      6D205354 
+ 794 0033 4F4D2050 		.ascii	"OM Port\015\012\000"
+ 794      6F72740D 
+ 794      0A00
+ 795              		.ident	"GCC: (xPack GNU Arm Embedded GCC x86_64) 14.2.1 20241119"
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 16
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:17     .text.MX_GPIO_Init:00000000 $t
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:22     .text.MX_GPIO_Init:00000000 MX_GPIO_Init
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:55     .text.MX_GPIO_Init:00000050 $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:58     .text.MPU_Config:00000000 $t
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:63     .text.MPU_Config:00000000 MPU_Config
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:97     .rodata.Error_Handler.str1.4:00000000 $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:101    .text.Error_Handler:00000000 $t
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:107    .text.Error_Handler:00000000 Error_Handler
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:132    .text.Error_Handler:00000030 $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:135    .text.MX_TIM2_Init:00000000 $t
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:140    .text.MX_TIM2_Init:00000000 MX_TIM2_Init
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:201    .text.MX_TIM2_Init:0000007c $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:772    .bss.htim2:00000000 htim2
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:204    .rodata.MX_FDCAN1_Init.str1.4:00000000 $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:214    .text.MX_FDCAN1_Init:00000000 $t
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:219    .text.MX_FDCAN1_Init:00000000 MX_FDCAN1_Init
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:310    .text.MX_FDCAN1_Init:000000c4 $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:779    .bss.hfdcan1:00000000 hfdcan1
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:317    .text.FDCAN_Config:00000000 $t
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:322    .text.FDCAN_Config:00000000 FDCAN_Config
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:368    .text.FDCAN_Config:0000005c $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:751    .bss.TxHeader:00000000 TxHeader
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:373    .text.SystemClock_Config:00000000 $t
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:379    .text.SystemClock_Config:00000000 SystemClock_Config
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:464    .text.SystemClock_Config:000000b4 $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:468    .rodata.main.str1.4:00000000 $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:478    .text.main:00000000 $t
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:484    .text.main:00000000 main
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:579    .text.main:000000d8 $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:744    .bss.TxData:00000000 TxData
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:588    .rodata.HAL_FDCAN_RxFifo0Callback.str1.4:00000000 $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:607    .text.HAL_FDCAN_RxFifo0Callback:00000000 $t
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:613    .text.HAL_FDCAN_RxFifo0Callback:00000000 HAL_FDCAN_RxFifo0Callback
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:730    .text.HAL_FDCAN_RxFifo0Callback:000000fc $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:758    .bss.RxData:00000000 RxData
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:765    .bss.RxHeader:00000000 RxHeader
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:741    .bss.TxData:00000000 $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:748    .bss.TxHeader:00000000 $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:755    .bss.RxData:00000000 $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:762    .bss.RxHeader:00000000 $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:769    .bss.htim2:00000000 $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:776    .bss.hfdcan1:00000000 $d
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:785    .data.TxBufferLen:00000000 TxBufferLen
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:792    .data.TxBuffer:00000000 TxBuffer
+C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s:789    .data.TxBuffer:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_MPU_Disable
+HAL_MPU_ConfigRegion
+HAL_MPU_Enable
+strlen
+CDC_Transmit_FS
+HAL_Delay
+HAL_TIM_PWM_Init
+HAL_TIMEx_MasterConfigSynchronization
+ARM GAS  C:\Users\aticl\AppData\Local\Temp\ccqcArVI.s 			page 17
+
+
+HAL_TIM_PWM_ConfigChannel
+HAL_TIM_MspPostInit
+HAL_FDCAN_Init
+HAL_FDCAN_ConfigGlobalFilter
+HAL_FDCAN_Start
+HAL_FDCAN_ActivateNotification
+memset
+HAL_PWREx_ConfigSupply
+HAL_RCC_OscConfig
+HAL_RCC_ClockConfig
+HAL_Init
+MX_USB_DEVICE_Init
+HAL_TIM_PWM_Start
+HAL_FDCAN_GetTxFifoFreeLevel
+snprintf
+HAL_FDCAN_AddMessageToTxFifoQ
+HAL_FDCAN_GetRxMessage
+HAL_FDCAN_Stop
