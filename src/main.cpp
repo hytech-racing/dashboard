@@ -30,6 +30,9 @@
 static CAN_message_t telem_can_rx_msg;
 STM32_CAN stm_can(FDCAN1);
 
+uint32_t last_blink = 0;
+bool led_state = false;
+
 uint8_t test_tx[] = {0xDE, 0xAD, 0xBE, 0xEF};
 
 // Hadware SPI and DMA
@@ -218,10 +221,12 @@ void loop() {
     // SerialUSB.println("TEST");
     // // delay(500);
 
-    digitalWrite(PA3, HIGH);
-    delay(500);
-    digitalWrite(PA3, LOW);
-    delay(500);
+    if (millis() - last_blink > 100) {
+      last_blink = millis();
+      led_state = !led_state;
+      digitalWrite(PA3, led_state);
+      HAL_SPI_Transmit(&hspi2, test_tx, sizeof(test_tx), HAL_MAX_DELAY);
+    }
     
   }
 
