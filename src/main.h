@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-void OtherClock_Config(void)
+extern "C" void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef       RCC_OscInitStruct = {};
   RCC_ClkInitTypeDef       RCC_ClkInitStruct = {};

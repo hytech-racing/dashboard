@@ -210,18 +210,18 @@ void loop() {
     // HT_SCHED::Scheduler::getInstance().run();
 
 
-    digitalWrite(PB7, LOW);
-    // bool tx_success = HAL_SPI_Transmit_DMA(&hspi2, test_tx, sizeof(test_tx)) == HAL_OK;
-    HAL_SPI_Transmit(&hspi2, test_tx, sizeof(test_tx), HAL_MAX_DELAY);
-    digitalWrite(PB7, HIGH);
-    delay(500);
+    // digitalWrite(PB7, LOW);
+    // // bool tx_success = HAL_SPI_Transmit_DMA(&hspi2, test_tx, sizeof(test_tx)) == HAL_OK;
+    // HAL_SPI_Transmit(&hspi2, test_tx, sizeof(test_tx), HAL_MAX_DELAY);
+    // digitalWrite(PB7, HIGH);
+    // delay(500);
     // SerialUSB.println("TEST");
     // // delay(500);
 
-    // digitalWrite(PA3, HIGH);
-    // delay(500);
-    // digitalWrite(PA3, LOW);
-    // delay(500);
+    digitalWrite(PA3, HIGH);
+    delay(500);
+    digitalWrite(PA3, LOW);
+    delay(500);
     
   }
 
