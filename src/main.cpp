@@ -19,6 +19,8 @@
 #include "ACUInterface.h"
 #include "VCRInterface.h"
 
+#include "main.h"
+
 
 #define LED_PIN PA3
 #define SHARP_CS PB7
@@ -131,9 +133,12 @@ HT_TASK::Task neopixels_task(&init_neopixels_task, &run_update_neopixels_task, N
 void setup() {
 
   pinMode(PB7, OUTPUT);
+  pinMode(PA3, OUTPUT);
   digitalWrite(PB7, HIGH);
 
   SerialUSB.begin(115200);
+
+  // SystemClock_Config();
 
   
   // Create Interfaces
@@ -190,12 +195,12 @@ void setup() {
   hspi2.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_DISABLE;
   hspi2.Init.IOSwap = SPI_IO_SWAP_DISABLE;
   
-  if (HAL_SPI_Init(&hspi2) != HAL_OK)
-  {
-    custom_handle_error(1);
-  }
+  // if (HAL_SPI_Init(&hspi2) != HAL_OK)
+  // {
+  //   custom_handle_error(1);
+  // }
 
-  __HAL_SPI_ENABLE(&hspi2);
+  // __HAL_SPI_ENABLE(&hspi2);
   
   
   
@@ -205,13 +210,18 @@ void loop() {
     // HT_SCHED::Scheduler::getInstance().run();
 
 
-    digitalWrite(PB7, LOW);
-    // bool tx_success = HAL_SPI_Transmit_DMA(&hspi2, test_tx, sizeof(test_tx)) == HAL_OK;
-    HAL_SPI_Transmit(&hspi2, test_tx, sizeof(test_tx), HAL_MAX_DELAY);
-    digitalWrite(PB7, HIGH);
-    delay(500);
+    // digitalWrite(PB7, LOW);
+    // // bool tx_success = HAL_SPI_Transmit_DMA(&hspi2, test_tx, sizeof(test_tx)) == HAL_OK;
+    // HAL_SPI_Transmit(&hspi2, test_tx, sizeof(test_tx), HAL_MAX_DELAY);
+    // digitalWrite(PB7, HIGH);
+    // delay(500);
     // SerialUSB.println("TEST");
     // // delay(500);
+
+    digitalWrite(PA3, HIGH);
+    delay(500);
+    digitalWrite(PA3, LOW);
+    delay(500);
     
   }
 

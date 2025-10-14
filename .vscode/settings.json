@@ -7,6 +7,15 @@
         "sstream": "cpp",
         "streambuf": "cpp",
         "compare": "cpp",
-        "stm32h7xx_hal_fdcan.h": "c"
+        "stm32h7xx_hal_fdcan.h": "c",
+        "array": "cpp",
+        "chrono": "cpp",
+        "forward_list": "cpp",
+        "initializer_list": "cpp",
+        "list": "cpp",
+        "vector": "cpp",
+        "xhash": "cpp",
+        "xstring": "cpp",
+        "xutility": "cpp"
     }
 }
