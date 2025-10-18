@@ -32,6 +32,7 @@ STM32_CAN stm_can(FDCAN1);
 
 uint32_t last_blink = 0;
 bool led_state = false;
+int count = 0;
 
 uint8_t test_tx[] = {0xDE, 0xAD, 0xBE, 0xEF};
 
@@ -39,10 +40,35 @@ uint8_t test_tx[] = {0xDE, 0xAD, 0xBE, 0xEF};
 SPI_HandleTypeDef hspi2;
 DMA_HandleTypeDef hdma_spi2_tx;
 
+extern "C" void DMA1_Stream0_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Stream0_IRQn 0 */
+
+  /* USER CODE END DMA1_Stream0_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_spi2_tx);
+  /* USER CODE BEGIN DMA1_Stream0_IRQn 1 */
+
+  /* USER CODE END DMA1_Stream0_IRQn 1 */
+}
+
+extern "C" void SPI2_IRQHandler(void)
+{
+  HAL_SPI_IRQHandler(&hspi2);
+}
+
+extern "C" void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+  if (hspi->Instance == SPI2) {
+    digitalWrite(PB7, HIGH); // set CS high after transmit complete
+  }
+}
+
 void custom_handle_error(int num) {
   while(1) {
-    SerialUSB.printf("Error at: %d\n", num);
-    delay(100);
+    digitalWrite(PA3, HIGH);
+    delay(500);
+    digitalWrite(PA3, LOW);
+    delay(500);
   }
 }
 
@@ -140,8 +166,8 @@ void setup() {
   digitalWrite(PB7, HIGH);
 
   SerialUSB.begin(115200);
-
-  // SystemClock_Config();
+  delay(3000);
+  SerialUSB.println("Starting");
 
   
   // Create Interfaces
@@ -225,7 +251,12 @@ void loop() {
       last_blink = millis();
       led_state = !led_state;
       digitalWrite(PA3, led_state);
-      HAL_SPI_Transmit(&hspi2, test_tx, sizeof(test_tx), HAL_MAX_DELAY);
+      // digitalWrite(PB7, LOW); // set CS low before transmit, high in callback after transmit
+      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
+      SerialUSB.println("Starting DMA Transmit");
+      HAL_SPI_Transmit_DMA(&hspi2, test_tx, sizeof(test_tx));
+      SerialUSB.println("DMA Transmit Done");
+      SerialUSB.printf("Count: %d\n", count);
     }
     
   }
