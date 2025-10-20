@@ -21,6 +21,8 @@
 
 #include "main.h"
 
+#include "HT_SPI.h"
+
 
 #define LED_PIN PA3
 #define SHARP_CS PB7
@@ -36,33 +38,6 @@ int count = 0;
 
 uint8_t test_tx[] = {0xDE, 0xAD, 0xBE, 0xEF};
 
-// Hadware SPI and DMA
-SPI_HandleTypeDef hspi2;
-DMA_HandleTypeDef hdma_spi2_tx;
-
-extern "C" void DMA1_Stream0_IRQHandler(void)
-{
-  /* USER CODE BEGIN DMA1_Stream0_IRQn 0 */
-
-  /* USER CODE END DMA1_Stream0_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_spi2_tx);
-  /* USER CODE BEGIN DMA1_Stream0_IRQn 1 */
-
-  /* USER CODE END DMA1_Stream0_IRQn 1 */
-}
-
-extern "C" void SPI2_IRQHandler(void)
-{
-  HAL_SPI_IRQHandler(&hspi2);
-}
-
-extern "C" void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-  if (hspi->Instance == SPI2) {
-    digitalWrite(PB7, HIGH); // set CS high after transmit complete
-  }
-}
-
 void custom_handle_error(int num) {
   while(1) {
     digitalWrite(PA3, HIGH);
@@ -71,72 +46,6 @@ void custom_handle_error(int num) {
     delay(500);
   }
 }
-
-extern "C" void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
-{
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-  RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
-  if(hspi->Instance==SPI2)
-  {
-  /* USER CODE BEGIN SPI2_MspInit 0 */
-
-  /* USER CODE END SPI2_MspInit 0 */
-
-  /** Initializes the peripherals clock
-  */
-    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SPI2;
-    PeriphClkInitStruct.Spi123ClockSelection = RCC_SPI123CLKSOURCE_PLL;
-    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
-    {
-      custom_handle_error(2);
-    }
-
-    /* Peripheral clock enable */
-    __HAL_RCC_SPI2_CLK_ENABLE();
-
-    __HAL_RCC_GPIOB_CLK_ENABLE();
-    /**SPI2 GPIO Configuration
-    PB10     ------> SPI2_SCK
-    PB14     ------> SPI2_MISO
-    PB15     ------> SPI2_MOSI
-    */
-    GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_14|GPIO_PIN_15;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-    /* SPI2 DMA Init */
-    /* SPI2_TX Init */
-    hdma_spi2_tx.Instance = DMA1_Stream0;
-    hdma_spi2_tx.Init.Request = DMA_REQUEST_SPI2_TX;
-    hdma_spi2_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
-    hdma_spi2_tx.Init.PeriphInc = DMA_PINC_DISABLE;
-    hdma_spi2_tx.Init.MemInc = DMA_MINC_ENABLE;
-    hdma_spi2_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-    hdma_spi2_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-    hdma_spi2_tx.Init.Mode = DMA_NORMAL;
-    hdma_spi2_tx.Init.Priority = DMA_PRIORITY_LOW;
-    hdma_spi2_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
-    if (HAL_DMA_Init(&hdma_spi2_tx) != HAL_OK)
-    {
-      custom_handle_error(3);
-    }
-
-    __HAL_LINKDMA(hspi,hdmatx,hdma_spi2_tx);
-
-    /* SPI2 interrupt Init */
-    HAL_NVIC_SetPriority(SPI2_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(SPI2_IRQn);
-  /* USER CODE BEGIN SPI2_MspInit 1 */
-
-  /* USER CODE END SPI2_MspInit 1 */
-  }
-
-}
-
-
 
 HT_TASK::TaskResponse init_can_task()
 {
@@ -161,9 +70,7 @@ HT_TASK::Task neopixels_task(&init_neopixels_task, &run_update_neopixels_task, N
 
 void setup() {
 
-  pinMode(PB7, OUTPUT);
   pinMode(PA3, OUTPUT);
-  digitalWrite(PB7, HIGH);
 
   SerialUSB.begin(115200);
   delay(3000);
@@ -192,67 +99,18 @@ void setup() {
   HT_SCHED::Scheduler::getInstance().schedule(neopixels_task);
   // HT_SCHED::Scheduler::getInstance().schedule(screen_task);
   
-  // Initialize SPI and DMA
-  // __HAL_RCC_GPIOB_CLK_ENABLE(); // IDK if this is done already or not
-  
-  // Init DMA for SPI2
-  __HAL_RCC_DMA1_CLK_ENABLE();
-  
-  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
-  
-  hspi2.Instance = SPI2;
-  hspi2.Init.Mode = SPI_MODE_MASTER;
-  hspi2.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi2.Init.NSS = SPI_NSS_SOFT;
-  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128; // 2MHz @ 192MHz SYSCLK
-  hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi2.Init.CRCPolynomial = 0x0;
-  hspi2.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
-  hspi2.Init.NSSPolarity = SPI_NSS_POLARITY_LOW;
-  hspi2.Init.FifoThreshold = SPI_FIFO_THRESHOLD_01DATA;
-  hspi2.Init.TxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
-  hspi2.Init.RxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
-  hspi2.Init.MasterSSIdleness = SPI_MASTER_SS_IDLENESS_00CYCLE;
-  hspi2.Init.MasterInterDataIdleness = SPI_MASTER_INTERDATA_IDLENESS_00CYCLE;
-  hspi2.Init.MasterReceiverAutoSusp = SPI_MASTER_RX_AUTOSUSP_DISABLE;
-  hspi2.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_DISABLE;
-  hspi2.Init.IOSwap = SPI_IO_SWAP_DISABLE;
-  
-  if (HAL_SPI_Init(&hspi2) != HAL_OK)
-  {
-    custom_handle_error(1);
-  }
-
-  __HAL_SPI_ENABLE(&hspi2);
-  
-  
+  SPI_Init();
   
 }
 
 void loop() {
     // HT_SCHED::Scheduler::getInstance().run();
 
-
-    // digitalWrite(PB7, LOW);
-    // // bool tx_success = HAL_SPI_Transmit_DMA(&hspi2, test_tx, sizeof(test_tx)) == HAL_OK;
-    // HAL_SPI_Transmit(&hspi2, test_tx, sizeof(test_tx), HAL_MAX_DELAY);
-    // digitalWrite(PB7, HIGH);
-    // delay(500);
-    // SerialUSB.println("TEST");
-    // // delay(500);
-
     if (millis() - last_blink > 100) {
       last_blink = millis();
       led_state = !led_state;
       digitalWrite(PA3, led_state);
-      // digitalWrite(PB7, LOW); // set CS low before transmit, high in callback after transmit
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
+      digitalWrite(PB7, LOW); // set CS low before transmit, high in callback after transmit
       SerialUSB.println("Starting DMA Transmit");
       HAL_SPI_Transmit_DMA(&hspi2, test_tx, sizeof(test_tx));
       SerialUSB.println("DMA Transmit Done");
