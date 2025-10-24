@@ -99,7 +99,7 @@ void setup() {
   HT_SCHED::Scheduler::getInstance().schedule(neopixels_task);
   // HT_SCHED::Scheduler::getInstance().schedule(screen_task);
   
-  SPI_Init();
+  HT_SPI_Init();
   
 }
 

@@ -79,7 +79,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
   }
 }
 
-void SPI_Init()
+void HT_SPI_Init()
 {
 
     // CS pin
