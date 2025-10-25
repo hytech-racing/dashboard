@@ -17,6 +17,7 @@
         "xhash": "cpp",
         "xstring": "cpp",
         "xutility": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "random": "cpp"
     }
 }
