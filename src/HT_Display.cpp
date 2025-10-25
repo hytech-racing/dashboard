@@ -28,13 +28,20 @@ boolean HyTech_SharpMem::begin(void) {
   // Set the vcom bit to a defined state
   _sharpmem_vcom = SHARPMEM_BIT_VCOM;
 
-  sharpmem_buffer = (uint8_t *)malloc(((WIDTH * HEIGHT) / 8) + (2*HEIGHT)); //malloc of a buffer that is the size of the display in pixels + the 2 extra pixels on either side for datasheet
+  sharpmem_buffer = (uint8_t *)malloc(((WIDTH * HEIGHT) / 8) + (2*HEIGHT)); //create a buffer that is the size of the display (bytes) + the 2 extra pixels on edge
+  int bytes_per_line = WIDTH / 8;
 
   if (!sharpmem_buffer)
     return false;
 
-  setRotation(0);
+  for (int i = 0; i < sizeof(sharpmem_buffer); i += WIDTH) {
+    uint8_t line[bytes_per_line + 2];
 
+    // save address byte
+    sharpmem_buffer[i * bytes_per_line] = ((i + 1) / (WIDTH / 8)) + 1; // [i+byytes_per_line get the first index on each row (equals to is stolen from adafruit lib)]
+  }
+  setRotation(0);
+  
   return true;
 }
 
@@ -47,7 +54,7 @@ static const uint8_t PROGMEM set[] = {1, 2, 4, 8, 16, 32, 64, 128},
                                       
 /**************************************************************************/
 /*!
-    @brief Draws a single pixel in image buffer
+    @brief Draws a single pixel in image buffer is adjusted to be able to send one continuous message with DMA
 
     @param[in]  x
                 The x position (0 based)
@@ -57,9 +64,10 @@ static const uint8_t PROGMEM set[] = {1, 2, 4, 8, 16, 32, 64, 128},
     * **0**: Black
     * **1**: White
 */
+
 /**************************************************************************/
 void HyTech_SharpMem::drawPixel(int16_t x, int16_t y, uint16_t color) {
-  if ((x < 0) || (x >= _width + 1) || (y < 0) || (y >= _height))
+  if ((x < 0) || (x >= _width) || (y < 0) || (y >= _height))
     return;
 
   switch (rotation) {
@@ -78,9 +86,9 @@ void HyTech_SharpMem::drawPixel(int16_t x, int16_t y, uint16_t color) {
   }
 
   if (color) {
-    sharpmem_buffer[(y * WIDTH + x) / 8] |= pgm_read_byte(&set[x & 7]);
+    sharpmem_buffer[((y * WIDTH + 1) + x + 1) / 8] |= pgm_read_byte(&set[x & 7]);
   } else {
-    sharpmem_buffer[(y * WIDTH + x) / 8] &= pgm_read_byte(&clr[x & 7]);
+    sharpmem_buffer[((y * WIDTH +1)  + x + 1) / 8] &= pgm_read_byte(&clr[x & 7]);
   }
 }
 
