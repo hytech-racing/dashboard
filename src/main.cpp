@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include <SPI.h>
-#include "CANInterface.h"
+//#include "CANInterface.h"
 #include <cstdint>
 #include "Dash_Constants.h"
 #include "Dash_Globals.h"
@@ -22,15 +22,13 @@
 #include "main.h"
 
 #include "HT_SPI.h"
+#include "HT_Display.h"
 
 
 #define LED_PIN PA3
 #define SHARP_CS PB7
 #define SHARP_CLK PB10
 #define SHARP_MOSI PB15
-
-static CAN_message_t telem_can_rx_msg;
-STM32_CAN stm_can(FDCAN1);
 
 uint32_t last_blink = 0;
 bool led_state = false;
@@ -47,26 +45,12 @@ void custom_handle_error(int num) {
   }
 }
 
-HT_TASK::TaskResponse init_can_task()
-{
-    stm_can.begin();
-    return HT_TASK::TaskResponse::YIELD;
-}
-
-HT_TASK::TaskResponse read_can_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo)
-{
-    if (stm_can.read(telem_can_rx_msg))
-    {
-      CANInterfaces& dash_can_interfaces = CANInterfacesInstance::instance(); 
-      DashCAN::dash_read_switch(dash_can_interfaces, telem_can_rx_msg, sysMicros);
-    }
-    return HT_TASK::TaskResponse::YIELD;
-}
 
 // Task Init
 HT_TASK::Task neopixels_task(&init_neopixels_task, &run_update_neopixels_task, NEOPIXEL_UPDATE_PRIORITY, NEOPIXEL_UPDATE_PERIOD);
 // HT_TASK::Task screen_task(&init_screen_task, &screen_refresh_task, SCREEN_REFRESH_PRIORITY, SCREEN_REFRESH_PERIOD); // 100 ms period
 
+HyTech_SharpMem testDisplay(SHARP_CS, 320, 240, 2000000); // Initialize display with CS pin, width, height, frequency, and no SPI pointer for now
 
 void setup() {
 
@@ -100,7 +84,11 @@ void setup() {
   // HT_SCHED::Scheduler::getInstance().schedule(screen_task);
   
   HT_SPI_Init();
+
   
+  testDisplay.begin();
+  testDisplay.drawPixel(1, 1, 1); //should draw a pixel on the display
+  testDisplay.drawPixel(10, 10, 1); //should draw another pixel on the display
 }
 
 void loop() {
@@ -112,7 +100,7 @@ void loop() {
       digitalWrite(PA3, led_state);
       digitalWrite(PB7, LOW); // set CS low before transmit, high in callback after transmit
       SerialUSB.println("Starting DMA Transmit");
-      HAL_SPI_Transmit_DMA(&hspi2, test_tx, sizeof(test_tx));
+      HAL_SPI_Transmit_DMA(&hspi2, testDisplay.getBuffer(), sizeof(testDisplay.getBuffer())); // Transmit the display buffer using DMA
       SerialUSB.println("DMA Transmit Done");
       SerialUSB.printf("Count: %d\n", count);
     }

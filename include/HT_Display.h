@@ -32,5 +32,6 @@ private:
   uint16_t _width;
   uint16_t _height;
   uint8_t _cs;
+  uint8_t * _stm_spi;
   uint8_t _sharpmem_vcom;
 };

@@ -27,6 +27,7 @@
  */
 HyTech_SharpMem::HyTech_SharpMem(uint8_t cs, uint16_t width, uint16_t height, uint32_t freq)
     : Adafruit_GFX(width, height) {
+  //_stm_spi = stm_spi;
   _cs = cs;
   _height = height;
   _width = width;
@@ -38,7 +39,7 @@ HyTech_SharpMem::HyTech_SharpMem(uint8_t cs, uint16_t width, uint16_t height, ui
  *
  * @return boolean true: success false: failure
  */
-boolean HyTech_SharpMem::begin(void) {
+bool HyTech_SharpMem::begin(void) {
   // this display is weird in that _cs is active HIGH not LOW like every other
   // SPI device
   digitalWrite(_cs, LOW);
