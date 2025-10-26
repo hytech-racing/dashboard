@@ -11,10 +11,7 @@
  */
 class HyTech_SharpMem : public Adafruit_GFX {
 public:
-  HyTech_SharpMem(uint8_t clk, uint8_t mosi, uint8_t cs, uint16_t w = 96,
-                    uint16_t h = 96, uint32_t freq = 2000000);
-  HyTech_SharpMem(SPIClass *theSPI, uint8_t cs, uint16_t w = 96,
-                    uint16_t h = 96, uint32_t freq = 2000000);
+  HyTech_SharpMem(uint8_t cs, uint16_t w = 96, uint16_t h = 96, uint32_t freq = 2000000);
   boolean begin();
   void drawPixel(int16_t x, int16_t y, uint16_t color);
   uint8_t getPixel(uint16_t x, uint16_t y);
@@ -32,6 +29,8 @@ public:
 private:
   Adafruit_SPIDevice *spidev = NULL; //need to figure this one out
   uint8_t *sharpmem_buffer = NULL;
+  uint16_t _width;
+  uint16_t _height;
   uint8_t _cs;
   uint8_t _sharpmem_vcom;
 };

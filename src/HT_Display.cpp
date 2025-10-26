@@ -15,6 +15,24 @@
 #endif
 
 /**
+ * @brief Construct a new Adafruit_SharpMem object with software SPI
+ *
+ * @param clk The clock pin
+ * @param mosi The MOSI pin
+ * @param cs The display chip select pin - **NOTE** this is ACTIVE HIGH!
+ * @param width The display width
+ * @param height The display height
+ * @param freq The SPI clock frequency desired (unlikely to be that fast in soft
+ * spi mode!)
+ */
+HyTech_SharpMem::HyTech_SharpMem(uint8_t cs, uint16_t width, uint16_t height, uint32_t freq)
+    : Adafruit_GFX(width, height) {
+  _cs = cs;
+  _height = height;
+  _width = width;
+}
+
+/**
  * @brief Start the driver object, setting up pins and configuring a buffer for
  * the screen contents
  *
