@@ -29,8 +29,8 @@ HyTech_SharpMem::HyTech_SharpMem(uint8_t cs, uint16_t w, uint16_t h, uint32_t fr
     : Adafruit_GFX(w, h) {
   //_stm_spi = stm_spi;
   _cs = cs;
-  _height = 320;
-  _width = 240;
+  _height = 240;
+  _width = 320;
 }
 
 /**

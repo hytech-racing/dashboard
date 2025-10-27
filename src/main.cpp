@@ -57,7 +57,7 @@ void setup() {
   pinMode(PA3, OUTPUT);
 
   SerialUSB.begin(115200);
-  delay(3000);3
+  delay(3000);
   SerialUSB.println("Starting");
 
   
