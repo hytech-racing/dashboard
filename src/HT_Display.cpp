@@ -54,11 +54,11 @@ bool HyTech_SharpMem::begin(void) {
   if (!sharpmem_buffer)
     return false;
 
-  for (int i = 0; i < sizeof(sharpmem_buffer); i += WIDTH) {
+  for (int i = 0; i < sizeof(sharpmem_buffer); i += _width) {
     uint8_t line[bytes_per_line + 2];
 
     // save address byte
-    sharpmem_buffer[i * bytes_per_line] = ((i + 1) / (WIDTH / 8)) + 1; // [i+byytes_per_line get the first index on each row (equals to is stolen from adafruit lib)]
+    sharpmem_buffer[i * bytes_per_line] = ((i + 1) / (_width / 8)) + 1; // [i+byytes_per_line get the first index on each row (equals to is stolen from adafruit lib)]
   }
   setRotation(0);
   
@@ -93,22 +93,22 @@ void HyTech_SharpMem::drawPixel(int16_t x, int16_t y, uint16_t color) {
   switch (rotation) {
   case 1:
     _swap_int16_t(x, y);
-    x = WIDTH - 1 - x;
+    x = _width - 1 - x;
     break;
   case 2:
-    x = WIDTH - 1 - x;
-    y = HEIGHT - 1 - y;
+    x = _width - 1 - x;
+    y = _height - 1 - y;
     break;
   case 3:
     _swap_int16_t(x, y);
-    y = HEIGHT - 1 - y;
+    y = _height - 1 - y;
     break;
   }
 
   if (color) {
-    sharpmem_buffer[((y * WIDTH + 1) + x + 1) / 8] |= pgm_read_byte(&set[x & 7]);
+    sharpmem_buffer[((y * _width + 1) + x + 1) / 8] |= pgm_read_byte(&set[x & 7]);
   } else {
-    sharpmem_buffer[((y * WIDTH +1)  + x + 1) / 8] &= pgm_read_byte(&clr[x & 7]);
+    sharpmem_buffer[((y * _width +1)  + x + 1) / 8] &= pgm_read_byte(&clr[x & 7]);
   }
 }
 
