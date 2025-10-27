@@ -57,7 +57,7 @@ void setup() {
   pinMode(PA3, OUTPUT);
 
   SerialUSB.begin(115200);
-  delay(3000);
+  delay(3000);3
   SerialUSB.println("Starting");
 
   
@@ -89,6 +89,10 @@ void setup() {
   testDisplay.begin();
   testDisplay.drawPixel(1, 1, 1); //should draw a pixel on the display
   testDisplay.drawPixel(10, 10, 1); //should draw another pixel on the display
+
+  SerialUSB.println(testDisplay.getBufferSize());
+  SerialUSB.println(((320 * 240) / 8) + (2*240));
+  SerialUSB.println(testDisplay.getBuffer()[0]);
 }
 
 void loop() {
@@ -98,9 +102,9 @@ void loop() {
       last_blink = millis();
       led_state = !led_state;
       digitalWrite(PA3, led_state);
-      digitalWrite(PB7, LOW); // set CS low before transmit, high in callback after transmit
+      digitalWrite(PB7, HIGH); // set CS low before transmit, high in callback after transmit
       SerialUSB.println("Starting DMA Transmit");
-      HAL_SPI_Transmit_DMA(&hspi2, testDisplay.getBuffer(), sizeof(testDisplay.getBuffer())); // Transmit the display buffer using DMA
+      HAL_SPI_Transmit_DMA(&hspi2, testDisplay.getBuffer(), testDisplay.getBufferSize()); // Transmit the display buffer using DMA
       SerialUSB.println("DMA Transmit Done");
       SerialUSB.printf("Count: %d\n", count);
     }

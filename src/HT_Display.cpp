@@ -25,12 +25,12 @@
  * @param freq The SPI clock frequency desired (unlikely to be that fast in soft
  * spi mode!)
  */
-HyTech_SharpMem::HyTech_SharpMem(uint8_t cs, uint16_t width, uint16_t height, uint32_t freq)
-    : Adafruit_GFX(width, height) {
+HyTech_SharpMem::HyTech_SharpMem(uint8_t cs, uint16_t w, uint16_t h, uint32_t freq)
+    : Adafruit_GFX(w, h) {
   //_stm_spi = stm_spi;
   _cs = cs;
-  _height = height;
-  _width = width;
+  _height = 320;
+  _width = 240;
 }
 
 /**
@@ -47,8 +47,9 @@ bool HyTech_SharpMem::begin(void) {
   // Set the vcom bit to a defined state
   _sharpmem_vcom = SHARPMEM_BIT_VCOM;
 
-  sharpmem_buffer = (uint8_t *)malloc(((WIDTH * HEIGHT) / 8) + (2*HEIGHT)); //create a buffer that is the size of the display (bytes) + the 2 extra pixels on edge
-  int bytes_per_line = WIDTH / 8;
+  sharpmem_buffer = (uint8_t *)malloc(((_width * _height) / 8) + (2*_height)); //create a buffer that is the size of the display (bytes) + the 2 extra pixels on edge
+  _size_of_buffer = ((_width * _height) / 8) + (2*_height);
+  int bytes_per_line = _width / 8;
 
   if (!sharpmem_buffer)
     return false;

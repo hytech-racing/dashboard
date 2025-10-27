@@ -11,8 +11,8 @@
  */
 class HyTech_SharpMem : public Adafruit_GFX {
 public:
-  HyTech_SharpMem(uint8_t cs, uint16_t w = 96, uint16_t h = 96, uint32_t freq = 2000000);
-  boolean begin();
+  HyTech_SharpMem(uint8_t cs, uint16_t w = 320, uint16_t h = 240, uint32_t freq = 2000000);
+  bool begin();
   void drawPixel(int16_t x, int16_t y, uint16_t color);
   uint8_t getPixel(uint16_t x, uint16_t y);
   void clearDisplay();
@@ -25,10 +25,12 @@ public:
    * @return uint8_t* Pointer to the framebuffer memory.
    */
   uint8_t *getBuffer() { return sharpmem_buffer; }
+  uint8_t getBufferSize() { return _size_of_buffer; }
 
 private:
   Adafruit_SPIDevice *spidev = NULL; //need to figure this one out
   uint8_t *sharpmem_buffer = NULL;
+  uint8_t _size_of_buffer;
   uint16_t _width;
   uint16_t _height;
   uint8_t _cs;

@@ -75,7 +75,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
   if (hspi->Instance == SPI2) {
-    digitalWrite(PB7, HIGH); // set CS high after transmit complete
+    digitalWrite(PB7, LOW); // set CS high after transmit complete
   }
 }
 
