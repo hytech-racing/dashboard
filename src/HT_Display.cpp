@@ -48,20 +48,22 @@ bool HyTech_SharpMem::begin(void) {
   _sharpmem_vcom = SHARPMEM_BIT_VCOM;
 
   sharpmem_buffer = (uint8_t *)malloc(((_display_width * _display_height) / 8) + (2*_display_height)); //create a buffer that is the size of the display (bytes) + the 2 extra pixels on edge
-  _size_of_buffer =  ((_display_width * _display_height) / 8) + (2*_display_height);
-  int bytes_per_line = _display_width / 8;
+  _size_of_buffer =  ((_display_width * _display_height) / 8) + (2*_display_height); //in bytes
+  int bytes_per_line = (_display_width / 8) + 2;
 
   if (!sharpmem_buffer)
     return false;
 
-  for (int i = 0; i < sizeof(sharpmem_buffer); i += _display_width) {
-    uint8_t line[bytes_per_line + 2];
-
-    // save address byte
-    sharpmem_buffer[i * bytes_per_line] = ((i + 1) / (_display_width / 8)) + 1; // [i+byytes_per_line get the first index on each row (equals to is stolen from adafruit lib)]
-  }
   setRotation(0);
   
+    
+  for (int i = 0; i < _size_of_buffer; i += bytes_per_line){
+    // save address byte
+    sharpmem_buffer[i] = ((i) / (bytes_per_line)) + 1; // line is i divided by bytes bytes per line + 1 
+  }
+  
+  sharpmem_buffer[0] = 0x01;
+  sharpmem_buffer[1] = 0x02;
   return true;
 }
 
