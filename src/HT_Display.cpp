@@ -29,8 +29,8 @@ HyTech_SharpMem::HyTech_SharpMem(uint8_t cs, uint16_t w, uint16_t h, uint32_t fr
     : Adafruit_GFX(w, h) {
   //_stm_spi = stm_spi;
   _cs = cs;
-  _height = 240;
-  _width = 320;
+  // _heightt = 240;
+  // _widthh = 320;
 }
 
 /**
@@ -47,18 +47,18 @@ bool HyTech_SharpMem::begin(void) {
   // Set the vcom bit to a defined state
   _sharpmem_vcom = SHARPMEM_BIT_VCOM;
 
-  sharpmem_buffer = (uint8_t *)malloc(((_width * _height) / 8) + (2*_height)); //create a buffer that is the size of the display (bytes) + the 2 extra pixels on edge
-  _size_of_buffer = ((_width * _height) / 8) + (2*_height);
-  int bytes_per_line = _width / 8;
+  sharpmem_buffer = (uint8_t *)malloc(((_display_width * _display_height) / 8) + (2*_display_height)); //create a buffer that is the size of the display (bytes) + the 2 extra pixels on edge
+  _size_of_buffer =  ((_display_width * _display_height) / 8) + (2*_display_height);
+  int bytes_per_line = _display_width / 8;
 
   if (!sharpmem_buffer)
     return false;
 
-  for (int i = 0; i < sizeof(sharpmem_buffer); i += _width) {
+  for (int i = 0; i < sizeof(sharpmem_buffer); i += _display_width) {
     uint8_t line[bytes_per_line + 2];
 
     // save address byte
-    sharpmem_buffer[i * bytes_per_line] = ((i + 1) / (_width / 8)) + 1; // [i+byytes_per_line get the first index on each row (equals to is stolen from adafruit lib)]
+    sharpmem_buffer[i * bytes_per_line] = ((i + 1) / (_display_width / 8)) + 1; // [i+byytes_per_line get the first index on each row (equals to is stolen from adafruit lib)]
   }
   setRotation(0);
   
@@ -87,13 +87,13 @@ static const uint8_t PROGMEM set[] = {1, 2, 4, 8, 16, 32, 64, 128},
 
 /**************************************************************************/
 void HyTech_SharpMem::drawPixel(int16_t x, int16_t y, uint16_t color) {
-  if ((x < 0) || (x >= _width) || (y < 0) || (y >= _height))
+  if ((x < 0) || (x >= _display_width) || (y < 0) || (y >= _display_height))
     return;
 
   switch (rotation) {
   case 1:
     _swap_int16_t(x, y);
-    x = _width - 1 - x;
+    x = _display_width - 1 - x;
     break;
   case 2:
     x = _width - 1 - x;
@@ -106,9 +106,9 @@ void HyTech_SharpMem::drawPixel(int16_t x, int16_t y, uint16_t color) {
   }
 
   if (color) {
-    sharpmem_buffer[((y * _width + 1) + x + 1) / 8] |= pgm_read_byte(&set[x & 7]);
+    sharpmem_buffer[((y * _display_width + 1) + x + 1) / 8] |= pgm_read_byte(&set[x & 7]);
   } else {
-    sharpmem_buffer[((y * _width +1)  + x + 1) / 8] &= pgm_read_byte(&clr[x & 7]);
+    sharpmem_buffer[((y * _display_width +1)  + x + 1) / 8] &= pgm_read_byte(&clr[x & 7]);
   }
 }
 

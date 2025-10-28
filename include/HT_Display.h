@@ -25,14 +25,16 @@ public:
    * @return uint8_t* Pointer to the framebuffer memory.
    */
   uint8_t *getBuffer() { return sharpmem_buffer; }
-  uint8_t getBufferSize() { return _size_of_buffer; }
+  uint16_t getBufferSize() { return _size_of_buffer; }
+  
 
 private:
   Adafruit_SPIDevice *spidev = NULL; //need to figure this one out
   uint8_t *sharpmem_buffer = NULL;
-  uint8_t _size_of_buffer;
-  uint16_t _width;
-  uint16_t _height;
+  uint16_t _size_of_buffer;
+  uint16_t _display_width = 320;
+  uint16_t _display_height = 240;
+  uint16_t _test = 240;
   uint8_t _cs;
   uint8_t * _stm_spi;
   uint8_t _sharpmem_vcom;

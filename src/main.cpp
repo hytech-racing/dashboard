@@ -91,7 +91,7 @@ void setup() {
   testDisplay.drawPixel(10, 10, 1); //should draw another pixel on the display
 
   SerialUSB.println(testDisplay.getBufferSize());
-  SerialUSB.println(((320 * 240) / 8) + (2*240));
+  //SerialUSB.println(((320 * 240) / 8) + (2*240));
   SerialUSB.println(testDisplay.getBuffer()[0]);
 }
 
