@@ -29,12 +29,14 @@
 #define SHARP_CS PB7
 #define SHARP_CLK PB10
 #define SHARP_MOSI PB15
+#define CHOPPED_SIZE 4
 
 uint32_t last_blink = 0;
 bool led_state = false;
 int count = 0;
 
 uint8_t test_tx[] = {0xDE, 0xAD, 0xBE, 0xEF};
+uint8_t chopped_display[CHOPPED_SIZE] = {0x00, 0x01, 0x02, 0x03};
 
 void custom_handle_error(int num) {
   while(1) {
@@ -94,11 +96,14 @@ void setup() {
   //SerialUSB.println(((320 * 240) / 8) + (2*240));
   SerialUSB.println(testDisplay.getBuffer()[0]);
 
-for (int i = 0; i < 10080; i += (320/8)+2){
+for (int i = 0; i < CHOPPED_SIZE; i += 1){//(320/8)+2){
 
     // save address byte
-    SerialUSB.println(testDisplay.getBuffer()[i]);
+
+    chopped_display[i] = i;//((i) / (42)) + 1;
+    SerialUSB.println(chopped_display[i]);
   }
+
 }
 
 void loop() {
@@ -110,9 +115,14 @@ void loop() {
       digitalWrite(PA3, led_state);
       digitalWrite(PB7, HIGH); // set CS low before transmit, high in callback after transmit
       SerialUSB.println("Starting DMA Transmit");
-      HAL_SPI_Transmit_DMA(&hspi2, testDisplay.getBuffer(), testDisplay.getBufferSize()); // Transmit the display buffer using DMA
-      SerialUSB.println(testDisplay.getBufferSize());
+
+      chopped_display[0] = 0x01;
+      chopped_display[1] = 0x02;
+      SerialUSB.println(chopped_display[0], HEX);
+      uint8_t *bruh = chopped_display;
+      SerialUSB.println(bruh[0], HEX);
+      HAL_SPI_Transmit_DMA(&hspi2, bruh, sizeof(chopped_display)); // Transmit the display buffer using DMA
+      //SerialUSB.println(testDisplay.getBufferSize());
       //SerialUSB.printf("Count: %d\n", count);
-    }
-    
+    }    
   }
