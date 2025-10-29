@@ -3,6 +3,8 @@
 SPI_HandleTypeDef hspi2;
 DMA_HandleTypeDef hdma_spi2_tx;
 
+bool spi_tx_complete = true;
+
 void DMA1_Stream0_IRQHandler(void)
 { HAL_DMA_IRQHandler(&hdma_spi2_tx); }
 void SPI2_IRQHandler(void)
@@ -33,7 +35,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
     __HAL_RCC_GPIOB_CLK_ENABLE();
     /**SPI2 GPIO Configuration
     PB10     ------> SPI2_SCK
-    PB14     ------> SPI2_MISO
+    PC14     ------> SPI2_MISO
     PB15     ------> SPI2_MOSI
     */
     GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_14|GPIO_PIN_15;
@@ -75,7 +77,9 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
   if (hspi->Instance == SPI2) {
-    digitalWrite(PB7, LOW); // set CS low after transmit complete
+    digitalWrite(PC14, LOW); // set CS low after transmit complete
+    SerialUSB.println("transmit complete");
+    bool spi_tx_complete = true;
   }
 }
 
@@ -83,8 +87,8 @@ void HT_SPI_Init()
 {
 
     // CS pin
-    pinMode(PB7, OUTPUT);
-    digitalWrite(PB7, HIGH);
+    pinMode(PC14, OUTPUT);
+    digitalWrite(PC14, HIGH);
 
     // DMA init
     __HAL_RCC_DMA1_CLK_ENABLE();
@@ -95,7 +99,7 @@ void HT_SPI_Init()
     // SPI init
     hspi2.Instance = SPI2;
     hspi2.Init.Mode = SPI_MODE_MASTER;
-    hspi2.Init.Direction = SPI_DIRECTION_2LINES;
+    hspi2.Init.Direction = SPI_DIRECTION_1LINE;
     hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
     hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
     hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
