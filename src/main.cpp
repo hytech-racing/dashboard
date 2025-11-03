@@ -33,11 +33,13 @@
 
 uint32_t last_blink = 0;
 uint32_t last_print = 0;
+uint16_t chopped_len = CHOPPED_SIZE;
 bool led_state = false;
 int count = 0;
 
 uint8_t test_tx[] = {0xDE, 0xAD, 0xBE, 0xEF};
-uint8_t chopped_display[CHOPPED_SIZE] = {0x00, 0x01, 0x02, 0x03};
+uint8_t chopped_display[CHOPPED_SIZE] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+                                        0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F};
 
 void custom_handle_error(int num) {
   while(1) {
@@ -103,39 +105,39 @@ extern "C" void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
     Check_DMA_SPI_Errors(hspi);
 }
  
-void dump_dma_spi_state(void)
-{
-    DMA_HandleTypeDef *hdma = hspi2.hdmatx;
-    SerialUSB.printf("---- DMA runtime ----\n");
-    SerialUSB.printf("DMA Instance: %p\n", (void*)hdma->Instance);
-    // NDTR = number of remaining transfers
-    SerialUSB.printf("NDTR: %lu\n", (uint32_t)hdma->Instance->NDTR);
-    // Peripheral and memory addresses
-    SerialUSB.printf("PAR (periph addr): 0x%08lX\n", (uint32_t)hdma->Instance->PAR);
-    SerialUSB.printf("M0AR (mem addr):   0x%08lX\n", (uint32_t)hdma->Instance->M0AR);
-    #if defined(M0AR_MA)
-    SerialUSB.printf("M1AR (mem2 addr):  0x%08lX\n", (uint32_t)hdma->Instance->M1AR);
-    #endif
-    // Stream configuration register SxCR
-    SerialUSB.printf("CR (SxCR): 0x%08lX\n", (uint32_t)hdma->Instance->CR);
-    SerialUSB.printf("FCR (SxFCR): 0x%08lX\n", (uint32_t)hdma->Instance->FCR);
-    SerialUSB.printf("ISR: 0x%08lX\n", (uint32_t)hdma->Instance->ISR);
-    SerialUSB.printf("IFCR: 0x%08lX\n", (uint32_t)hdma->Instance->IFCR);
-    SerialUSB.printf("hdma->Init: Dir=%d MemInc=%d PDataAlign=%d MDataAlign=%d Mode=%d FIFOMode=%d MemBurst=%d PeriphBurst=%d\n",
-        hdma->Init.Direction,
-        hdma->Init.MemInc,
-        hdma->Init.PeriphDataAlignment,
-        hdma->Init.MemDataAlignment,
-        hdma->Init.Mode,
-        hdma->Init.FIFOMode,
-        hdma->Init.MemBurst,
-        hdma->Init.PeriphBurst
-    );
-    SerialUSB.printf("---- SPI registers ----\n");
-    SerialUSB.printf("SPI SR: 0x%08lX\n", (uint32_t)hspi2.Instance->SR);
-    SerialUSB.printf("SPI CFG1: 0x%08lX\n", (uint32_t)hspi2.Instance->CFG1);
-    SerialUSB.printf("SPI CR1: 0x%08lX\n", (uint32_t)hspi2.Instance->CR1);
-}
+// void dump_dma_spi_state(void)
+// {
+//     DMA_HandleTypeDef *hdma = hspi2.hdmatx;
+//     SerialUSB.printf("---- DMA runtime ----\n");
+//     SerialUSB.printf("DMA Instance: %p\n", (void*)Instance);
+//     // NDTR = number of remaining transfers
+//     SerialUSB.printf("NDTR: %lu\n", (uint32_t)hdma->Instance->NDTR);
+//     // Peripheral and memory addresses
+//     SerialUSB.printf("PAR (periph addr): 0x%08lX\n", (uint32_t)hdma->Instance->PAR);
+//     SerialUSB.printf("M0AR (mem addr):   0x%08lX\n", (uint32_t)hdma->Instance->M0AR);
+//     #if defined(M0AR_MA)
+//     SerialUSB.printf("M1AR (mem2 addr):  0x%08lX\n", (uint32_t)hdma->Instance->M1AR);
+//     #endif
+//     // Stream configuration register SxCR
+//     SerialUSB.printf("CR (SxCR): 0x%08lX\n", (uint32_t)hdma->Instance->CR);
+//     SerialUSB.printf("FCR (SxFCR): 0x%08lX\n", (uint32_t)hdma->Instance->FCR);
+//     SerialUSB.printf("ISR: 0x%08lX\n", (uint32_t)hdma->Instance->ISR);
+//     SerialUSB.printf("IFCR: 0x%08lX\n", (uint32_t)hdma->Instance->IFCR);
+//     SerialUSB.printf("hdma->Init: Dir=%d MemInc=%d PDataAlign=%d MDataAlign=%d Mode=%d FIFOMode=%d MemBurst=%d PeriphBurst=%d\n",
+//         hdma->Init.Direction,
+//         hdma->Init.MemInc,
+//         hdma->Init.PeriphDataAlignment,
+//         hdma->Init.MemDataAlignment,
+//         hdma->Init.Mode,
+//         hdma->Init.FIFOMode,
+//         hdma->Init.MemBurst,
+//         hdma->Init.PeriphBurst
+//     );
+//     SerialUSB.printf("---- SPI registers ----\n");
+//     SerialUSB.printf("SPI SR: 0x%08lX\n", (uint32_t)hspi2.Instance->SR);
+//     SerialUSB.printf("SPI CFG1: 0x%08lX\n", (uint32_t)hspi2.Instance->CFG1);
+//     SerialUSB.printf("SPI CR1: 0x%08lX\n", (uint32_t)hspi2.Instance->CR1);
+// }
   
 
 
@@ -224,40 +226,42 @@ void loop() {
   }
 
   if (millis() - last_print > 1000) {
-    dump_dma_spi_state();
+
+    //dump_dma_spi_state();
     last_print = millis();
-  }
+  
 
     if (spi_tx_complete) {
       digitalWrite(PC14, HIGH); // set CS high before transmit, low in callback after transmit
-//       SerialUSB.println("Starting DMA Transmit");
-//           SerialUSB.printf("SPI SR: 0x%08lX\n", hspi2.Instance->SR);
+      SerialUSB.println("Starting DMA Transmit");
+//    SerialUSB.printf("SPI SR: 0x%08lX\n", hspi2.Instance->SR);
 // SerialUSB.printf("SPI CFG1: 0x%08lX\n", hspi2.Instance->CFG1);
 // SerialUSB.printf("SPI CFG2: 0x%08lX\n", hspi2.Instance->CFG2);
 // SerialUSB.printf("SPI CR1:  0x%08lX\n", hspi2.Instance->CR1);
-// SerialUSB.printf("SPI CR2:  0x%08lX\n", hspi2.Instance->CR2);
-//       SCB_CleanDCache_by_Addr((uint32_t*)testDisplay.getBuffer(), testDisplay.getBufferSize()); // Clean D-Cache before DMA transfer
-//       HAL_SPI_Transmit_DMA(&hspi2, testDisplay.getBuffer(), testDisplay.getBufferSize()); // Transmit the display buffer using DMA
-
+SerialUSB.printf("SPI CR2:  0x%08lX\n", hspi2.Instance->CR2);
+      SCB_CleanDCache_by_Addr((uint32_t*)chopped_display, chopped_len); // Clean D-Cache before DMA transfer
+      HAL_SPI_Transmit_DMA(&hspi2, chopped_display, chopped_len); // Transmit the display buffer using DMA
+    
 // Clear any stale flags before enabling DMA
 
-__HAL_SPI_CLEAR_EOTFLAG(&hspi2);
+// __HAL_SPI_CLEAR_EOTFLAG(&hspi2);
 
-__HAL_SPI_CLEAR_TXTFFLAG(&hspi2);
+// __HAL_SPI_CLEAR_TXTFFLAG(&hspi2);
 
-// Start DMA transmission
+// // Start DMA transmission
 
-HAL_SPI_Transmit_DMA(&hspi2, testDisplay.getBuffer(), testDisplay.getBufferSize());
+// HAL_SPI_Transmit_DMA(&hspi2, testDisplay.getBuffer(), testDisplay.getBufferSize());
  
-// Force SPI to start sending
+// // Force SPI to start sending
 
-SET_BIT(hspi2.Instance->CR1, SPI_CR1_CSTART);
+// SET_BIT(hspi2.Instance->CR1, SPI_CR1_CSTART);
  
-// Ensure DMA requests stay enabled
+// // Ensure DMA requests stay enabled
 
-SET_BIT(hspi2.Instance->CFG1, SPI_CFG1_TXDMAEN);
+// SET_BIT(hspi2.Instance->CFG1, SPI_CFG1_TXDMAEN);
 
  
       spi_tx_complete = false;
     }
+}
 }
