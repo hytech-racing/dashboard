@@ -55,8 +55,11 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
     hdma_spi2_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     hdma_spi2_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
     hdma_spi2_tx.Init.Mode = DMA_NORMAL;
-    hdma_spi2_tx.Init.Priority = DMA_PRIORITY_LOW;
-    hdma_spi2_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+    hdma_spi2_tx.Init.Priority = DMA_PRIORITY_HIGH;
+    hdma_spi2_tx.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
+    hdma_spi2_tx.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+    hdma_spi2_tx.Init.MemBurst = DMA_MBURST_INC8;
+
     if (HAL_DMA_Init(&hdma_spi2_tx) != HAL_OK)
     {
       Error_Handler();
@@ -88,7 +91,7 @@ void HT_SPI_Init()
 
     // CS pin
     pinMode(PC14, OUTPUT);
-    digitalWrite(PC14, HIGH);
+    digitalWrite(PC14, LOW);
 
     // DMA init
     __HAL_RCC_DMA1_CLK_ENABLE();
@@ -109,15 +112,15 @@ void HT_SPI_Init()
     hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
     hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
     hspi2.Init.CRCPolynomial = 0x0;
-    hspi2.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+    hspi2.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
     hspi2.Init.NSSPolarity = SPI_NSS_POLARITY_LOW;
-    hspi2.Init.FifoThreshold = SPI_FIFO_THRESHOLD_01DATA;
+    hspi2.Init.FifoThreshold = SPI_FIFO_THRESHOLD_08DATA;
     hspi2.Init.TxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
     hspi2.Init.RxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
     hspi2.Init.MasterSSIdleness = SPI_MASTER_SS_IDLENESS_00CYCLE;
     hspi2.Init.MasterInterDataIdleness = SPI_MASTER_INTERDATA_IDLENESS_00CYCLE;
     hspi2.Init.MasterReceiverAutoSusp = SPI_MASTER_RX_AUTOSUSP_DISABLE;
-    hspi2.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_DISABLE;
+    hspi2.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_ENABLE;
     hspi2.Init.IOSwap = SPI_IO_SWAP_DISABLE;
     
     if (HAL_SPI_Init(&hspi2) != HAL_OK)

@@ -29,7 +29,7 @@
 #define SHARP_CS PC14
 #define SHARP_CLK PB10
 #define SHARP_MOSI PB15
-#define CHOPPED_SIZE 32
+#define CHOPPED_SIZE 10080
 
 uint32_t last_blink = 0;
 uint32_t last_print = 0;
@@ -38,7 +38,7 @@ bool led_state = false;
 int count = 0;
 
 uint8_t test_tx[] = {0xDE, 0xAD, 0xBE, 0xEF};
-uint8_t chopped_display[CHOPPED_SIZE] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+static uint8_t chopped_display[CHOPPED_SIZE] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
                                         0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F};
 
 void custom_handle_error(int num) {
@@ -190,7 +190,7 @@ void setup() {
 
   //SerialUSB.println(testDisplay.getBufferSize());
   //SerialUSB.println(((320 * 240) / 8) + (2*240));
-  SerialUSB.println(testDisplay.getBuffer()[0]);
+  //SerialUSB.println(testDisplay.getBuffer()[0]);
 
 // for (int i = 0; i < CHOPPED_SIZE; i += 1){//(320/8)+2){
 
@@ -207,7 +207,7 @@ void setup() {
 void loop() {
     // HT_SCHED::Scheduler::getInstance().run();
 
-    uint8_t *ptr = testDisplay.getBuffer();
+    //uint8_t *ptr = testDisplay.getBuffer();
     if (millis() - last_blink > 100) {
       last_blink = millis();
       led_state = !led_state;
@@ -231,7 +231,7 @@ void loop() {
     last_print = millis();
   
 
-    if (spi_tx_complete) {
+
       digitalWrite(PC14, HIGH); // set CS high before transmit, low in callback after transmit
       SerialUSB.println("Starting DMA Transmit");
 //    SerialUSB.printf("SPI SR: 0x%08lX\n", hspi2.Instance->SR);
@@ -239,8 +239,9 @@ void loop() {
 // SerialUSB.printf("SPI CFG2: 0x%08lX\n", hspi2.Instance->CFG2);
 // SerialUSB.printf("SPI CR1:  0x%08lX\n", hspi2.Instance->CR1);
 SerialUSB.printf("SPI CR2:  0x%08lX\n", hspi2.Instance->CR2);
-      SCB_CleanDCache_by_Addr((uint32_t*)chopped_display, chopped_len); // Clean D-Cache before DMA transfer
-      HAL_SPI_Transmit_DMA(&hspi2, chopped_display, chopped_len); // Transmit the display buffer using DMA
+      SCB_CleanDCache_by_Addr((uint32_t*)testDisplay.getBuffer(), testDisplay.getBufferSize()); // Clean D-Cache before DMA transfer
+      hspi2.Instance->CR1 &= ~SPI_CR1_SPE;
+      HAL_SPI_Transmit_DMA(&hspi2, testDisplay.getBuffer(), testDisplay.getBufferSize()); // Transmit the display buffer using DMA
     
 // Clear any stale flags before enabling DMA
 
@@ -260,8 +261,8 @@ SerialUSB.printf("SPI CR2:  0x%08lX\n", hspi2.Instance->CR2);
 
 // SET_BIT(hspi2.Instance->CFG1, SPI_CFG1_TXDMAEN);
 
- 
+ delay(100);
       spi_tx_complete = false;
-    }
+    
 }
 }
