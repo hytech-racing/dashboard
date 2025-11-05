@@ -7,6 +7,8 @@
 extern SPI_HandleTypeDef hspi2;
 extern DMA_HandleTypeDef hdma_spi2_tx;
 
+extern bool spi_tx_complete;
+
 extern "C"
 {
   void DMA1_Stream0_IRQHandler(void);

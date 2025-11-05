@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.asm": "riscv",
         "string_view": "cpp",
         "deque": "cpp",
         "atomic": "cpp",
@@ -17,6 +18,9 @@
         "xhash": "cpp",
         "xstring": "cpp",
         "xutility": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "random": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp"
     }
 }

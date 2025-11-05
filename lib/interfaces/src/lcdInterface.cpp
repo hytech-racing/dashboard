@@ -6,10 +6,10 @@
 
 void DashboardDisplay::init() {
     // set non-needed Display pins low
-    pinMode(PB14, OUTPUT);
+    pinMode(PB7, OUTPUT);
     pinMode(PB1, OUTPUT);
     pinMode(PA3, OUTPUT);
-    digitalWrite(PB14, LOW);
+    digitalWrite(PB7, LOW);
     digitalWrite(PB1, LOW);
 }
 
