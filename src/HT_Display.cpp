@@ -106,9 +106,9 @@ void HyTech_SharpMem::drawPixel(int16_t x, int16_t y, uint16_t color) {
   }
 
   if (color) {
-    sharpmem_buffer[((y * _display_width + 1) + x + 1) / 8] |= pgm_read_byte(&set[x & 7]);
+    _display_buffer[((y * _display_width) + x ) / 8 + 1 ]  |= pgm_read_byte(&set[x & 7]);
   } else {
-    sharpmem_buffer[((y * _display_width +1)  + x + 1) / 8] &= pgm_read_byte(&clr[x & 7]);
+    _display_buffer[((y * _display_width) + x) / 8 + 1] &= pgm_read_byte(&clr[x & 7]);
   }
 }
 

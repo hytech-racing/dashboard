@@ -35,7 +35,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
     __HAL_RCC_GPIOB_CLK_ENABLE();
     /**SPI2 GPIO Configuration
     PB10     ------> SPI2_SCK
-    PC14     ------> SPI2_MISO
+    PB7     ------> SPI2_MISO
     PB15     ------> SPI2_MOSI
     */
     GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_14|GPIO_PIN_15;
@@ -80,7 +80,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
   if (hspi->Instance == SPI2) {
-    digitalWrite(PC14, LOW); // set CS low after transmit complete
+    digitalWrite(PB7, LOW); // set CS low after transmit complete
     SerialUSB.println("transmit complete");
     bool spi_tx_complete = true;
   }
@@ -90,8 +90,8 @@ void HT_SPI_Init()
 {
 
     // CS pin
-    pinMode(PC14, OUTPUT);
-    digitalWrite(PC14, LOW);
+    pinMode(PB7, OUTPUT);
+    digitalWrite(PB7, LOW);
 
     // DMA init
     __HAL_RCC_DMA1_CLK_ENABLE();
@@ -108,7 +108,7 @@ void HT_SPI_Init()
     hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
     hspi2.Init.NSS = SPI_NSS_SOFT;
     hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128; // 2MHz @ 192MHz SYSCLK
-    hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
+    hspi2.Init.FirstBit = SPI_FIRSTBIT_LSB;
     hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
     hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
     hspi2.Init.CRCPolynomial = 0x0;
