@@ -81,6 +81,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
   if (hspi->Instance == SPI2) {
     digitalWrite(PB7, LOW); // set CS low after transmit complete
+    digitalWrite(PC14, LOW);
     SerialUSB.println("transmit complete");
     bool spi_tx_complete = true;
   }

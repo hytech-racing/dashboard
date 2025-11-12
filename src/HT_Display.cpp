@@ -49,19 +49,23 @@ bool HyTech_SharpMem::begin(void) {
 
   //sharpmem_buffer = (uint8_t *)malloc(((_display_width * _display_height) / 8) + (2*_display_height)); //create a buffer that is the size of the display (bytes) + the 2 extra pixels on edge
   //_size_of_buffer =  ((_display_width * _display_height) / 8) + (2*_display_height); //in bytes
-  int bytes_per_line = (_display_width / 8) + 2;
+  int bytes_per_line = (42);
 
   // if (!sharpmem_buffer)
   //   return false;
 
   // setRotation(0);
-  
+  for (int i = 0; i < _size_of_buffer; i++) {
+    _display_buffer[i] = 0xFF;
+  }
+  for (int i = 41; i < _size_of_buffer; i += bytes_per_line) {
+    _display_buffer[i] = 0x00; //00s at the end of the line
+  }
     
   for (int i = 0; i < _size_of_buffer; i += bytes_per_line){
     // save address byte
     _display_buffer[i] = ((i) / (bytes_per_line)) + 1; // line is i divided by bytes bytes per line + 1 
   }
-  
   return true;
 }
 
@@ -106,61 +110,8 @@ void HyTech_SharpMem::drawPixel(int16_t x, int16_t y, uint16_t color) {
   }
 
   if (color) {
-    _display_buffer[((y * _display_width) + x ) / 8 + 1 ]  |= pgm_read_byte(&set[x & 7]);
+    _display_buffer[(y * 42) + (x / 8) + 1] |= pgm_read_byte(&set[x & 7]);
   } else {
-    _display_buffer[((y * _display_width) + x) / 8 + 1] &= pgm_read_byte(&clr[x & 7]);
+    _display_buffer[(y * 42) + (x / 8) + 1] &= pgm_read_byte(&clr[x & 7]);
   }
-}
-
-/**************************************************************************/
-/*!
-    @brief Renders the contents of the pixel buffer on the LCD
-*/
-/**************************************************************************/
-void HyTech_SharpMem::refresh_buffer(void) {
-  uint16_t i, currentline;
-
-  uint8_t bytes_per_line = WIDTH / 8;
-  uint8_t actual_usable_bytes_per_line = bytes_per_line - 1;
-  uint16_t totalbytes = (WIDTH * HEIGHT) / 8;
-
-  for (i = 0; i < totalbytes; i += bytes_per_line) { //index over the bytes in the line
-    uint8_t line[bytes_per_line + 2];
-
-    // Send address byte
-    currentline = ((i + 1) / (WIDTH / 8)) + 1;
-    line[0] = currentline;
-    // copy over this line
-    memcpy(line + 1, sharpmem_buffer + i, bytes_per_line);
-    // Send end of line
-    line[bytes_per_line + 1] = 0x00;
-    // send it!
-    spidev->transfer(line, bytes_per_line + 2);
-  }
-
-  // Send another trailing 8 bits for the last line
-  spidev->transfer(0x00);
-  digitalWrite(_cs, LOW);
-  spidev->endTransaction();
-}
-
-/**************************************************************************/
-/*!
-    @brief Clears the screen
-*/
-/**************************************************************************/
-void HyTech_SharpMem::clearDisplay() {
-  memset(sharpmem_buffer, 0xff, (WIDTH * HEIGHT) / 8);
-
-  spidev->beginTransaction();
-  // Send the clear screen command rather than doing a HW refresh (quicker)
-  digitalWrite(_cs, HIGH);
-
-  uint8_t clear_data[2] = {(uint8_t)(_sharpmem_vcom | SHARPMEM_BIT_CLEAR),
-                           0x00};
-  spidev->transfer(clear_data, 2);
-
-  TOGGLE_VCOM;
-  digitalWrite(_cs, LOW);
-  spidev->endTransaction();
 }

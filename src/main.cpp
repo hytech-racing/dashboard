@@ -157,8 +157,10 @@ void setup() {
 
   pinMode(PA3, OUTPUT);
   pinMode(PB7, OUTPUT);
+  pinMode(PC14, OUTPUT);
 
   digitalWrite(PB7, LOW);
+  digitalWrite(PC14, LOW);
 
   SerialUSB.begin(115200);
   delay(3000);
@@ -191,17 +193,42 @@ void setup() {
 
   
   testDisplay.begin();
-  testDisplay.drawPixel(1, 0, 1); //should draw a pixel on the display
-  testDisplay.drawPixel(2, 0, 1); // should draw another pixel on the display
-  testDisplay.drawPixel(3, 0, 1); // should draw another pixel on the display
-  testDisplay.drawPixel(4, 0, 1); // should draw another pixel on the display
-  testDisplay.drawPixel(5, 0, 1); // should draw another pixel on the display
-  testDisplay.drawPixel(6, 1, 1); // should draw another pixel on the display
-  testDisplay.drawPixel(7, 0, 1); // should draw another pixel on the display
-  testDisplay.drawPixel(8, 0, 1); //should draw another pixel on the display
-  testDisplay.drawPixel(9, 0, 1); // should draw another pixel on the display
-  testDisplay.drawPixel(10, 0, 1); // should draw another pixel on the display
+  testDisplay.drawPixel(0, 0, 0); //should draw a pixel on the display
+  testDisplay.drawPixel(1, 0, 0); // should draw a pixel on the display
+  testDisplay.drawPixel(2, 0, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(3, 0, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(4, 0, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(5, 0, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(6, 1, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(7, 1, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(8, 0, 0); //should draw another pixel on the display
+  testDisplay.drawPixel(9, 0, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(10, 0, 0); // should draw another pixel on the display
 
+  testDisplay.drawPixel(100, 100, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(101, 101, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(100, 101, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(101, 100, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(200, 200, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(199, 200, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(200, 199, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(199, 199, 0); // should draw another pixel on the display
+
+  testDisplay.drawPixel(300, 200, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(299, 200, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(300, 199, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(299, 199, 0); // should draw another pixel on the display
+
+  testDisplay.drawPixel(100, 240, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(100, 239, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(99, 240, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(99, 239, 0); // should draw another pixel on the display
+
+  testDisplay.drawPixel(318, 238, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(319, 238, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(318, 239, 0); // should draw another pixel on the display
+  testDisplay.drawPixel(319, 239, 0); // should draw another pixel on the display
+  testDisplay.writeLine(50, 50, 270, 190, 0); // draw a line across the display
   //SerialUSB.println(testDisplay.getBufferSize());
   //SerialUSB.println(((320 * 240) / 8) + (2*240));
   //SerialUSB.println(testDisplay.getBuffer()[0]);
@@ -247,6 +274,7 @@ void loop() {
 
 
       digitalWrite(PB7, HIGH); // set CS high before transmit, low in callback after transmit
+      digitalWrite(PC14, HIGH);
       SerialUSB.println("Starting DMA Transmit");
 //    SerialUSB.printf("SPI SR: 0x%08lX\n", hspi2.Instance->SR);
 // SerialUSB.printf("SPI CFG1: 0x%08lX\n", hspi2.Instance->CFG1);
