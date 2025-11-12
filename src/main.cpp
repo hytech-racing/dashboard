@@ -14,7 +14,8 @@
 #include "ht_sched.hpp"
 
 #include "CANInterface.h"
-#include "lcdInterface.h"
+//#include "lcdInterface.h"
+#include "newDisplay.h"
 #include "VCFInterface.h"
 #include "ACUInterface.h"
 #include "VCRInterface.h"
@@ -151,7 +152,7 @@ extern "C" void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
 HT_TASK::Task neopixels_task(&init_neopixels_task, &run_update_neopixels_task, NEOPIXEL_UPDATE_PRIORITY, NEOPIXEL_UPDATE_PERIOD);
 // HT_TASK::Task screen_task(&init_screen_task, &screen_refresh_task, SCREEN_REFRESH_PRIORITY, SCREEN_REFRESH_PERIOD); // 100 ms period
 
-HyTech_SharpMem testDisplay(SHARP_CS, 320, 240, 2000000); // Initialize display with CS pin, width, height, frequency, and no SPI pointer for now
+HyTech_SharpMem testDisplay(SHARP_CS, 320, 240); // Initialize display with CS pin, width, height, frequency, and no SPI pointer for now
 
 void setup() {
 
@@ -166,12 +167,13 @@ void setup() {
   delay(3000);
   SerialUSB.println("Starting");
 
+
   
   // Create Interfaces
   ACUInterfaceInstance::create();
   VCRInterfaceInstance::create();
   VCFInterfaceInstance::create(sys_time::hal_millis(), 50UL); //TODO: needs to be updated to use constexpr
-  // dashDisplayInstance::create(SHARP_CLK, SHARP_MOSI, SHARP_CS, 320, 240); 
+  //dashDisplayInstance::create(PB7, 320, 240); 
   
   VCRData_sInstance::create();
   VCFData_sInstance::create();
@@ -191,44 +193,47 @@ void setup() {
   
   HT_SPI_Init();
 
+  //dashDisplayInstance::instance().init();
   
   testDisplay.begin();
-  testDisplay.drawPixel(0, 0, 0); //should draw a pixel on the display
-  testDisplay.drawPixel(1, 0, 0); // should draw a pixel on the display
-  testDisplay.drawPixel(2, 0, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(3, 0, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(4, 0, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(5, 0, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(6, 1, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(7, 1, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(8, 0, 0); //should draw another pixel on the display
-  testDisplay.drawPixel(9, 0, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(10, 0, 0); // should draw another pixel on the display
+  testDisplay.drawRect(100, 100, 50, 50, 0); // Fill the screen with black
+  //testDisplay.draw_battery_bar(50);
+  // testDisplay.drawPixel(0, 0, 0); //should draw a pixel on the display
+  // testDisplay.drawPixel(1, 0, 0); // should draw a pixel on the display
+  // testDisplay.drawPixel(2, 0, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(3, 0, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(4, 0, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(5, 0, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(6, 1, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(7, 1, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(8, 0, 0); //should draw another pixel on the display
+  // testDisplay.drawPixel(9, 0, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(10, 0, 0); // should draw another pixel on the display
 
-  testDisplay.drawPixel(100, 100, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(101, 101, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(100, 101, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(101, 100, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(200, 200, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(199, 200, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(200, 199, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(199, 199, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(100, 100, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(101, 101, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(100, 101, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(101, 100, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(200, 200, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(199, 200, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(200, 199, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(199, 199, 0); // should draw another pixel on the display
 
-  testDisplay.drawPixel(300, 200, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(299, 200, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(300, 199, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(299, 199, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(300, 200, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(299, 200, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(300, 199, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(299, 199, 0); // should draw another pixel on the display
 
-  testDisplay.drawPixel(100, 240, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(100, 239, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(99, 240, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(99, 239, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(100, 240, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(100, 239, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(99, 240, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(99, 239, 0); // should draw another pixel on the display
 
-  testDisplay.drawPixel(318, 238, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(319, 238, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(318, 239, 0); // should draw another pixel on the display
-  testDisplay.drawPixel(319, 239, 0); // should draw another pixel on the display
-  testDisplay.writeLine(50, 50, 270, 190, 0); // draw a line across the display
+  // testDisplay.drawPixel(318, 238, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(319, 238, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(318, 239, 0); // should draw another pixel on the display
+  // testDisplay.drawPixel(319, 239, 0); // should draw another pixel on the display
+  // testDisplay.writeLine(50, 50, 270, 190, 0); // draw a line across the display
   //SerialUSB.println(testDisplay.getBufferSize());
   //SerialUSB.println(((320 * 240) / 8) + (2*240));
   //SerialUSB.println(testDisplay.getBuffer()[0]);
@@ -247,7 +252,8 @@ void setup() {
 
 void loop() {
     // HT_SCHED::Scheduler::getInstance().run();
-
+    //dashDisplayInstance::instance().hytech_animation();
+    //dashDisplayInstance::instance().draw_battery_bar(50);
     //uint8_t *ptr = testDisplay.getBuffer();
     if (millis() - last_blink > 100) {
       last_blink = millis();
