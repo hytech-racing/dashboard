@@ -33,6 +33,7 @@ HT_TASK::TaskResponse run_update_neopixels_task(const unsigned long& sys_micros,
     return HT_TASK::TaskResponse::YIELD;
 }
 
+
 // HT_TASK::TaskResponse init_screen_task(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info)
 // {
 //     dashDisplayInstance::instance().invert_display(false);

@@ -56,13 +56,13 @@ extern "C" void SystemClock_Config(void)
       | RCC_PERIPHCLK_SAI2 | RCC_PERIPHCLK_SAI1 | RCC_PERIPHCLK_SDMMC
       | RCC_PERIPHCLK_USART234578 | RCC_PERIPHCLK_ADC | RCC_PERIPHCLK_I2C123
       | RCC_PERIPHCLK_USB | RCC_PERIPHCLK_QSPI | RCC_PERIPHCLK_FMC
-      | RCC_PERIPHCLK_SPI45 | RCC_PERIPHCLK_SPI6;
+      | RCC_PERIPHCLK_SPI45 | RCC_PERIPHCLK_SPI6 | RCC_PERIPHCLK_FDCAN;
   // PLL 2
-  PeriphClkInitStruct.PLL2.PLL2M = 4;
+  PeriphClkInitStruct.PLL2.PLL2M = 2;
   //  PeriphClkInitStruct.PLL2.PLL2N = 115; // Max Freq @ 3v3 (overclocked SDRAM)
-  PeriphClkInitStruct.PLL2.PLL2N = 100;  // 100Mhz -> FMC
-  PeriphClkInitStruct.PLL2.PLL2P = 8;  // 57.5
-  PeriphClkInitStruct.PLL2.PLL2Q = 10; // 46
+  PeriphClkInitStruct.PLL2.PLL2N = 12;  // 100Mhz -> FMC
+  PeriphClkInitStruct.PLL2.PLL2P = 2;  // 57.5
+  PeriphClkInitStruct.PLL2.PLL2Q = 3; // 46
   PeriphClkInitStruct.PLL2.PLL2R = 2;  // 115Mhz
   PeriphClkInitStruct.PLL2.PLL2RGE = RCC_PLL2VCIRANGE_2;
   PeriphClkInitStruct.PLL2.PLL2VCOSEL = RCC_PLL2VCOWIDE;
@@ -92,6 +92,7 @@ extern "C" void SystemClock_Config(void)
   PeriphClkInitStruct.I2c4ClockSelection = RCC_I2C4CLKSOURCE_PLL3;
   PeriphClkInitStruct.UsbClockSelection = RCC_USBCLKSOURCE_HSI48;
   PeriphClkInitStruct.AdcClockSelection = RCC_ADCCLKSOURCE_PLL3;
+  PeriphClkInitStruct.FdcanClockSelection = RCC_FDCANCLKSOURCE_PLL2;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
     Error_Handler();
   }

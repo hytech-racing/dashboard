@@ -224,7 +224,7 @@
 // bool DashboardDisplay::blink()
 // {
 //     if ((millis() - DashboardDisplay::last_blink_millis) > 200)
-//     {
+//     { 
 //         DashboardDisplay::last_blink = !last_blink;
 //         DashboardDisplay::last_blink_millis = millis();
 //     }
