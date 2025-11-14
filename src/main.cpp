@@ -24,6 +24,7 @@
 
 #include "HT_SPI.h"
 #include "HT_Display.h"
+#include "HT_FDCAN.h"
 
 
 #define LED_PIN PA3
@@ -57,95 +58,10 @@ void custom_handle_error(int num) {
   }
 }
 
-void Check_DMA_SPI_Errors(SPI_HandleTypeDef *hspi)
-{
-    DMA_HandleTypeDef *hdma = hspi->hdmatx;
-
-    SerialUSB.printf("\n--- DMA / SPI Diagnostic ---\n");
-
-    // 1️⃣ DMA-level error flags
-    SerialUSB.printf("DMA ErrorCode: 0x%08lX\n", hdma->ErrorCode);
-    if (hdma->ErrorCode & HAL_DMA_ERROR_TE)  SerialUSB.printf(" -> Transfer error (TEIF)\n");
-    if (hdma->ErrorCode & HAL_DMA_ERROR_FE)  SerialUSB.printf(" -> FIFO error (FEIF)\n");
-    if (hdma->ErrorCode & HAL_DMA_ERROR_DME) SerialUSB.printf(" -> Direct mode error (DMEIF)\n");
-    if (hdma->ErrorCode & HAL_DMA_ERROR_TIMEOUT) SerialUSB.printf(" -> Timeout error\n");
-    if (hdma->ErrorCode & HAL_DMA_ERROR_PARAM)   SerialUSB.printf(" -> Invalid parameters\n");
-    if (hdma->ErrorCode == HAL_DMA_ERROR_NONE)   SerialUSB.printf(" -> No DMA error\n");
-
-    // 2️⃣ SPI-level error flags
-    SerialUSB.printf("SPI ErrorCode: 0x%08lX\n", hspi->ErrorCode);
-    if (hspi->ErrorCode & HAL_SPI_ERROR_MODF)   SerialUSB.printf(" -> Mode fault\n");
-    if (hspi->ErrorCode & HAL_SPI_ERROR_CRC)    SerialUSB.printf(" -> CRC error\n");
-    if (hspi->ErrorCode & HAL_SPI_ERROR_OVR)    SerialUSB.printf(" -> Overrun\n");
-    if (hspi->ErrorCode & HAL_SPI_ERROR_FRE)    SerialUSB.printf(" -> Frame error\n");
-    if (hspi->ErrorCode & HAL_SPI_ERROR_DMA)    SerialUSB.printf(" -> DMA transfer error\n");
-    if (hspi->ErrorCode == HAL_SPI_ERROR_NONE)  SerialUSB.printf(" -> No SPI error\n");
-
-    // 3️⃣ DMA Stream hardware flags (optional: direct register access)
-    uint32_t isr = DMA1->LISR; // or HISR depending on stream
-    SerialUSB.printf("DMA LISR/HISR: 0x%08lX\n", isr);
-
-    // 4️⃣ SPI Status Register
-    uint32_t sr = hspi->Instance->SR;
-    SerialUSB.printf("SPI SR: 0x%08lX\n", sr);
-
-    if (sr & SPI_SR_OVR)  SerialUSB.printf(" -> OVR set\n");
-    if (sr & SPI_SR_MODF) SerialUSB.printf(" -> MODF set\n");
-    if (sr & SPI_SR_UDR)  SerialUSB.printf(" -> UDR set\n");
-    // if (sr & SPI_SR_FRE)  SerialUSB.printf(" -> FRE set\n");
-
-    SerialUSB.printf("SPI SR: 0x%08lX\n", hspi2.Instance->SR);
-SerialUSB.printf("SPI CFG1: 0x%08lX\n", hspi2.Instance->CFG1);
-SerialUSB.printf("SPI CFG2: 0x%08lX\n", hspi2.Instance->CFG2);
-SerialUSB.printf("SPI CR1:  0x%08lX\n", hspi2.Instance->CR1);
-SerialUSB.printf("SPI CR2:  0x%08lX\n", hspi2.Instance->CR2);
-
-    // 5️⃣ State fields
-    SerialUSB.printf("DMA State: %d, SPI State: %d\n", hdma->State, hspi->State);
-
-    SerialUSB.printf("--- End of diagnostics ---\n");
-}
-
 extern "C" void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
 {
     SerialUSB.printf("SPI Error Callback triggered!\n");
-    Check_DMA_SPI_Errors(hspi);
 }
- 
-// void dump_dma_spi_state(void)
-// {
-//     DMA_HandleTypeDef *hdma = hspi2.hdmatx;
-//     SerialUSB.printf("---- DMA runtime ----\n");
-//     SerialUSB.printf("DMA Instance: %p\n", (void*)Instance);
-//     // NDTR = number of remaining transfers
-//     SerialUSB.printf("NDTR: %lu\n", (uint32_t)hdma->Instance->NDTR);
-//     // Peripheral and memory addresses
-//     SerialUSB.printf("PAR (periph addr): 0x%08lX\n", (uint32_t)hdma->Instance->PAR);
-//     SerialUSB.printf("M0AR (mem addr):   0x%08lX\n", (uint32_t)hdma->Instance->M0AR);
-//     #if defined(M0AR_MA)
-//     SerialUSB.printf("M1AR (mem2 addr):  0x%08lX\n", (uint32_t)hdma->Instance->M1AR);
-//     #endif
-//     // Stream configuration register SxCR
-//     SerialUSB.printf("CR (SxCR): 0x%08lX\n", (uint32_t)hdma->Instance->CR);
-//     SerialUSB.printf("FCR (SxFCR): 0x%08lX\n", (uint32_t)hdma->Instance->FCR);
-//     SerialUSB.printf("ISR: 0x%08lX\n", (uint32_t)hdma->Instance->ISR);
-//     SerialUSB.printf("IFCR: 0x%08lX\n", (uint32_t)hdma->Instance->IFCR);
-//     SerialUSB.printf("hdma->Init: Dir=%d MemInc=%d PDataAlign=%d MDataAlign=%d Mode=%d FIFOMode=%d MemBurst=%d PeriphBurst=%d\n",
-//         hdma->Init.Direction,
-//         hdma->Init.MemInc,
-//         hdma->Init.PeriphDataAlignment,
-//         hdma->Init.MemDataAlignment,
-//         hdma->Init.Mode,
-//         hdma->Init.FIFOMode,
-//         hdma->Init.MemBurst,
-//         hdma->Init.PeriphBurst
-//     );
-//     SerialUSB.printf("---- SPI registers ----\n");
-//     SerialUSB.printf("SPI SR: 0x%08lX\n", (uint32_t)hspi2.Instance->SR);
-//     SerialUSB.printf("SPI CFG1: 0x%08lX\n", (uint32_t)hspi2.Instance->CFG1);
-//     SerialUSB.printf("SPI CR1: 0x%08lX\n", (uint32_t)hspi2.Instance->CR1);
-// }
-  
 
 
 // Task Init
@@ -196,48 +112,6 @@ void setup() {
   //dashDisplayInstance::instance().init();
   
   testDisplay.begin();
-  testDisplay.drawRect(100, 100, 50, 50, 0); // Fill the screen with black
-  //testDisplay.draw_battery_bar(50);
-  // testDisplay.drawPixel(0, 0, 0); //should draw a pixel on the display
-  // testDisplay.drawPixel(1, 0, 0); // should draw a pixel on the display
-  // testDisplay.drawPixel(2, 0, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(3, 0, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(4, 0, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(5, 0, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(6, 1, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(7, 1, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(8, 0, 0); //should draw another pixel on the display
-  // testDisplay.drawPixel(9, 0, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(10, 0, 0); // should draw another pixel on the display
-
-  // testDisplay.drawPixel(100, 100, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(101, 101, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(100, 101, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(101, 100, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(200, 200, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(199, 200, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(200, 199, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(199, 199, 0); // should draw another pixel on the display
-
-  // testDisplay.drawPixel(300, 200, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(299, 200, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(300, 199, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(299, 199, 0); // should draw another pixel on the display
-
-  // testDisplay.drawPixel(100, 240, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(100, 239, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(99, 240, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(99, 239, 0); // should draw another pixel on the display
-
-  // testDisplay.drawPixel(318, 238, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(319, 238, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(318, 239, 0); // should draw another pixel on the display
-  // testDisplay.drawPixel(319, 239, 0); // should draw another pixel on the display
-  // testDisplay.writeLine(50, 50, 270, 190, 0); // draw a line across the display
-  //SerialUSB.println(testDisplay.getBufferSize());
-  //SerialUSB.println(((320 * 240) / 8) + (2*240));
-  //SerialUSB.println(testDisplay.getBuffer()[0]);
-
 // for (int i = 0; i < CHOPPED_SIZE; i += 1){//(320/8)+2){
 
 //     // save address byte
@@ -255,7 +129,10 @@ void loop() {
     //dashDisplayInstance::instance().hytech_animation();
     //dashDisplayInstance::instance().draw_battery_bar(50);
     //uint8_t *ptr = testDisplay.getBuffer();
-    if (millis() - last_blink > 100) {
+
+    testDisplay.drawBitmap(hytech_logo_x, hytech_logo_y, epd_bitmap_Hytech_Logo, hytech_logo_size, hytech_logo_size, 0);
+    if (millis() - last_blink > 100)
+    {
       last_blink = millis();
       led_state = !led_state;
       digitalWrite(PA3, led_state);
@@ -269,8 +146,8 @@ void loop() {
       
       // HAL_SPI_Transmit(&hspi2, testDisplay.getBuffer(), testDisplay.getBufferSize(), HAL_MAX_DELAY); // Transmit the display buffer using DMA
       //SerialUSB.println(testDisplay.getBufferSize());
-      //SerialUSB.SerialUSB.printf("Count: %d\n", count);  
-  }
+      //SerialUSB.SerialUSB.printf("Count: %d\n", count);
+    }
 
   if (millis() - last_print > 1000) {
 
