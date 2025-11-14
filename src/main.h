@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #include <Arduino.h>
+#include "bitmaps.h"
 
 extern "C" void SystemClock_Config(void)
 {
