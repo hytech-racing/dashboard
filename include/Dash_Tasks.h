@@ -6,8 +6,18 @@
 #include <ht_sched.hpp>
 #include <ht_task.hpp>
 
+#include "Dash_Constants.h"
+#include "Dash_Globals.h"
+#include "NeopixelController.h"
+#include "SharedFirmwareTypes.h"
 
-
+// Interface Includes
+#include "VCFInterface.h"
+#include "VCRInterface.h"
+// #include "lcdInterface.h"
+#include "newDisplay.h"
+#include "bitmaps.h"
+#include "etl/delegate.h"
 
 HT_TASK::TaskResponse init_can_task();
 HT_TASK::TaskResponse read_can_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
@@ -18,4 +28,5 @@ HT_TASK::TaskResponse run_update_neopixels_task(const unsigned long& sys_micros,
 HT_TASK::TaskResponse init_screen_task(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
 HT_TASK::TaskResponse screen_refresh_task(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
 
+HT_TASK::TaskResponse main_display_task(const unsigned long &sys_micros, const HT_TASK::TaskInfo &task_info);
 #endif /* DASH_TASKS_H */  

@@ -1,3 +1,6 @@
+#ifndef BITMAPS__H
+#define BITMAPS__H
+
 #include <Arduino.h>
 
 const int hytech_logo_size = 84;
@@ -9191,3 +9194,4 @@ const unsigned char isp10 [] PROGMEM = {
 // 	isp10
 // };
 
+#endif

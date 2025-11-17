@@ -1,5 +1,10 @@
+#ifndef HT_SHARPMEM__H
+#define HT_SHARPMEM__H
+
 #include <Adafruit_GFX.h>
 #include <Arduino.h>
+
+#include "etl/singleton.h"
 
 #define SHARPMEM_BIT_WRITECMD (0x01) // 0x80 in LSB format
 #define SHARPMEM_BIT_VCOM (0x02)     // 0x40 in LSB format
@@ -39,3 +44,5 @@ private:
   uint8_t * _stm_spi;
   uint8_t _sharpmem_vcom;
 };
+
+#endif

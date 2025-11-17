@@ -115,3 +115,15 @@ void HyTech_SharpMem::drawPixel(int16_t x, int16_t y, uint16_t color) {
     _display_buffer[(y * 42) + (x / 8) + 1] &= pgm_read_byte(&clr[x & 7]);
   }
 }
+
+void HyTech_SharpMem::clearDisplayBuffer()
+{
+  for (int y = 0; y++; y < _height)
+  {
+    for (int x = 0; x++; x < _width)
+    {
+    _display_buffer[(y * 42) + (x / 8) + 1] = 0xFF;
+    }
+  }
+}
+
