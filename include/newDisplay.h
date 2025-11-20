@@ -32,8 +32,7 @@ public:
     void startup();
     void hytech_animation();
     // void driver_animation(StartupAnimations);
-
-    void draw_background_bitmap();
+    void clear_display_buffer() { _display.clearDisplayBuffer(); }
     void draw_vertical_pedal_bar(float val, int initial_x_coord);
     void draw_battery_bar(int percent);
     void display_speeds(float rpm);
