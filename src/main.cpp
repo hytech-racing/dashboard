@@ -20,7 +20,7 @@
 #include "ACUInterface.h"
 #include "VCRInterface.h"
 
-#include "main.h"
+#include "SysClock_Config.h"
 
 #include "HT_SPI.h"
 #include "HT_Display.h"
@@ -31,20 +31,14 @@
 #define SHARP_CS PB7
 #define SHARP_CLK PB10
 #define SHARP_MOSI PB15
-#define CHOPPED_SIZE 10080
-#define SHARPMEM_BIT_WRITECMD (0x01) // 0x80 in LSB format
-#define SHARPMEM_BIT_VCOM (0x02)     // 0x40 in LSB format
-#define SHARPMEM_BIT_CLEAR (0x04)    // 0x20 in LSB format
+
 
 uint32_t last_blink = 0;
 uint32_t last_print = 0;
-uint16_t chopped_len = CHOPPED_SIZE;
 bool led_state = false;
 int count = 0;
 
 uint8_t test_tx[] = {0xDE, 0xAD, 0xBE, 0xEF};
-static uint8_t chopped_display[CHOPPED_SIZE] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-                                        0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F};
 
 // CAN setup
 uint32_t rxId;
@@ -121,22 +115,11 @@ void setup() {
   testDisplay.init(&hspi2);
   testDisplay.hytech_animation();
   spi_tx_complete = true;
-// for (int i = 0; i < CHOPPED_SIZE; i += 1){//(320/8)+2){
-
-//     // save address byte
-
-//     chopped_display[i] = i;//((i) / (42)) + 1;
-//     SerialUSB.println(chopped_display[i]);
-//   }
-//   chopped_display[0] = 0x01;
-//   chopped_display[1] = 0x02;
 
 }
 int brake = 0;
 void loop() {
   //scheduler.run();
-    //testDisplay.drawBitmap(hytech_logo_x, hytech_logo_y, epd_bitmap_Hytech_Logo, hytech_logo_size, hytech_logo_size, 0);
-    //testDisplay.startup();
     
     if (spi_tx_complete)
     {
