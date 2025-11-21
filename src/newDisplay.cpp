@@ -9,7 +9,19 @@ void HTX_Display::init()
     digitalWrite(PB7, LOW);
     digitalWrite(PB1, LOW);
     _display.begin();
-    
+
+}
+
+void HTX_Display::draw_background()
+{
+    _display.clearDisplayBuffer();
+    _display.fillRect(0, 0, 320, 240, _white);
+    _display.drawBitmap(0, 0, epd_bitmap_hytech_dashboard, 320, 240, _black);
+    _display.fillRect(320 - 40, 30, 40, 200, _white);
+    _display.fillRect(283, 36, 305 - 283, 210 - 36, _black);
+    _display.fillRect(283 - 3, (36 + 210 - 36) / 2 + 15, 25, 7, _white);
+    _display.fillRect(0, 215, 130, 25, _white);
+    _display.fillRect(100, 5, 100, 20, _black);
 }
 
 void HTX_Display::startup()

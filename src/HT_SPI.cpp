@@ -3,7 +3,6 @@
 SPI_HandleTypeDef hspi2;
 DMA_HandleTypeDef hdma_spi2_tx;
 
-bool spi_tx_complete = true;
 
 void DMA1_Stream0_IRQHandler(void)
 { HAL_DMA_IRQHandler(&hdma_spi2_tx); }
@@ -77,15 +76,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
 
 }
 
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-  if (hspi->Instance == SPI2) {
-    digitalWrite(PB7, LOW); // set CS low after transmit complete
-    digitalWrite(PC14, LOW);
-    SerialUSB.println("transmit complete");
-    bool spi_tx_complete = true;
-  }
-}
+
 
 void HT_SPI_Init()
 {

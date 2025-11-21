@@ -33,6 +33,7 @@ public:
     void startup();
     void hytech_animation();
     // void driver_animation(StartupAnimations);
+    void draw_background();
     void clear_display_buffer() { _display.clearDisplayBuffer(); }
     void draw_vertical_pedal_bar(float val, int initial_x_coord);
     void draw_battery_bar(int percent);
@@ -50,12 +51,13 @@ private:
 
     bool last_blink = false;
     uint32_t last_blink_millis = 0;
-    uint16_t _black = 0;
-    uint16_t _white = 1;
+    uint16_t _black = 0x00;
+    uint16_t _white = 0xFF;
 
     /* SPI Sending */
     uint8_t vcom = SHARPMEM_BIT_VCOM; // VCOM toggle command
     SPI_HandleTypeDef *hspi = NULL;
+    HAL_StatusTypeDef _spi_status;
 };
 
 using HTXDisplayInstance = etl::singleton<HTX_Display>;

@@ -53,9 +53,7 @@ uint8_t rxLen;
 
 uint8_t tx[8] = {0x11, 0x22, 0x33};
 
-
-
-void send_display_buffer();
+bool spi_tx_complete = true;
 
 void custom_handle_error(int num) {
   while(1) {
@@ -132,11 +130,23 @@ void setup() {
 //   chopped_display[1] = 0x02;
 
 }
-
+int brake = 0;
 void loop() {
   //scheduler.run();
     //testDisplay.drawBitmap(hytech_logo_x, hytech_logo_y, epd_bitmap_Hytech_Logo, hytech_logo_size, hytech_logo_size, 0);
-    testDisplay.startup();
+    //testDisplay.startup();
+    if (spi_tx_complete)
+    {
+    testDisplay.draw_background();
+    testDisplay.invert_display(VCFInterfaceInstance::instance().is_mech_brake_pressed());
+    testDisplay.draw_vertical_pedal_bar((brake++%100), 17);
+    testDisplay.draw_battery_bar(ACUInterfaceInstance::instance().get_curr_data().pack_voltage * 100.0 / 530.0);
+    testDisplay.draw_icons(1 /*DrivebrainInterfaceInstance::instance().get_db_state_data().vn_status*/, 1, 1, 1);
+    testDisplay.display_speeds(VCRInterfaceInstance::instance().get_curr_wheel_data().actual_speed);
+    testDisplay.send_display_buffer(&hspi2);
+    spi_tx_complete = false;
+    }
+    
     ///@brief blink led
     if (millis() - last_blink > 100)
     {
@@ -144,29 +154,39 @@ void loop() {
       led_state = !led_state;
       digitalWrite(PA3, led_state);
     }
+    
 
-  if (millis() - last_print > 1000) {
-
-    //dump_dma_spi_state();
-    last_print = millis();
-    testDisplay.send_display_buffer(&hspi2);
-
-    FDCAN_write(0x55, tx, 3);
-
-    if (FDCAN_read(&rxId, rxData, &rxLen))
+    if (millis() - last_print > 200)
     {
-      SerialUSB.print("Received ID: 0x");
-      SerialUSB.print(rxId, HEX);
-      SerialUSB.print(" Data: ");
-      for (int i = 0; i < rxLen; i++)
-      {
-        SerialUSB.print(rxData[i], HEX);
-        SerialUSB.print(" ");
-      }
-      Serial.println();
-    }
+      SerialUSB.print("looping");
 
-    spi_tx_complete = false;
-    last_print = millis();
+      // dump_dma_spi_state();
+      last_print = millis();
+
+      FDCAN_write(0x55, tx, 3);
+
+      if (FDCAN_read(&rxId, rxData, &rxLen))
+      {
+        SerialUSB.print("Received ID: 0x");
+        SerialUSB.print(rxId, HEX);
+        SerialUSB.print(" Data: ");
+        for (int i = 0; i < rxLen; i++)
+        {
+          SerialUSB.print(rxData[i], HEX);
+          SerialUSB.print(" ");
+        }
+        Serial.println();
+      }
+      last_print = millis();
+    }
 }
+
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+  if (hspi->Instance == SPI2)
+  {
+    spi_tx_complete = true;
+    digitalWrite(PB7, LOW); // set CS low after transmit complete
+    digitalWrite(PC14, LOW);   
+  }
 }
