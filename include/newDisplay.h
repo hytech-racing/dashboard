@@ -11,6 +11,7 @@
 #include <Fonts/FreeSans9pt7b.h>
 #include <Fonts/FreeSans24pt7b.h>
 #include <Fonts/FreeSansBold24pt7b.h>
+#include "HT_SPI.h"
 
 #include "bitmaps.h"
 
@@ -27,7 +28,7 @@ class HTX_Display
 {
 public:
     HyTech_SharpMem _display; // bigger display is 320x240 smaller one is 400x240
-    HTX_Display(uint8_t cs) : _display(cs, 320, 240) {}
+    HTX_Display(uint8_t cs, SPI_HandleTypeDef *spi_address) : _display(cs, 320, 240) { spi_address = hspi;}
     void init();
     void startup();
     void hytech_animation();
@@ -39,7 +40,7 @@ public:
     void draw_icons(uint8_t vn_status, uint8_t car_state, bool db_in_ctrl, bool is_latched);
     void invert_display(bool invert_criteria);
     void draw_popup(String title);
-    void display_refresh();
+    void send_display_buffer(SPI_HandleTypeDef *hspi);
     uint8_t current_page = 0;
 
 private:
@@ -51,6 +52,10 @@ private:
     uint32_t last_blink_millis = 0;
     uint16_t _black = 0;
     uint16_t _white = 1;
+
+    /* SPI Sending */
+    uint8_t vcom = SHARPMEM_BIT_VCOM; // VCOM toggle command
+    SPI_HandleTypeDef *hspi = NULL;
 };
 
 using HTXDisplayInstance = etl::singleton<HTX_Display>;

@@ -9,11 +9,13 @@ void HTX_Display::init()
     digitalWrite(PB7, LOW);
     digitalWrite(PB1, LOW);
     _display.begin();
+    
 }
 
 void HTX_Display::startup()
 {
-    hytech_animation();
+    _display.drawBitmap(hytech_logo_x, hytech_logo_y, epd_bitmap_Hytech_Logo, hytech_logo_size, hytech_logo_size, 0);
+    //hytech_animation();
     // driver_animation(StartupAnimations::NONE);
 }
 
@@ -161,10 +163,6 @@ void HTX_Display::invert_display(bool invert_criteria)
     }
 }
 
-void HTX_Display::display_refresh()
-{
-    //_display.refresh();
-}
 
 void HTX_Display::draw_rectangle_right_corner(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
@@ -215,4 +213,19 @@ bool HTX_Display::blink()
         HTX_Display::last_blink_millis = millis();
     }
     return HTX_Display::last_blink;
+}
+
+void HTX_Display::send_display_buffer(SPI_HandleTypeDef *hspi)
+{
+    digitalWrite(PB7, HIGH); // set CS high before transmit, low in callback after transmit
+    digitalWrite(PC14, HIGH);
+    // SerialUSB.println("Starting DMA Transmit");
+
+    uint8_t toggle_vcom[] = {vcom | SHARPMEM_BIT_WRITECMD};
+    HAL_SPI_Transmit(hspi, toggle_vcom, sizeof(toggle_vcom), HAL_MAX_DELAY); // Test transmit to ensure SPI is working
+    vcom = vcom ? 0x00 : SHARPMEM_BIT_VCOM;
+
+    SCB_CleanDCache_by_Addr((uint32_t *)_display.getBuffer(), _display.getBufferSize()); // Clean D-Cache before DMA transfer
+    hspi2.Instance->CR1 &= ~SPI_CR1_SPE;
+    HAL_SPI_Transmit_DMA(hspi, _display.getBuffer(), _display.getBufferSize()); // Transmit the display buffer using DMA
 }

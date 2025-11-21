@@ -53,7 +53,7 @@ uint8_t rxLen;
 
 uint8_t tx[8] = {0x11, 0x22, 0x33};
 
-uint8_t vcom = SHARPMEM_BIT_VCOM; //VCOM toggle command
+
 
 void send_display_buffer();
 
@@ -72,11 +72,14 @@ extern "C" void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
 }
 
 
+/* Scheduler setup */
+HT_SCHED::Scheduler &scheduler = HT_SCHED::Scheduler::getInstance();
+
 // Task Init
 HT_TASK::Task neopixels_task(&init_neopixels_task, &run_update_neopixels_task, NEOPIXEL_UPDATE_PRIORITY, NEOPIXEL_UPDATE_PERIOD);
-// HT_TASK::Task screen_task(&init_screen_task, &screen_refresh_task, SCREEN_REFRESH_PRIORITY, SCREEN_REFRESH_PERIOD); // 100 ms period
+//HT_TASK::Task screen_task(&init_screen_task, &screen_refresh_task, SCREEN_REFRESH_PRIORITY, SCREEN_REFRESH_PERIOD); // 100 ms period
 
-//HyTech_SharpMem testDisplay(SHARP_CS, 320, 240); // Initialize display with CS pin, width, height, frequency, and no SPI pointer for now
+HTX_Display testDisplay(SHARP_CS, &hspi2); // Initialize display with CS pin, width, height, frequency, and no SPI pointer for now
 
 void setup() {
 
@@ -97,7 +100,7 @@ void setup() {
   ACUInterfaceInstance::create();
   VCRInterfaceInstance::create();
   VCFInterfaceInstance::create(sys_time::hal_millis(), 50UL); //TODO: needs to be updated to use constexpr
-  HTXDisplayInstance::create(PB7); 
+  //HTXDisplayInstance::create(PB7); 
   
   VCRData_sInstance::create();
   VCFData_sInstance::create();
@@ -107,20 +110,17 @@ void setup() {
   auto main_can_recv = etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)>::create<DashCAN::dash_read_switch>();
   //DashCANInterfaceObjectsInstance::create(main_can_recv, &stm_can); // NOLINT (Not sure why it's uninitialized. I think it is.)
   
-  
-  
-  // Setup scheduler
-  HT_SCHED::Scheduler::getInstance().setTimingFunction(micros);
+  scheduler.setTimingFunction(micros);
   
   //HT_SCHED::Scheduler::getInstance().schedule(neopixels_task);
-  // HT_SCHED::Scheduler::getInstance().schedule(screen_task);
+  //HT_SCHED::Scheduler::getInstance().schedule(screen_task);
   
   HT_SPI_Init();
   FDCAN_Init();
 
   //dashDisplayInstance::instance().init();
   
-  //testDisplay.begin();
+  testDisplay.init();
 // for (int i = 0; i < CHOPPED_SIZE; i += 1){//(320/8)+2){
 
 //     // save address byte
@@ -134,8 +134,9 @@ void setup() {
 }
 
 void loop() {
+  //scheduler.run();
     //testDisplay.drawBitmap(hytech_logo_x, hytech_logo_y, epd_bitmap_Hytech_Logo, hytech_logo_size, hytech_logo_size, 0);
-
+    testDisplay.startup();
     ///@brief blink led
     if (millis() - last_blink > 100)
     {
@@ -148,7 +149,7 @@ void loop() {
 
     //dump_dma_spi_state();
     last_print = millis();
-    //send_display_buffer();
+    testDisplay.send_display_buffer(&hspi2);
 
     FDCAN_write(0x55, tx, 3);
 
@@ -169,5 +170,3 @@ void loop() {
     last_print = millis();
 }
 }
-
-
