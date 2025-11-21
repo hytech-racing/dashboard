@@ -20,7 +20,6 @@ public:
   bool begin();
   void drawPixel(int16_t x, int16_t y, uint16_t color);
   uint8_t getPixel(uint16_t x, uint16_t y);
-  void clearDisplay();
   void refresh_buffer(void);
   void clearDisplayBuffer();
   /**
@@ -34,12 +33,10 @@ public:
   
 
 private:
-  Adafruit_SPIDevice *spidev = NULL; //need to figure this one out
   uint8_t _display_buffer[10080]; //320*240/8 = 9600 + 480 extra for line addresses
   uint16_t _size_of_buffer = 10080;
   uint16_t _display_width = 320;
   uint16_t _display_height = 240;
-  uint16_t _test = 2;
   uint8_t _cs;
   uint8_t * _stm_spi;
   uint8_t _sharpmem_vcom;

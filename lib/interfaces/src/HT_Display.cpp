@@ -118,9 +118,9 @@ void HyTech_SharpMem::drawPixel(int16_t x, int16_t y, uint16_t color) {
 
 void HyTech_SharpMem::clearDisplayBuffer()
 {
-  for (int y = 0; y++; y < _height)
+  for (int y = 0; y < _height; y++)
   {
-    for (int x = 0; x++; x < _width)
+    for (int x = 0; x < _width; x++)
     {
     _display_buffer[(y * 42) + (x / 8) + 1] = 0xFF;
     }

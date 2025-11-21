@@ -1,5 +1,7 @@
 #include "HT_SPI.h"
 
+extern bool spi_tx_complete;
+
 SPI_HandleTypeDef hspi2;
 DMA_HandleTypeDef hdma_spi2_tx;
 
@@ -76,7 +78,15 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
 
 }
 
-
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+  if (hspi->Instance == SPI2)
+  {
+    spi_tx_complete = true;
+    digitalWrite(PB7, LOW); // set CS low after transmit complete
+    digitalWrite(PC14, LOW);
+  }
+}
 
 void HT_SPI_Init()
 {

@@ -1,6 +1,6 @@
 #include "newDisplay.h"
 
-void HTX_Display::init()
+void HTX_Display::init(SPI_HandleTypeDef *hspi)
 {
     // set non-needed Display pins low
     pinMode(PB7, OUTPUT);
@@ -9,6 +9,8 @@ void HTX_Display::init()
     digitalWrite(PB7, LOW);
     digitalWrite(PB1, LOW);
     _display.begin();
+
+    _hspi = hspi;
 
 }
 
@@ -39,17 +41,18 @@ void HTX_Display::hytech_animation()
     _display.clearDisplayBuffer();
     _display.setRotation(0);
     _display.drawBitmap(hytech_logo_x, hytech_logo_y, epd_bitmap_Hytech_Logo, hytech_logo_size, hytech_logo_size, _black);
-    //_display.refresh();
+    send_display_buffer(_hspi);
     delay(2000);
     for (int i = 1; i > -116; i -= 3)
     {
         _display.clearDisplayBuffer();
         _display.drawBitmap(hytech_logo_x + i, hytech_logo_y, epd_bitmap_Hytech_Logo, hytech_logo_size, hytech_logo_size, _black);
-        //_display.refresh();
+        send_display_buffer(_hspi);
+        delay(60);
     }
-    delay(20);
     _display.drawBitmap(hytech_words_x + 45, hytech_words_y, epd_bitmap_HytechWords, hytech_words_x_size, hytech_words_y_size, _black);
-    //_display.refresh();
+    send_display_buffer(_hspi);
+    delay(60);
     _display.setFont(&FreeSans12pt7b);
     String greeting = "Cook";
     int length = greeting.length();
@@ -57,7 +60,7 @@ void HTX_Display::hytech_animation()
     _display.setTextColor(_black);
     _display.setTextSize(1);
     _display.println(greeting);
-    //_display.refresh();
+    send_display_buffer(_hspi);
     delay(2000);
     _display.clearDisplayBuffer();
 }

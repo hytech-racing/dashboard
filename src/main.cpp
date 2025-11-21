@@ -77,7 +77,7 @@ HT_SCHED::Scheduler &scheduler = HT_SCHED::Scheduler::getInstance();
 HT_TASK::Task neopixels_task(&init_neopixels_task, &run_update_neopixels_task, NEOPIXEL_UPDATE_PRIORITY, NEOPIXEL_UPDATE_PERIOD);
 //HT_TASK::Task screen_task(&init_screen_task, &screen_refresh_task, SCREEN_REFRESH_PRIORITY, SCREEN_REFRESH_PERIOD); // 100 ms period
 
-HTX_Display testDisplay(SHARP_CS, &hspi2); // Initialize display with CS pin, width, height, frequency, and no SPI pointer for now
+HTX_Display testDisplay(SHARP_CS); // Initialize display with CS pin, width, height, frequency, and no SPI pointer for now
 
 void setup() {
 
@@ -118,7 +118,9 @@ void setup() {
 
   //dashDisplayInstance::instance().init();
   
-  testDisplay.init();
+  testDisplay.init(&hspi2);
+  testDisplay.hytech_animation();
+  spi_tx_complete = true;
 // for (int i = 0; i < CHOPPED_SIZE; i += 1){//(320/8)+2){
 
 //     // save address byte
@@ -135,6 +137,7 @@ void loop() {
   //scheduler.run();
     //testDisplay.drawBitmap(hytech_logo_x, hytech_logo_y, epd_bitmap_Hytech_Logo, hytech_logo_size, hytech_logo_size, 0);
     //testDisplay.startup();
+    
     if (spi_tx_complete)
     {
     testDisplay.draw_background();
@@ -181,12 +184,3 @@ void loop() {
     }
 }
 
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-  if (hspi->Instance == SPI2)
-  {
-    spi_tx_complete = true;
-    digitalWrite(PB7, LOW); // set CS low after transmit complete
-    digitalWrite(PC14, LOW);   
-  }
-}
