@@ -99,7 +99,7 @@ void setup() {
   
   // Create can singletons
   CANInterfacesInstance::create(VCFInterfaceInstance::instance(), ACUInterfaceInstance::instance(), VCRInterfaceInstance::instance(), DrivebrainInterfaceInstance::instance()); 
-  auto main_can_recv = etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)>::create<DashCAN::dash_read_switch>();
+  //auto main_can_recv = etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)>::create<DashCAN::dash_read_switch>();
   //DashCANInterfaceObjectsInstance::create(main_can_recv, &stm_can); // NOLINT (Not sure why it's uninitialized. I think it is.)
   
   scheduler.setTimingFunction(micros);
@@ -151,19 +151,7 @@ void loop() {
 
       FDCAN_write(0x55, tx, 3);
 
-      if (FDCAN_read(&rxId, rxData, &rxLen))
-      {
-        SerialUSB.print("Received ID: 0x");
-        SerialUSB.print(rxId, HEX);
-        SerialUSB.print(" Data: ");
-        for (int i = 0; i < rxLen; i++)
-        {
-          SerialUSB.print(rxData[i], HEX);
-          SerialUSB.print(" ");
-        }
-        Serial.println();
-      }
-      last_print = millis();
+    FDCAN_read(CANInterfacesInstance::instance(), millis());
     }
 }
 

@@ -95,27 +95,20 @@ int FDCAN_write(uint32_t id, const uint8_t *data, uint8_t len) {
   return 1;
 }
 
-int FDCAN_read(uint32_t *id, uint8_t *data, uint8_t *len) {
+int FDCAN_read(CANInterfaces &interfaces, unsigned long millis)
+{
   FDCAN_RxHeaderTypeDef rxHeader;
+  uint8_t data[8];
 
   // Check if a message is available in FIFO0
   if (HAL_FDCAN_GetRxMessage(&hfdcan1, FDCAN_RX_FIFO0, &rxHeader, data) == HAL_OK) {
       // Return identifier and data length
-      *id = rxHeader.Identifier;
+      CAN_message_t msg;
+      msg.id = rxHeader.Identifier;
+      msg.len = rxHeader.DataLength;
+      msg.buf = data;
 
-      // Map DLC to byte length
-      switch(rxHeader.DataLength) {
-          case FDCAN_DLC_BYTES_0:  *len = 0; break;
-          case FDCAN_DLC_BYTES_1:  *len = 1; break;
-          case FDCAN_DLC_BYTES_2:  *len = 2; break;
-          case FDCAN_DLC_BYTES_3:  *len = 3; break;
-          case FDCAN_DLC_BYTES_4:  *len = 4; break;
-          case FDCAN_DLC_BYTES_5:  *len = 5; break;
-          case FDCAN_DLC_BYTES_6:  *len = 6; break;
-          case FDCAN_DLC_BYTES_7:  *len = 7; break;
-          case FDCAN_DLC_BYTES_8:  *len = 8; break;
-          default: *len = 8; break;
-      }
+      DashCAN::dash_read_switch(interfaces, msg, millis);
 
       return 1; // message read successfully
   }
