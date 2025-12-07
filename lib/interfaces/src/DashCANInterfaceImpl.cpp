@@ -35,6 +35,11 @@ void DashCAN::dash_read_switch(CANInterfaces &interfaces, const CAN_message_t &m
                 interfaces.db_interface.receive_db_state_data(msg);
                 break;
               }
+              case VEHICLE_STATE_CANID:
+              {
+                interfaces.vcr_interface.receive_vehicle_state(msg, millis);
+                break;
+              }
 
               default:
                   break;

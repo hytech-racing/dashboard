@@ -39,7 +39,7 @@ public:
     void draw_vertical_pedal_bar(float val, int initial_x_coord);
     void draw_battery_bar(int percent);
     void display_speeds(float rpm);
-    void draw_icons(uint8_t vn_status, uint8_t car_state, bool db_in_ctrl, bool is_latched);
+    void draw_icons(uint8_t vn_status, uint8_t car_state, bool db_in_ctrl);
     void invert_display(bool invert_criteria);
     void draw_popup(String title);
     void send_display_buffer(SPI_HandleTypeDef *hspi);

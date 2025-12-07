@@ -106,7 +106,7 @@ void HTX_Display::display_speeds(float rpm)
     _display.setFont(&FreeSans12pt7b);
 }
 
-void HTX_Display::draw_icons(uint8_t vn_status, uint8_t car_state, bool db_in_ctrl, bool is_latched)
+void HTX_Display::draw_icons(uint8_t vn_status, uint8_t car_state, bool db_in_ctrl)
 {
 
     /* no gps icon   = 0 */

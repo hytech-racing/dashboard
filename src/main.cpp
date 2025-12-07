@@ -125,9 +125,9 @@ void loop() {
     {
     testDisplay.draw_background();
     testDisplay.invert_display(VCFInterfaceInstance::instance().is_mech_brake_pressed());
-    testDisplay.draw_vertical_pedal_bar((brake++%100), 17);
+    testDisplay.draw_vertical_pedal_bar(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.brake_percent, 17);
     testDisplay.draw_battery_bar(ACUInterfaceInstance::instance().get_curr_data().pack_voltage * 100.0 / 530.0);
-    testDisplay.draw_icons(1 /*DrivebrainInterfaceInstance::instance().get_db_state_data().vn_status*/, 1, 1, 1);
+    testDisplay.draw_icons(DrivebrainInterfaceInstance::instance().get_db_state_data().vn_status, VCRInterfaceInstance::instance().get_curr_car_state().drivetrain_state, DrivebrainInterfaceInstance::instance().get_db_state_data().drivebrain_in_ctrl);
     testDisplay.display_speeds(VCRInterfaceInstance::instance().get_curr_wheel_data().actual_speed);
     testDisplay.send_display_buffer(&hspi2);
     spi_tx_complete = false;
@@ -152,6 +152,8 @@ void loop() {
       FDCAN_write(0x55, tx, 3);
 
     FDCAN_read(CANInterfacesInstance::instance(), millis());
+    Serial.println(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.accel_is_implausible);
+    Serial.println(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.brake_percent);
     }
 }
 
