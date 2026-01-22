@@ -3,10 +3,10 @@
 void HTX_Display::init(SPI_HandleTypeDef *hspi)
 {
     // set non-needed Display pins low
-    pinMode(PB7, OUTPUT);
+    pinMode(PB4, OUTPUT);
     pinMode(PB1, OUTPUT);
     pinMode(PA3, OUTPUT);
-    digitalWrite(PB7, LOW);
+    digitalWrite(PB4, LOW);
     digitalWrite(PB1, LOW);
     _display.begin();
 
@@ -232,7 +232,7 @@ bool HTX_Display::blink()
 
 void HTX_Display::send_display_buffer(SPI_HandleTypeDef *hspi)
 {
-    digitalWrite(PB7, HIGH); // set CS high before transmit, low in callback after transmit
+    digitalWrite(PB4, HIGH); // set CS high before transmit, low in callback after transmit
     digitalWrite(PC14, HIGH);
     // SerialUSB.println("Starting DMA Transmit");
 

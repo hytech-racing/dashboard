@@ -83,7 +83,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
   if (hspi->Instance == SPI2)
   {
     spi_tx_complete = true;
-    digitalWrite(PB7, LOW); // set CS low after transmit complete
+    digitalWrite(PB4, LOW); // set CS low after transmit complete
     digitalWrite(PC14, LOW);
   }
 }
@@ -92,8 +92,8 @@ void HT_SPI_Init()
 {
 
     // CS pin
-    pinMode(PB7, OUTPUT);
-    digitalWrite(PB7, LOW);
+    pinMode(PB4, OUTPUT);
+    digitalWrite(PB4, LOW);
 
     // DMA init
     __HAL_RCC_DMA1_CLK_ENABLE();

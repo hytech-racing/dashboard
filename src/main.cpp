@@ -28,7 +28,7 @@
 
 
 #define LED_PIN PA3
-#define SHARP_CS PB7
+#define SHARP_CS PB4
 #define SHARP_CLK PB10
 #define SHARP_MOSI PB15
 
@@ -76,10 +76,10 @@ HTX_Display testDisplay(SHARP_CS); // Initialize display with CS pin, width, hei
 void setup() {
 
   pinMode(PA3, OUTPUT);
-  pinMode(PB7, OUTPUT);
+  pinMode(PB4, OUTPUT);
   pinMode(PC14, OUTPUT);
 
-  digitalWrite(PB7, LOW);
+  digitalWrite(PB4, LOW);
   digitalWrite(PC14, LOW);
 
   SerialUSB.begin(115200);
@@ -104,7 +104,7 @@ void setup() {
   
   scheduler.setTimingFunction(micros);
   
-  //HT_SCHED::Scheduler::getInstance().schedule(neopixels_task);
+  HT_SCHED::Scheduler::getInstance().schedule(neopixels_task);
   //HT_SCHED::Scheduler::getInstance().schedule(screen_task);
   
   HT_SPI_Init();
