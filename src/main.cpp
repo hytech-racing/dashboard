@@ -68,10 +68,11 @@ extern "C" void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
 HT_SCHED::Scheduler &scheduler = HT_SCHED::Scheduler::getInstance();
 
 // Task Init
+HT_TASK::Task heartbeat_task(&init_heartbeat, &heartbeat, 1000, 500000); // .5 second period
 HT_TASK::Task neopixels_task(&init_neopixels_task, &run_update_neopixels_task, NEOPIXEL_UPDATE_PRIORITY, NEOPIXEL_UPDATE_PERIOD);
-//HT_TASK::Task screen_task(&init_screen_task, &screen_refresh_task, SCREEN_REFRESH_PRIORITY, SCREEN_REFRESH_PERIOD); // 100 ms period
+HT_TASK::Task screen_task(&init_screen, &screen_refresh, SCREEN_REFRESH_PRIORITY, SCREEN_REFRESH_PERIOD); // 100 ms period
 
-HTX_Display testDisplay(SHARP_CS); // Initialize display with CS pin, width, height, frequency, and no SPI pointer for now
+//HTX_Display testDisplay(SHARP_CS); // Initialize display with CS pin, width, height, frequency, and no SPI pointer for now
 
 void setup() {
 
@@ -83,77 +84,59 @@ void setup() {
   digitalWrite(PC14, LOW);
 
   SerialUSB.begin(115200);
-  delay(3000);
-  SerialUSB.println("Starting");
-
 
   
   // Create Interfaces
   ACUInterfaceInstance::create();
   VCRInterfaceInstance::create();
   VCFInterfaceInstance::create(sys_time::hal_millis(), 50UL); //TODO: needs to be updated to use constexpr
-  //HTXDisplayInstance::create(PB7); 
+
+
   
+  //Global Data Singletons (should work on removing)
   VCRData_sInstance::create();
   VCFData_sInstance::create();
   
   // Create can singletons
   CANInterfacesInstance::create(VCFInterfaceInstance::instance(), ACUInterfaceInstance::instance(), VCRInterfaceInstance::instance(), DrivebrainInterfaceInstance::instance()); 
-  //auto main_can_recv = etl::delegate<void(CANInterfaces &, const CAN_message_t &, unsigned long)>::create<DashCAN::dash_read_switch>();
-  //DashCANInterfaceObjectsInstance::create(main_can_recv, &stm_can); // NOLINT (Not sure why it's uninitialized. I think it is.)
-  
+
   scheduler.setTimingFunction(micros);
   
+  HT_SCHED::Scheduler::getInstance().schedule(heartbeat_task);
   HT_SCHED::Scheduler::getInstance().schedule(neopixels_task);
-  //HT_SCHED::Scheduler::getInstance().schedule(screen_task);
+  HT_SCHED::Scheduler::getInstance().schedule(screen_task);
   
-  HT_SPI_Init();
   FDCAN_Init();
-
-  //dashDisplayInstance::instance().init();
   
-  testDisplay.init(&hspi2);
-  testDisplay.hytech_animation();
   spi_tx_complete = true;
-
 }
-int brake = 0;
+
 void loop() {
-  //scheduler.run();
-    
-    if (spi_tx_complete)
-    {
-    testDisplay.draw_background();
-    testDisplay.invert_display(VCFInterfaceInstance::instance().is_mech_brake_pressed());
-    testDisplay.draw_vertical_pedal_bar(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.brake_percent, 17);
-    testDisplay.draw_battery_bar(ACUInterfaceInstance::instance().get_curr_data().pack_voltage * 100.0 / 530.0);
-    testDisplay.draw_icons(DrivebrainInterfaceInstance::instance().get_db_state_data().vn_status, VCRInterfaceInstance::instance().get_curr_car_state().drivetrain_state, DrivebrainInterfaceInstance::instance().get_db_state_data().drivebrain_in_ctrl);
-    testDisplay.display_speeds(VCRInterfaceInstance::instance().get_curr_wheel_data().actual_speed);
-    testDisplay.send_display_buffer(&hspi2);
-    spi_tx_complete = false;
-    }
-    
-    ///@brief blink led
-    if (millis() - last_blink > 100)
-    {
-      last_blink = millis();
-      led_state = !led_state;
-      digitalWrite(PA3, led_state);
-    }
+  scheduler.run();
     
 
-    if (millis() - last_print > 200)
-    {
-      SerialUSB.print("looping");
+    
+    // ///@brief blink led
+    // if (millis() - last_blink > 100)
+    // {
+    //   last_blink = millis();
+    //   led_state = !led_state;
+    //   digitalWrite(PA3, led_state);
+    // }
+    
 
-      // dump_dma_spi_state();
-      last_print = millis();
+    // if (millis() - last_print > 200)
+    // {
+    //   SerialUSB.print("looping");
 
-      FDCAN_write(0x55, tx, 3);
+    //   // dump_dma_spi_state();
+    //   last_print = millis();
 
-    FDCAN_read(CANInterfacesInstance::instance(), millis());
-    Serial.println(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.accel_is_implausible);
-    Serial.println(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.brake_percent);
-    }
+    //   FDCAN_write(0x55, tx, 3);
+
+    // FDCAN_read(CANInterfacesInstance::instance(), millis());
+    // Serial.println(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.accel_is_implausible);
+    // Serial.println(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.brake_percent);
+    //}
 }
 
