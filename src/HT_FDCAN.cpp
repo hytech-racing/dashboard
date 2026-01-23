@@ -139,3 +139,24 @@ void FDCAN1_GPIO_Init_PD0D1(void)
     // Ensure FDCAN clock is enabled, though it's also in FDCAN_Init()
     __HAL_RCC_FDCAN_CLK_ENABLE(); 
 }
+
+void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs, CANInterfaces &interfaces, unsigned long millis)
+{
+  if ((hfdcan->Instance == FDCAN1) && ((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != 0))
+  {
+
+    FDCAN_RxHeaderTypeDef rxHeader;
+    uint8_t rxData[8];
+
+    // Retrieve the message from FIFO 0
+    if (HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &rxHeader, rxData) == HAL_OK)
+    {
+      CAN_message_t msg;
+      msg.id = rxHeader.Identifier;
+      msg.len = rxHeader.DataLength;
+      msg.buf = rxData;
+      DashCAN::dash_read_switch(interfaces, msg, millis);
+    }
+
+  }
+}

@@ -34,5 +34,7 @@ HT_TASK::TaskResponse run_update_neopixels_task(const unsigned long& sys_micros,
 HT_TASK::TaskResponse init_screen(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
 HT_TASK::TaskResponse screen_refresh(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
 
-HT_TASK::TaskResponse main_display_task(const unsigned long &sys_micros, const HT_TASK::TaskInfo &task_info);
+HT_TASK::TaskResponse init_can(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
+HT_TASK::TaskResponse can_read(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+
 #endif /* DASH_TASKS_H */  

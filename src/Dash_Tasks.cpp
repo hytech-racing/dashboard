@@ -1,10 +1,17 @@
 #include "Dash_Tasks.h"
 
+// pin definitions
+#define LED_PIN PA3
 
+#define SHARP_CS PB4
+#define SHARP_CLK PB10
+#define SHARP_MOSI PB15
 
 
 HT_TASK::TaskResponse init_heartbeat(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info)
 {
+    SerialUSB.begin(115200);
+
     pinMode(LED_PIN, OUTPUT);
     return HT_TASK::TaskResponse::YIELD;
 }
@@ -36,6 +43,8 @@ HT_TASK::TaskResponse run_update_neopixels_task(const unsigned long& sys_micros,
 
 HT_TASK::TaskResponse init_screen(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info)
 {
+    pinMode(PB4, OUTPUT);
+    digitalWrite(PB4, LOW);
 
     HT_SPI_Init();
     // Create Display singleton
@@ -77,5 +86,20 @@ HT_TASK::TaskResponse screen_refresh(const unsigned long& sys_micros, const HT_T
     // }
 
     // HTXDisplayInstance::instance().display_refresh();
+    return HT_TASK::TaskResponse::YIELD;
+}
+
+HT_TASK::TaskResponse init_can(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info)
+{
+    // Create can singletons
+    CANInterfacesInstance::create(VCFInterfaceInstance::instance(), ACUInterfaceInstance::instance(), VCRInterfaceInstance::instance(), DrivebrainInterfaceInstance::instance());
+    
+    FDCAN_Init();   
+    return HT_TASK::TaskResponse::YIELD;
+}
+
+HT_TASK::TaskResponse can_read(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info)
+{
+    FDCAN_read(CANInterfacesInstance::instance(), sys_time::hal_millis());
     return HT_TASK::TaskResponse::YIELD;
 }

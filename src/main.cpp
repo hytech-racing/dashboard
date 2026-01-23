@@ -27,11 +27,6 @@
 #include "HT_FDCAN.h"
 
 
-#define LED_PIN PA3
-#define SHARP_CS PB4
-#define SHARP_CLK PB10
-#define SHARP_MOSI PB15
-
 
 uint32_t last_blink = 0;
 uint32_t last_print = 0;
@@ -75,38 +70,23 @@ HT_TASK::Task screen_task(&init_screen, &screen_refresh, SCREEN_REFRESH_PRIORITY
 //HTX_Display testDisplay(SHARP_CS); // Initialize display with CS pin, width, height, frequency, and no SPI pointer for now
 
 void setup() {
-
-  pinMode(PA3, OUTPUT);
-  pinMode(PB4, OUTPUT);
-  pinMode(PC14, OUTPUT);
-
-  digitalWrite(PB4, LOW);
-  digitalWrite(PC14, LOW);
-
-  SerialUSB.begin(115200);
-
   
   // Create Interfaces
   ACUInterfaceInstance::create();
   VCRInterfaceInstance::create();
   VCFInterfaceInstance::create(sys_time::hal_millis(), 50UL); //TODO: needs to be updated to use constexpr
 
-
-  
   //Global Data Singletons (should work on removing)
   VCRData_sInstance::create();
   VCFData_sInstance::create();
   
-  // Create can singletons
-  CANInterfacesInstance::create(VCFInterfaceInstance::instance(), ACUInterfaceInstance::instance(), VCRInterfaceInstance::instance(), DrivebrainInterfaceInstance::instance()); 
+
 
   scheduler.setTimingFunction(micros);
   
   HT_SCHED::Scheduler::getInstance().schedule(heartbeat_task);
   HT_SCHED::Scheduler::getInstance().schedule(neopixels_task);
   HT_SCHED::Scheduler::getInstance().schedule(screen_task);
-  
-  FDCAN_Init();
   
   spi_tx_complete = true;
 }
