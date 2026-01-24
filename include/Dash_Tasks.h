@@ -25,8 +25,8 @@
 HT_TASK::TaskResponse init_heartbeat(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
 HT_TASK::TaskResponse heartbeat(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
 
-HT_TASK::TaskResponse init_can_task();
-HT_TASK::TaskResponse read_can_task(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+HT_TASK::TaskResponse init_can(const unsigned long &sysMicros, const HT_TASK::TaskInfo &taskInfo);
+HT_TASK::TaskResponse can_read(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
 HT_TASK::TaskResponse init_neopixels_task(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
 HT_TASK::TaskResponse run_update_neopixels_task(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);

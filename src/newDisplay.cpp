@@ -233,7 +233,6 @@ bool HTX_Display::blink()
 void HTX_Display::send_display_buffer(SPI_HandleTypeDef *hspi)
 {
     digitalWrite(PB4, HIGH); // set CS high before transmit, low in callback after transmit
-    digitalWrite(PC14, HIGH);
     // SerialUSB.println("Starting DMA Transmit");
 
     uint8_t toggle_vcom[] = {vcom | SHARPMEM_BIT_WRITECMD};

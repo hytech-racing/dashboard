@@ -18,16 +18,4 @@ typedef struct {
     uint8_t len;
 } CAN_message_t;
 
-class STM32_CAN {
-public:
-    STM32_CAN(FDCAN_TypeDef* instance);
-
-    bool begin();
-    bool read(CAN_message_t& msg);
-    bool write(const CAN_message_t& msg);
-
-private:
-    FDCAN_HandleTypeDef hfdcan;
-};
-
 #endif

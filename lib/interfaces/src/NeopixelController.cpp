@@ -8,7 +8,7 @@ void NeopixelController::init_neopixels() {
         _neopixels.setPixelColor(i, (uint32_t) LED_color_e::INIT_COLOR);
         // BMS and IMD are off according to rules
         if (i == LED_ID_e::BMS || i == LED_ID_e::IMD){
-            _neopixels.setPixelColor(i, (uint32_t) LED_color_e::OFF);
+            _neopixels.setPixelColor(i, (uint32_t) LED_color_e::GREEN);
         }
     }
     // write data to neopixels
@@ -28,9 +28,9 @@ void NeopixelController::set_neopixel(uint16_t id, uint32_t c) {
 
 
 //TODO: Update for dash CAN
-void NeopixelController::refresh_neopixels(VCFData_s &vcf_data, VCRData_s &vcr_data, CANInterfaces &interfaces) {
+void NeopixelController::refresh_neopixels(CANInterfaces &interfaces) {
 
-    // If we are in pedals recalibration state, LIGHT UP DASHBOARD ALL RED.
+    // // If we are in pedals recalibration state, LIGHT UP DASHBOARD ALL RED.
     if (interfaces.vcr_interface.is_in_pedals_calibration_state()) {
         set_neopixel_color(LED_ID_e::BRAKE, LED_color_e::RED);
         set_neopixel_color(LED_ID_e::TORQUE_MODE, LED_color_e::RED);
@@ -38,7 +38,7 @@ void NeopixelController::refresh_neopixels(VCFData_s &vcf_data, VCRData_s &vcr_d
         set_neopixel_color(LED_ID_e::CRIT_CHARGE, LED_color_e::RED);
         set_neopixel_color(LED_ID_e::INERTIA, LED_color_e::RED);
         set_neopixel_color(LED_ID_e::COCKPIT_BRB, LED_color_e::RED);
-        set_neopixel_color(LED_ID_e::BOTS, LED_color_e::RED);
+        set_neopixel_color(LED_ID_e::BOTS, LED_color_e::OFF);
         set_neopixel_color(LED_ID_e::MC_ERR, LED_color_e::RED);
         set_neopixel_color(LED_ID_e::RDY_DRIVE, LED_color_e::RED);
         set_neopixel_color(LED_ID_e::GLV, LED_color_e::RED);
@@ -88,11 +88,13 @@ void NeopixelController::refresh_neopixels(VCFData_s &vcf_data, VCRData_s &vcr_d
     set_neopixel_color(LED_ID_e::BOTS, LED_color_e::OFF); // Unused for now
     set_neopixel_color(LED_ID_e::IMD, interfaces.acu_interface.imd_ok ? LED_color_e::GREEN : LED_color_e::RED);
     set_neopixel_color(LED_ID_e::BMS, interfaces.acu_interface.bms_ok ? LED_color_e::GREEN : LED_color_e::RED);
-    set_neopixel_color(LED_ID_e::MC_ERR, (vcr_data.interface_data.inverter_data.FL.error || vcr_data.interface_data.inverter_data.FR.error || vcr_data.interface_data.inverter_data.RL.error || vcr_data.interface_data.inverter_data.RR.error) ? LED_color_e::RED : LED_color_e::OFF);
+    set_neopixel_color(LED_ID_e::MC_ERR, LED_color_e::OFF); // Unused for now
     set_neopixel_color(LED_ID_e::RDY_DRIVE, LED_color_e::RED);
-    set_neopixel_color(LED_ID_e::GLV, vcr_data.interface_data.current_sensor_data.twentyfour_volt_sensor > glv_critical_voltage ? LED_color_e::GREEN : LED_color_e::OFF); // No sensor there yet
+    set_neopixel_color(LED_ID_e::GLV, LED_color_e::OFF); // No sensor there yet
     set_neopixel_color(LED_ID_e::TORQUE_MODE, torque_mode_color);
 
+    set_neopixel_color(LED_ID_e::MC_ERR, LED_color_e::BLUE);
+    set_neopixel_color(LED_ID_e::BOTS, LED_color_e::OFF);
     _neopixels.show();
 
 }

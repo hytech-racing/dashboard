@@ -12,6 +12,11 @@ HT_TASK::TaskResponse init_heartbeat(const unsigned long& sys_micros, const HT_T
 {
     SerialUSB.begin(115200);
 
+    // Create Interfaces
+    ACUInterfaceInstance::create();
+    VCRInterfaceInstance::create();
+    VCFInterfaceInstance::create(sys_time::hal_millis(), 50UL); // TODO: needs to be updated to use constexpr
+
     pinMode(LED_PIN, OUTPUT);
     return HT_TASK::TaskResponse::YIELD;
 }
@@ -36,7 +41,7 @@ HT_TASK::TaskResponse init_neopixels_task(const unsigned long& sys_micros, const
 
 HT_TASK::TaskResponse run_update_neopixels_task(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info)
 {
-    NeopixelControllerInstance::instance().refresh_neopixels(VCFData_sInstance::instance(), VCRData_sInstance::instance(), CANInterfacesInstance::instance());
+    NeopixelControllerInstance::instance().refresh_neopixels(CANInterfacesInstance::instance());
     return HT_TASK::TaskResponse::YIELD;
 }
 
