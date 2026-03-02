@@ -34,8 +34,10 @@ void EncoderInterface::setupEncoders() {
     pinMode(D2_B, INPUT_PULLUP) // 
 
     
-    attachInterrupt(digitalPinToInterrupt(CLK_1), EncoderInterface::isr1, FALLING)
-    attachInterrupt(digitalPinToInterrupt(CLK_2), EncoderInterface::isr1, FALLING)
+    //attachInterrupt(digitalPinToInterrupt(CLK_1), EncoderInterface::isr1, FALLING)
+    //attachInterrupt(digitalPinToInterrupt(CLK_2), EncoderInterface::isr1, FALLING)
+    Encoder(PD4, PD5) //1
+    Encoder(PD6, PD7) //2
 }
 
 void EncoderInterface::updateEncoder() {
