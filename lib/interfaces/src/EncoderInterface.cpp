@@ -36,8 +36,8 @@ void EncoderInterface::setupEncoders() {
     
     //attachInterrupt(digitalPinToInterrupt(CLK_1), EncoderInterface::isr1, FALLING)
     //attachInterrupt(digitalPinToInterrupt(CLK_2), EncoderInterface::isr1, FALLING)
-    Encoder(PD4, PD5) //1
-    Encoder(PD6, PD7) //2
+    Encoder Dial1(PD4, PD5) //1
+    Encoder Dial2(PD6, PD7) //2
 }
 
 void EncoderInterface::updateEncoder() {
@@ -48,14 +48,14 @@ void EncoderInterface::updateEncoder() {
         //print statements.
         Serial.println(_encoder.data.encoder_value);
     }
-    prev_value = _encoder.data.state.encoder_value;
+    prev_value = _encoder.data.state.encoder_value; // 
 
     if (button_state == LOW)
     {
        if (millis() - _encoder_data.last_button_press > bounce_delay) {
-            _encoder.data.state = !_encoder.data.state;
+            _encoder.data.state = !_encoder.data.state; // or use Dial2.read()
             Serial.println("pressed");
-            if (_encoder.data.state == false) {
+            if (_encoder.data.state == false) { // Dial2.read?
                 value = 0;
             } else {
                 interrupts();
