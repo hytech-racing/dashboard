@@ -6,7 +6,16 @@ volatile unsigned long last_interrupt_time = 0;
 void EncoderInterace::isr1() {
     unsigned long current_time = millis();
     if (current_time - last_interrupt_time > bounce_delay) {
-        int enc b_value = digitalRead(DT);
+        int enc b_value = digitalRead(D1_B);
+        EncoderInterfaceInstance::instance().setValue(enc_b_value);
+        last_interrupt_time = current_time;
+    }
+}
+
+void EncoderInterace::isr2() {
+    unsigned long current_time = millis();
+    if (current_time - last_interrupt_time > bounce_delay) {
+        int enc b_value = digitalRead(D2_B);
         EncoderInterfaceInstance::instance().setValue(enc_b_value);
         last_interrupt_time = current_time;
     }
@@ -25,11 +34,12 @@ void EncoderInterface::setupEncoders() {
     pinMode(D2_B, INPUT_PULLUP) // 
 
     
-    attachInterrupt(digitalPinToInterrupt(CLK), EncoderInterface::isr1, FALLING)
+    attachInterrupt(digitalPinToInterrupt(CLK_1), EncoderInterface::isr1, FALLING)
+    attachInterrupt(digitalPinToInterrupt(CLK_2), EncoderInterface::isr1, FALLING)
 }
 
 void EncoderInterface::updateEncoder() {
-    int button_state = digitalRead(SW);
+    int button_state = digitalRead(D1_B);
 
     if (_encoder.data.encoder.value != prev_value)
     {
