@@ -6,17 +6,17 @@
 
 struct rotary_encoder_s {
     int16_t counter = 0;      
-    int32_t pos = 0;     
+    int32_t pos;     
     int32_t prev_pos = 0; 
     int32_t pos_change = 0;   
-    int8_t direction = 0;  
+    int8_t direction;  
 };
 
 class RotaryEncoderInterface
 {
 public:
 
-    void setup_encoder();
+    void setup_encoder(counter);
     void update_encoder();
 
 private:
