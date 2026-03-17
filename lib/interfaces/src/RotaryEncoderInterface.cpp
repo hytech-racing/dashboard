@@ -1,4 +1,4 @@
-#include "STM32encoder.h"
+#include "RotaryEncoderInterface.h"
 
 STM32Encoder enc(TIM2, 0x07); 
 
