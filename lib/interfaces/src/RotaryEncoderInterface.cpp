@@ -2,9 +2,6 @@
 
 STM32Encoder enc(TIM2, 0x07); 
 
-int16_t enc_counter = 0;
-int32_t enc_prev_pos = 0;
-
 void RotaryEncoderInterface::setup_encoder(counter) {
   Serial.begin(115200);
   enc.bind(counter, 1, 0, 2);
