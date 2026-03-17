@@ -2,7 +2,7 @@
 #define ROTARY_ENCODER_INTERFACE_H
 
 #include <Arduino.h>
-#include "STM32encoder.h" //come back to this
+#include "STM32encoder.h"
 
 struct rotary_encoder_s {
     int16_t counter = 0;      
@@ -15,12 +15,15 @@ struct rotary_encoder_s {
 class RotaryEncoderInterface
 {
 public:
-    RotaryEncoderInterface() = default;
+
+    void setup_encoder();
+    void update_encoder();
 
 private:
     STM32Encoder _enc = STM32ENcoder(TIM2, 0x07);  // change depending on pin
+    rotary_encoder_s _encoder_data;
 
-}
+};
 
 #endif
 
