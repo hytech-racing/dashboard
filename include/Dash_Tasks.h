@@ -17,6 +17,7 @@
 // Interface Includes
 #include "VCFInterface.h"
 #include "VCRInterface.h"
+#include "EncoderInterface.h"
 // #include "lcdInterface.h"
 #include "newDisplay.h"
 #include "bitmaps.h"
@@ -36,5 +37,7 @@ HT_TASK::TaskResponse screen_refresh(const unsigned long& sys_micros, const HT_T
 
 HT_TASK::TaskResponse init_can(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
 HT_TASK::TaskResponse can_read(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+
+HT_TASK::TaskResponse init_encoders(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
 
 #endif /* DASH_TASKS_H */  

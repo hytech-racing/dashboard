@@ -108,3 +108,10 @@ HT_TASK::TaskResponse can_read(const unsigned long& sys_micros, const HT_TASK::T
     FDCAN_read(CANInterfacesInstance::instance(), sys_time::hal_millis());
     return HT_TASK::TaskResponse::YIELD;
 }
+
+HT_TASK::TaskResponse init_encoders(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info) 
+{
+    EncoderInterfaceInstance::create();
+    EncoderInterfaceInstance::instance().setupEncoders();
+    return HT_TASK::TaskResponse::YIELD;
+}

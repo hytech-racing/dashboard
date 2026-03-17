@@ -3,19 +3,19 @@
 const int bounce_delay = 100;
 volatile unsigned long last_interrupt_time = 0;
 
-void EncoderInterace::isr1() {
+void EncoderInterface::isr1() {
     unsigned long current_time = millis();
     if (current_time - last_interrupt_time > bounce_delay) {
-        int enc b_value = digitalRead(D1_B);
+        int enc_b_value = digitalRead(D1_B);
         EncoderInterfaceInstance::instance().setValue(enc_b_value);
         last_interrupt_time = current_time;
     }
 }
 
-void EncoderInterace::isr2() {
+void EncoderInterface::isr2() {
     unsigned long current_time = millis();
     if (current_time - last_interrupt_time > bounce_delay) {
-        int enc b_value = digitalRead(D2_B);
+        int enc_b_value = digitalRead(D2_B);
         EncoderInterfaceInstance::instance().setValue(enc_b_value);
         last_interrupt_time = current_time;
     }
@@ -28,16 +28,16 @@ void EncoderInterface::setValue(int enc_b_value) {
 void EncoderInterface::setupEncoders() {
 
     
-    pinMode(CLK_1, INPUT_PULLUP) //
-    pinMode(D1_B, INPUT_PULLUP) // 
-    pinMode(CLK_2, INPUT_PULLUP) // 
-    pinMode(D2_B, INPUT_PULLUP) // 
+    pinMode(CLK_1, INPUT_PULLUP); //
+    pinMode(D1_B, INPUT_PULLUP); // 
+    pinMode(CLK_2, INPUT_PULLUP); // 
+    pinMode(D2_B, INPUT_PULLUP); // 
 
     
     //attachInterrupt(digitalPinToInterrupt(CLK_1), EncoderInterface::isr1, FALLING)
     //attachInterrupt(digitalPinToInterrupt(CLK_2), EncoderInterface::isr1, FALLING)
-    Encoder Dial1(PD4, PD5) //1
-    Encoder Dial2(PD6, PD7) //2
+    STM32encoder Dial1(CLK_1, 0); //1
+    STM32encoder Dial2(CLK_2, 05); //2
 }
 
 void EncoderInterface::updateEncoder() {
