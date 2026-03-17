@@ -17,7 +17,7 @@ class RotaryEncoderInterface
 public:
 
     void setup_encoder(counter);
-    void update_encoder();
+    void update_encoder(pos, prev_pos, pos_change, direction, counter);
 
 private:
     STM32Encoder _enc = STM32ENcoder(TIM2, 0x07);  // change depending on pin
