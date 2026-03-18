@@ -18,7 +18,7 @@ void init_encoder(int pin1, int pin2) // whys this here????
 void rotate() {
   int counter = 0;
 
-  unsigned char result = enc.read();
+  uint8_t result = enc.read();
   if (result == DIR_CW) {
     counter++;
     Serial.println(counter);
