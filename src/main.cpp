@@ -20,6 +20,8 @@
 #include "ACUInterface.h"
 #include "VCRInterface.h"
 
+#include "test_encoder.h"
+
 #include "SysClock_Config.h"
 
 #include "HT_SPI.h"
@@ -43,11 +45,12 @@ HT_TASK::Task screen_task(&init_screen, &screen_refresh, SCREEN_REFRESH_PRIORITY
 
 void setup() {
   
-
+  Serial.begin(115200);
   //Global Data Singletons (should work on removing)
   // VCRData_sInstance::create();
   // VCFData_sInstance::create();
 
+  enc1_init(); // added here, since we have interrupts we don't tneed to write much
 
   scheduler.setTimingFunction(micros);
   
