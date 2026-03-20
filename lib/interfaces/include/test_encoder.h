@@ -4,7 +4,6 @@
 
 #include <Arduino.h>
 #include <Rotary.h>
-
 #include "SharedFirmwareTypes.h"
 #include "hytech.h"
 
@@ -12,8 +11,8 @@
 #define ENC1_B PD5
 #define ENC1_BTN PA8
 
-volatile int enc1_counter; 
-volatile bool enc1_moved; 
+static int enc1_counter; 
+static bool enc1_moved; 
 
 void enc1_init();
 void enc1_rotate();

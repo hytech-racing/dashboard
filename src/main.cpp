@@ -3,6 +3,8 @@
 #include <SPI.h>
 //#include "CANInterface.h"
 #include <cstdint>
+#include "test_encoder.h"
+
 #include "Dash_Constants.h"
 #include "Dash_Globals.h"
 #include "DashCANInterfaceImpl.h"
@@ -20,7 +22,6 @@
 #include "ACUInterface.h"
 #include "VCRInterface.h"
 
-#include "test_encoder.h"
 
 #include "SysClock_Config.h"
 
@@ -40,18 +41,35 @@ HT_TASK::Task heartbeat_task(&init_heartbeat, &heartbeat, 1000, 500000); // .5 s
 HT_TASK::Task can_task(&init_can, &can_read, 80, 10000); // 10 ms period
 HT_TASK::Task neopixels_task(&init_neopixels_task, &run_update_neopixels_task, NEOPIXEL_UPDATE_PRIORITY, NEOPIXEL_UPDATE_PERIOD);
 HT_TASK::Task screen_task(&init_screen, &screen_refresh, SCREEN_REFRESH_PRIORITY, SCREEN_REFRESH_PERIOD); // 100 ms period
-
+int count = 0;
 //HTX_Display testDisplay(SHARP_CS); // Initialize display with CS pin, width, height, frequency, and no SPI pointer for now
+void enc1_press() {
+    //if (digitalRead(PA8) == LOW) { //dial buttons are pulled up to 3.3v, so ithink it'll be read on low. we can always test
+    //    Serial.println("Dial1 Button Pressed");
+    //    delay(100); // crude debounce???? use millis in real application
+    //}
+    count++;
+}
+void enc1_init() {
+    //attachInterrupt(digitalPinToInterrupt(ENC1_A), enc1_rotate, CHANGE); // add enc1
+    //attachInterrupt(digitalPinToInterrupt(ENC1_B), enc1_rotate, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(PA8), enc1_press, CHANGE);
+
+}
+
 
 void setup() {
   
   Serial.begin(115200);
+  Serial.print("yo");
   //Global Data Singletons (should work on removing)
   // VCRData_sInstance::create();
   // VCFData_sInstance::create();
-
-  enc1_init(); // added here, since we have interrupts we don't tneed to write much
-
+  //Rotary enc1(ENC1_A, ENC1_B);
+  // // added here, since we have interrupts we don't tneed to write much
+  Rotary enc1(ENC1_A, ENC1_B);
+  pinMode(PA8, INPUT);
+  enc1_init();
   scheduler.setTimingFunction(micros);
   
   HT_SCHED::Scheduler::getInstance().schedule(heartbeat_task);

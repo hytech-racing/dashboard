@@ -108,3 +108,4 @@ HT_TASK::TaskResponse can_read(const unsigned long& sys_micros, const HT_TASK::T
     FDCAN_read(CANInterfacesInstance::instance(), sys_time::hal_millis());
     return HT_TASK::TaskResponse::YIELD;
 }
+
