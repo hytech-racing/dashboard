@@ -3,7 +3,6 @@
 #include <SPI.h>
 //#include "CANInterface.h"
 #include <cstdint>
-#include "test_encoder.h"
 
 #include "Dash_Constants.h"
 #include "Dash_Globals.h"
@@ -45,16 +44,6 @@ int count = 0;
 //HTX_Display testDisplay(SHARP_CS); // Initialize display with CS pin, width, height, frequency, and no SPI pointer for now
 
 
-void enc1_press() {
-  count++;
-}
-void enc1_init() {
-    //attachInterrupt(digitalPinToInterrupt(ENC1_A), enc1_rotate, CHANGE); // add enc1
-    //attachInterrupt(digitalPinToInterrupt(ENC1_B), enc1_rotate, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(PA8), enc1_press, CHANGE);
-
-}
-
 
 void setup() {
   
@@ -65,9 +54,7 @@ void setup() {
   // VCFData_sInstance::create();
   //Rotary enc1(ENC1_A, ENC1_B);
   // // added here, since we have interrupts we don't tneed to write much
-  Rotary enc1(ENC1_A, ENC1_B);
-  pinMode(PA8, INPUT);
-  enc1_init();
+  
   scheduler.setTimingFunction(micros);
   
   HT_SCHED::Scheduler::getInstance().schedule(heartbeat_task);
@@ -80,6 +67,6 @@ void setup() {
 
 void loop() {
   scheduler.run();
-  Serial.println(count);
+
 }
 
