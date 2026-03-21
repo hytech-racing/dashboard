@@ -4,7 +4,7 @@
 // for encoder 1
 #define ENC1_A PD4
 #define ENC1_B PD5
-#define ENC1_BTN PA7 // Wtf is this pin
+#define ENC1_BTN PA8 // Wtf is this pin
 
 Rotary enc1(ENC1_A, ENC1_B, ENC1_BTN);//, ENC1_BTN);
 
@@ -54,11 +54,11 @@ void enc1_rotate() {
 }
 
 void enc1_press() {
-    //if (enc1.buttonPressedReleased(20)) {
-    //    Serial.println("Button pressed");
-    //    enc1_counter++;
-    //}
-    Serial.println("HEY HEY HEY");
+    if (enc1.buttonPressedReleased(20)) {
+        Serial.println("Button pressed");
+        enc1_counter++;
+    }
+    Serial.println(enc1_counter);
 }
 
 
