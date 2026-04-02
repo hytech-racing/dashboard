@@ -57,8 +57,9 @@ void enc1_press() {
     if (enc1.buttonPressedReleased(20)) {
         Serial.println("Button pressed");
         enc1_counter++;
+        Serial.println(enc1_counter);
+
     }
-    Serial.println(enc1_counter);
 }
 
 
@@ -71,7 +72,7 @@ void setup() { // this will be replaced w/ init, serial goes in main.cpp.
     pinMode(ENC1_BTN, INPUT);
     attachInterrupt(digitalPinToInterrupt(ENC1_A), enc1_rotate, CHANGE);
     attachInterrupt(digitalPinToInterrupt(ENC1_B), enc1_rotate, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(ENC1_BTN), enc1_press, FALLING);
+    attachInterrupt(digitalPinToInterrupt(ENC1_BTN), enc1_press, CHANGE);
 
   
 }
@@ -79,5 +80,4 @@ void setup() { // this will be replaced w/ init, serial goes in main.cpp.
 
 void loop() {
     //Serial.println(enc1_counter);
-
 }
