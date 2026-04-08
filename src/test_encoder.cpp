@@ -41,12 +41,12 @@ void enc1_check() { // renamed this to check, usable in the main loop, only issu
 void enc1_rotate() {
     unsigned char result = enc1.process();
     if (result == enc1.clockwise()) {
-        //enc1_counter++;
-        Serial.println("cw turn");
+        enc1_counter--;
+        //Serial.println("cw turn");
         enc1_moved = true;
     } else if (result == enc1.counterClockwise()) {
-        //enc1_counter--; 
-        Serial.println("ccw turn");
+        enc1_counter++; 
+        //Serial.println("ccw turn");
         enc1_moved = true;
 
     } 
@@ -56,7 +56,7 @@ void enc1_rotate() {
 void enc1_press() {
     if (enc1.buttonPressedReleased(20)) {
         Serial.println("Button pressed");
-        enc1_counter++;
+        //enc1_counter++;
         Serial.println(enc1_counter);
 
     }
