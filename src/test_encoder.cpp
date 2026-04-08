@@ -57,7 +57,7 @@ void enc1_press() {
     if (enc1.buttonPressedReleased(20)) {
         Serial.println("Button pressed");
         //enc1_counter++;
-        Serial.println(enc1_counter);
+        Serial.println(int(enc1_counter/2));
 
     }
 }
