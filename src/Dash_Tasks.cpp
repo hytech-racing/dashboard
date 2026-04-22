@@ -100,12 +100,17 @@ HT_TASK::TaskResponse init_can(const unsigned long& sys_micros, const HT_TASK::T
     // Create can singletons
     CANInterfacesInstance::create(VCFInterfaceInstance::instance(), ACUInterfaceInstance::instance(), VCRInterfaceInstance::instance());
     
-    FDCAN_Init();   
+    FDCAN_Init();
+    
+    // Initialize static references for interrupt handler
+    FDCAN_read(CANInterfacesInstance::instance(), sys_time::hal_millis());
+    
     return HT_TASK::TaskResponse::YIELD;
 }
 
 HT_TASK::TaskResponse can_read(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info)
 {
-    FDCAN_read(CANInterfacesInstance::instance(), sys_time::hal_millis());
+    // CAN messages are now processed in interrupt handler
+    // This task just yields - interrupts handle message reception
     return HT_TASK::TaskResponse::YIELD;
 }

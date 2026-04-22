@@ -1,7 +1,11 @@
 #include "HT_FDCAN.h"
 
 
-FDCAN_HandleTypeDef hfdcan1; 
+FDCAN_HandleTypeDef hfdcan1;
+
+// Static pointers for interrupt handler
+static CANInterfaces* g_interfaces = nullptr;
+static unsigned long g_last_millis = 0; 
 
 
 int FDCAN_Init(){
@@ -97,23 +101,12 @@ int FDCAN_write(uint32_t id, const uint8_t *data, uint8_t len) {
 
 int FDCAN_read(CANInterfaces &interfaces, unsigned long millis)
 {
-  FDCAN_RxHeaderTypeDef rxHeader;
-  uint8_t data[8];
-
-  // Check if a message is available in FIFO0
-  if (HAL_FDCAN_GetRxMessage(&hfdcan1, FDCAN_RX_FIFO0, &rxHeader, data) == HAL_OK) {
-      // Return identifier and data length
-      CAN_message_t msg;
-      msg.id = rxHeader.Identifier;
-      msg.len = rxHeader.DataLength;
-      msg.buf = data;
-
-      DashCAN::dash_read_switch(interfaces, msg, millis);
-
-      return 1; // message read successfully
-  }
-
-  return 0; // no message available
+  // Store references for use in interrupt handler
+  g_interfaces = &interfaces;
+  g_last_millis = millis;
+  
+  // Just return 0 - messages are handled in the interrupt
+  return 0;
 }
 
 void FDCAN1_GPIO_Init_PD0D1(void)
@@ -140,10 +133,12 @@ void FDCAN1_GPIO_Init_PD0D1(void)
     __HAL_RCC_FDCAN_CLK_ENABLE(); 
 }
 
-void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs, CANInterfaces &interfaces, unsigned long millis)
+void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 {
   if ((hfdcan->Instance == FDCAN1) && ((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != 0))
   {
+    // Only process if pointers have been set
+    if (g_interfaces == nullptr) return;
 
     FDCAN_RxHeaderTypeDef rxHeader;
     uint8_t rxData[8];
@@ -155,8 +150,24 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs,
       msg.id = rxHeader.Identifier;
       msg.len = rxHeader.DataLength;
       msg.buf = rxData;
-      DashCAN::dash_read_switch(interfaces, msg, millis);
+      DashCAN::dash_read_switch(*g_interfaces, msg, g_last_millis);
     }
+  }
+}
 
+/**
+  * @brief FDCAN MSP Initialization
+  * This function configures the hardware resources for FDCAN
+  */
+void HAL_FDCAN_MspInit(FDCAN_HandleTypeDef* hfdcan)
+{
+  if(hfdcan->Instance == FDCAN1)
+  {
+    // Enable FDCAN1 clock (already enabled in FDCAN_Init, but doing it here too for completeness)
+    __HAL_RCC_FDCAN_CLK_ENABLE();
+    
+    // Enable FDCAN1 IT0 interrupt in NVIC
+    HAL_NVIC_SetPriority(FDCAN1_IT0_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(FDCAN1_IT0_IRQn);
   }
 }
