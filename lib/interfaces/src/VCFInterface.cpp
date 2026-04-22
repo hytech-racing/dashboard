@@ -52,3 +52,10 @@ VCFCANInterfaceData_s VCFInterface::get_curr_data() {
     }
     return _curr_data;
 }
+
+void VCFInterface::receive_dashboard_message(const CAN_message_t &msg, unsigned long curr_millis) {
+    DASH_INPUT_t _dash_input_msg;
+    Unpack_DASH_INPUT_hytech(&_dash_input_msg, &msg.buf[0], msg.len);
+
+    _control_mode = _dash_input_msg.dash_dial_mode;
+};

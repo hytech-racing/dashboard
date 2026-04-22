@@ -14,10 +14,11 @@ void VCRInterface::receive_inv_dynamics(const CAN_message_t &can_msg, unsigned l
     _wheel_data.last_recv_millis = curr_millis;
 }
 
-void VCRInterface::receive_vehicle_state(const CAN_message_t &can_msg, unsigned long curr_millis)
+void VCRInterface::receive_vehicle_state(const CAN_message_t &can_msg)
 {
-    VEHICLE_STATE_t unpacked_msg;
-    Unpack_VEHICLE_STATE_hytech(&unpacked_msg, can_msg.buf, can_msg.len);
-
-    _car_state.drivetrain_state = unpacked_msg.drivetrain_state;    
+    CAR_STATES_t unpacked_msg;
+    Unpack_CAR_STATES_hytech(&unpacked_msg, can_msg.buf, can_msg.len); //NOLINT
+    _vehicle_state_value = static_cast<VehicleState_e>(unpacked_msg.vehicle_state);
+    _drivetrain_state_value = static_cast<DrivetrainState_e>(unpacked_msg.drivetrain_state);
+    _is_db_in_ctrl = unpacked_msg.drivebrain_in_control;
 }

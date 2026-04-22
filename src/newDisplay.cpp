@@ -106,7 +106,7 @@ void HTX_Display::display_speeds(float rpm)
     _display.setFont(&FreeSans12pt7b);
 }
 
-void HTX_Display::draw_icons(uint8_t vn_status, uint8_t car_state, bool db_in_ctrl)
+void HTX_Display::draw_icons(uint8_t vn_status, VehicleState_e car_state, bool db_in_ctrl)
 {
 
     /* no gps icon   = 0 */
@@ -139,7 +139,7 @@ void HTX_Display::draw_icons(uint8_t vn_status, uint8_t car_state, bool db_in_ct
         _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_nogps, 27, 27, _black);
     }
 
-    if (car_state)
+    if (car_state == VehicleState_e::READY_TO_DRIVE)
     {
         _display.drawBitmap(rtd_icon_pos_x, icon_pos_y, epd_bitmap_rtd, 27, 27, _black);
     }

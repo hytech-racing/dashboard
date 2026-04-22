@@ -28,6 +28,8 @@ public:
     bool is_drivetrain_reset_pressed() {return _curr_data.dash_input_state.mc_reset_btn_is_pressed; }
     bool is_recalibrate_pedals_button_pressed() {return _curr_data.dash_input_state.preset_btn_is_pressed; }
     bool is_pedals_heartbeat_not_ok() {return !_curr_data.stamped_pedals.heartbeat_ok; }
+
+    int get_control_mode() {return _control_mode;}
     void reset_pedals_heartbeat();
     
     void receive_pedals_message(const CAN_message_t& msg, unsigned long curr_millis);
@@ -42,6 +44,8 @@ public:
 private:
 
     VCFCANInterfaceData_s _curr_data;
+
+    int _control_mode;
 
     unsigned long _max_heartbeat_interval_ms;
     bool _first_received_message_heartbeat_init = false;

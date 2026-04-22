@@ -19,18 +19,18 @@
 
 enum LED_ID_e
 {
-    BOTS = 0,
-    LAUNCH_CTRL = 1,
+    SHUTDOWN = 0,
+    INVERTER_ERR = 1,
     TORQUE_MODE = 2,
     BRAKE = 3,
-    IMD = 4,
-    COCKPIT_BRB = 5,
-    INERTIA = 6,
-    BMS = 7,
-    GLV = 8,
-    CRIT_CHARGE = 9,
-    RDY_DRIVE = 10,
-    MC_ERR = 11,
+    BMS = 4,
+    GLV = 5,
+    PACK = 6,
+    IMD = 7,
+    IMPLAUSE = 8,
+    RDY_DRIVE = 9,
+    LATCH = 10,
+    CRIT_CHARGE = 11
 };
 
 enum class LED_color_e
@@ -41,6 +41,8 @@ enum class LED_color_e
     RED = 0xFF0000,
     INIT_COLOR = 0xFF007F,
     BLUE = 0xFF,
+    PURPLE = 0x703fab,
+    ORANGE = 0xf5a742,
 };
 
 class NeopixelController
