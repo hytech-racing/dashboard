@@ -20,7 +20,7 @@ void HTX_Display::draw_background()
     _display.fillRect(0, 0, 320, 240, _white);
     _display.drawBitmap(0, 0, epd_bitmap_hytech_dashboard, 320, 240, _black);
     _display.fillRect(320 - 40, 30, 40, 200, _white);
-    _display.fillRect(283, 36, 305 - 283, 210 - 36, _black);
+    //_display.fillRect(283, 36, 305 - 283, 210 - 36, _black);
     _display.fillRect(283 - 3, (36 + 210 - 36) / 2 + 15, 25, 7, _white);
     _display.fillRect(0, 215, 130, 25, _white);
     _display.fillRect(100, 5, 100, 20, _black);
@@ -54,7 +54,7 @@ void HTX_Display::hytech_animation()
     send_display_buffer(_hspi);
     delay(60);
     _display.setFont(&FreeSans12pt7b);
-    String greeting = "Cook";
+    String greeting = "God Bless Alysa Liu <3";
     int length = greeting.length();
     _display.setCursor(hytech_logo_x - length * 3, hytech_logo_y + hytech_logo_size + 30);
     _display.setTextColor(_black);
@@ -104,6 +104,18 @@ void HTX_Display::display_speeds(float rpm)
     _display.setCursor(125, 165);
     _display.print("MPH");
     _display.setFont(&FreeSans12pt7b);
+}
+
+void HTX_Display::display_mode(int mode)
+{
+    _display.setFont(&FreeSans24pt7b);
+    _display.setTextSize(2);
+    _display.setTextColor(_black);
+
+    _display.setCursor(100, 140);
+
+    // SerialUSB.println(mph);
+    _display.println(HTX_Display::twoDigits(mode));
 }
 
 void HTX_Display::draw_icons(uint8_t vn_status, VehicleState_e car_state, bool db_in_ctrl)

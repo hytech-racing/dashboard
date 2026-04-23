@@ -102,8 +102,8 @@ void NeopixelController::refresh_neopixels(CANInterfaces &interfaces) {
 
     /* SHUTDOWN LEDS */
     set_neopixel_color(LED_ID_e::LATCH, LED_color_e::OFF); // Unused for now
-    set_neopixel_color(LED_ID_e::IMD, interfaces.acu_interface.imd_ok ? LED_color_e::GREEN : LED_color_e::RED);
-    set_neopixel_color(LED_ID_e::BMS, interfaces.acu_interface.bms_ok ? LED_color_e::GREEN : LED_color_e::RED);
+    set_neopixel_color(LED_ID_e::IMD, interfaces.acu_interface.get_curr_data().imd_ok ? LED_color_e::GREEN : LED_color_e::RED);
+    set_neopixel_color(LED_ID_e::BMS, interfaces.acu_interface.get_curr_data().bms_ok ? LED_color_e::GREEN : LED_color_e::RED);
     set_neopixel_color(LED_ID_e::SHUTDOWN, LED_color_e::OFF); // Unused for now
     
     /* DRIVETRAIN LEDS */

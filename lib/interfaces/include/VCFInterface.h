@@ -27,7 +27,6 @@ public:
     bool is_mech_brake_pressed() {return _curr_data.stamped_pedals.pedals_data.mech_brake_is_active;}
     bool is_drivetrain_reset_pressed() {return _curr_data.dash_input_state.mc_reset_btn_is_pressed; }
     bool is_recalibrate_pedals_button_pressed() {return _curr_data.dash_input_state.preset_btn_is_pressed; }
-    bool is_pedals_heartbeat_not_ok() {return !_curr_data.stamped_pedals.heartbeat_ok; }
 
     int get_control_mode() {return _control_mode;}
     void reset_pedals_heartbeat();
@@ -35,12 +34,7 @@ public:
     void receive_pedals_message(const CAN_message_t& msg, unsigned long curr_millis);
     void receive_dashboard_message(const CAN_message_t& msg, unsigned long curr_millis);
         
-    VCFCANInterfaceData_s get_curr_data();
-
-    void send_buzzer_start_message();
-    void send_recalibrate_pedals_message();
-    void enqueue_torque_mode_LED_message(TorqueLimit_e torque_mode);
-
+    VCFCANInterfaceData_s get_curr_data() {return _curr_data;}
 private:
 
     VCFCANInterfaceData_s _curr_data;

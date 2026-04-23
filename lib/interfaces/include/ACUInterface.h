@@ -7,6 +7,14 @@
 #include "CANInterface.h"
 #include "SystemTimeInterface.h"
 
+struct ACUData_s
+{
+    bool bms_ok;
+    bool imd_ok;
+    volt pack_voltage;
+    volt min_cell_voltage;
+};
+
 class ACUInterface  
 {
     public:
@@ -19,17 +27,13 @@ class ACUInterface
         void receive_acu_ok_message(const CAN_message_t &msg);
 
 
-        ACUCoreData_s get_curr_data() {return _last_recvd_data;}
-
-        bool get_voltages_not_critical() {return _voltages_not_critical;}
+        ACUData_s get_curr_data() {return _acu_data;}
 
         void receive_acu_voltages(const CAN_message_t &msg);
 
-        bool bms_ok = true;
-        bool imd_ok = true;
     private: 
-        ACUCoreData_s _last_recvd_data;
-        bool _voltages_not_critical = false;
+        ACUData_s _acu_data;
+            
 
         unsigned long _acu_init_millis;
 
