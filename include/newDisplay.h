@@ -15,6 +15,7 @@
 #include "HT_SPI.h"
 
 #include "bitmaps.h"
+#include "alysa_frames.h"
 
 #include "SharedFirmwareTypes.h"
 #include "etl/singleton.h"
@@ -33,7 +34,8 @@ public:
     HTX_Display(uint8_t cs) : _display(cs, 320, 240) {}
     void init(SPI_HandleTypeDef *hspi);
     void startup();
-    void hytech_animation();
+    void hytech_animation(); 
+    void alysa_animation();
     // void driver_animation(StartupAnimations);
     void draw_background();
     void clear_display_buffer() { _display.clearDisplayBuffer(); }

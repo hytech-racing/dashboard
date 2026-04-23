@@ -56,6 +56,7 @@ HT_TASK::TaskResponse init_screen(const unsigned long& sys_micros, const HT_TASK
     HTXDisplayInstance::create(PB4); // TODO: Update to use a constant
     HTXDisplayInstance::instance().init(&hspi2);
     HTXDisplayInstance::instance().hytech_animation();
+    HTXDisplayInstance::instance().alysa_animation();
     return HT_TASK::TaskResponse::YIELD;
 }
 

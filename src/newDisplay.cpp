@@ -33,6 +33,20 @@ void HTX_Display::startup()
     // driver_animation(StartupAnimations::NONE);
 }
 
+void HTX_Display::alysa_animation()
+{
+    _display.setRotation(0);
+    for (int i = 0; i < ALYSA_FRAME_COUNT; i++)
+    {
+        const uint8_t *frame = alysa_animation_array[i];
+        _display.clearDisplayBuffer();
+        _display.drawBitmap(62, 0, frame, 216, 240, _black);
+        send_display_buffer(_hspi);
+        delay(400);
+    }
+    _display.clearDisplayBuffer();
+}
+
 /// @brief Function to display general hytech startup animation
 /// @note Taken from 2024 dash code
 
@@ -42,8 +56,8 @@ void HTX_Display::hytech_animation()
     _display.setRotation(0);
     _display.drawBitmap(hytech_logo_x, hytech_logo_y, epd_bitmap_Hytech_Logo, hytech_logo_size, hytech_logo_size, _black);
     send_display_buffer(_hspi);
-    delay(2000);
-    for (int i = 1; i > -116; i -= 3)
+    delay(500);
+    for (int i = 0; i > -116; i -= 3)
     {
         _display.clearDisplayBuffer();
         _display.drawBitmap(hytech_logo_x + i, hytech_logo_y, epd_bitmap_Hytech_Logo, hytech_logo_size, hytech_logo_size, _black);
@@ -54,7 +68,7 @@ void HTX_Display::hytech_animation()
     send_display_buffer(_hspi);
     delay(60);
     _display.setFont(&FreeSans12pt7b);
-    String greeting = "God Bless Alysa Liu <3";
+    String greeting = "NEEEOOOWWMM";
     int length = greeting.length();
     _display.setCursor(hytech_logo_x - length * 3, hytech_logo_y + hytech_logo_size + 30);
     _display.setTextColor(_black);
