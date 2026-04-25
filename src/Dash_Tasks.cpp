@@ -71,6 +71,12 @@ HT_TASK::TaskResponse screen_refresh(const unsigned long& sys_micros, const HT_T
     HTXDisplayInstance::instance().draw_icons(1, VCRInterfaceInstance::instance().get_curr_car_state(), VCRInterfaceInstance::instance().get_drivebrain_in_control());
     HTXDisplayInstance::instance().display_mode(VCFInterfaceInstance::instance().get_control_mode());
     //HTXDisplayInstance::instance().display_speeds(VCRInterfaceInstance::instance().get_curr_wheel_data().actual_speed);
+
+    if (ACUInterfaceInstance::instance().get_curr_data().imd_ok == false || ACUInterfaceInstance::instance().get_curr_data().bms_ok == false)
+    {
+        HTXDisplayInstance::instance().draw_popup("GET OUT!");
+    }
+
     HTXDisplayInstance::instance().send_display_buffer(&hspi2);
     spi_tx_complete = false;
     }

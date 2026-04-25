@@ -21,7 +21,8 @@ class ACUInterface
         //ACUInterface() = delete;
 
         ACUInterface(){
-            _acu_init_millis = sys_time::hal_millis();
+            _acu_data.bms_ok = true;
+            _acu_data.imd_ok = true;
         }
 
         void receive_acu_ok_message(const CAN_message_t &msg);
@@ -31,11 +32,11 @@ class ACUInterface
 
         void receive_acu_voltages(const CAN_message_t &msg);
 
+
     private: 
         ACUData_s _acu_data;
-            
+        
 
-        unsigned long _acu_init_millis;
 
 };
 

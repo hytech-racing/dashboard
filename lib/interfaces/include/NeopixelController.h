@@ -30,7 +30,11 @@ enum LED_ID_e
     IMPLAUSE = 8,
     RDY_DRIVE = 9,
     LATCH = 10,
-    CRIT_CHARGE = 11
+    CRIT_CHARGE = 11,
+    END1 = 12,
+    END2 = 13,
+    END3 = 14,
+    END4 = 15
 };
 
 enum class LED_color_e

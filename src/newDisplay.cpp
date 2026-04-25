@@ -40,7 +40,7 @@ void HTX_Display::alysa_animation()
     {
         const uint8_t *frame = alysa_animation_array[i];
         _display.clearDisplayBuffer();
-        _display.drawBitmap(62, 0, frame, 216, 240, _black);
+        _display.drawBitmap(52, 0, frame, 216, 240, _black);
         send_display_buffer(_hspi);
         delay(400);
     }
@@ -75,7 +75,7 @@ void HTX_Display::hytech_animation()
     _display.setTextSize(1);
     _display.println(greeting);
     send_display_buffer(_hspi);
-    delay(2000);
+    delay(1000);
     _display.clearDisplayBuffer();
 }
 
@@ -232,14 +232,14 @@ String HTX_Display::twoDigits(int number)
 
 void HTX_Display::draw_popup(String title)
 {
-    int width = 200;
+    int width = 300;
     int height = 150;
     _display.fillRect(160 - (width / 2), 120 - (height / 2), width, height, _black);
     width -= 10;
     height -= 10;
     _display.fillRect(160 - (width / 2), 120 - (height / 2), width, height, _white);
     _display.setFont(&FreeSansBold12pt7b);
-    _display.setCursor(160 - (width / 2) + 1, 120 - (height / 2) + 20);
+    _display.setCursor(160 - (width / 2) + 25, 120 - (height / 2) + 50);
     int x = _display.getCursorX();
     _display.println(title);
     _display.setFont(&FreeSans12pt7b);
