@@ -1,29 +1,50 @@
 #include "EncoderInterfaceThing.h"
-#include <MD_REncoder.h>
-int pin1 = PD4;
-int pin2 = PD5;
-
-MD_REncoder enc = MD_REncoder(pin1, pin2);
-
-void init_encoder(int pin1, int pin2) // whys this here????
-{
-    //MD_REncoder enc = MD_REncoder(pin1, pin2);
-    
-    attachInterrupt(digitalPinToInterrupt(pin1), rotate, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(pin2), rotate, CHANGE);
-  // add above 2 lines to main setup
-}
 
 
-void rotate() {
-  int counter = 0;
+Encoder::Encoder(int pin1, int pin2, int button, Rotary enc)
+    : m_pin1 { pin1 }
+    , m_pin2 { pin2 }
+    , m_button { button }
+    //, m_enc() { enc }
+{}
 
-  uint8_t result = enc.read();
-  if (result == DIR_CW) {
-    counter++;
-    Serial.println(counter);
-  } else if (result == DIR_CCW) {
-    counter--;
-    Serial.println(counter);
-  }
-}
+
+
+void Encoder::enc_init(Rotary enc) {
+
+    // encoder pins? pull up?
+    Rotary enc(m_pin1, m_pin2, m_button);
+    pinMode(m_pin1, INPUT);
+    pinMode(m_pin2, INPUT);
+    pinMode(m_button, INPUT);
+    attachInterrupt(digitalPinToInterrupt(m_pin1), Encoder::enc_rotate(enc), CHANGE);
+    attachInterrupt(digitalPinToInterrupt(m_pin2), Encoder::enc_rotate(enc), CHANGE);
+    attachInterrupt(digitalPinToInterrupt(m_button), Encoder::enc_press(enc), CHANGE);
+};
+
+
+void Encoder::enc_rotate(Rotary enc) {
+      unsigned char result = enc.process();
+    if (result == enc.clockwise()) {
+        enc_counter--;
+        //Serial.println("cw turn");
+        enc_moved = true;
+    } else if (result == enc.counterClockwise()) {
+        enc_counter++; 
+        //Serial.println("ccw turn");
+        enc_moved = true;
+
+    } 
+    //Serial.println(enc1_counter);
+;}
+
+void Encoder::enc_press(Rotary enc) {
+      if (enc.buttonPressedReleased(20)) {
+        Serial.println("Button pressed");
+        Serial.println(int(enc_counter/2));
+
+    }
+  
+};
+
+
