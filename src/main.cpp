@@ -62,7 +62,7 @@ void setup() {
 void loop() {
   scheduler.run();
 
-  Serial.println(ACUInterfaceInstance::instance().get_curr_data().pack_voltage);
-  Serial.println(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.brake_percent);
+  //Serial.println(ACUInterfaceInstance::instance().get_curr_data().pack_voltage);
+  //Serial.println(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.brake_percent);
 }
 

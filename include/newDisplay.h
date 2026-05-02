@@ -48,6 +48,9 @@ public:
     void draw_popup(String title);
     void send_display_buffer(SPI_HandleTypeDef *hspi);
     void display_min_cell(float min_cell_voltage);
+    void display_all_temps(veh_vec<int> temps);
+    void display_max_temps(int inverter_temp, int motor_temp);
+
     uint8_t current_page = 0;
 
 private:
