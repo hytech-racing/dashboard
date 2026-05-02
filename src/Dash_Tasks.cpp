@@ -60,6 +60,8 @@ HT_TASK::TaskResponse screen_refresh(const unsigned long& sys_micros, const HT_T
     HTXDisplayInstance::instance().draw_background();
     HTXDisplayInstance::instance().invert_display(VCFInterfaceInstance::instance().is_mech_brake_pressed());
     HTXDisplayInstance::instance().draw_vertical_pedal_bar(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.brake_percent * 100, 17);
+    HTXDisplayInstance::instance().draw_vertical_pedal_bar(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.accel_percent * 100, 46);
+    
     HTXDisplayInstance::instance().draw_battery_bar((ACUInterfaceInstance::instance().get_curr_data().pack_voltage - 460) / 70 * 100.0 + 1);
     HTXDisplayInstance::instance().draw_icons(1, VCRInterfaceInstance::instance().get_curr_car_state(), VCRInterfaceInstance::instance().get_drivebrain_in_control());
     HTXDisplayInstance::instance().display_mode(VCFInterfaceInstance::instance().get_control_mode());
