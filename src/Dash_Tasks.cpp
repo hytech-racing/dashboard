@@ -21,15 +21,6 @@ HT_TASK::TaskResponse init_heartbeat(const unsigned long& sys_micros, const HT_T
     return HT_TASK::TaskResponse::YIELD;
 }
 
-HT_TASK::TaskResponse heartbeat(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info)
-{
-    // Toggle an LED or perform other heartbeat actions
-    static bool led_state = false;
-    led_state = !led_state;
-    digitalWrite(LED_PIN, led_state ? HIGH : LOW);
-
-    return HT_TASK::TaskResponse::YIELD;
-}
 
 HT_TASK::TaskResponse init_neopixels_task(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info)
 {
@@ -56,6 +47,7 @@ HT_TASK::TaskResponse init_screen(const unsigned long& sys_micros, const HT_TASK
     HTXDisplayInstance::create(PB4); // TODO: Update to use a constant
     HTXDisplayInstance::instance().init(&hspi2);
     HTXDisplayInstance::instance().hytech_animation();
+    HTXDisplayInstance::instance().alysa_animation();
     return HT_TASK::TaskResponse::YIELD;
 }
 
@@ -65,10 +57,18 @@ HT_TASK::TaskResponse screen_refresh(const unsigned long& sys_micros, const HT_T
     {
     HTXDisplayInstance::instance().draw_background();
     HTXDisplayInstance::instance().invert_display(VCFInterfaceInstance::instance().is_mech_brake_pressed());
-    HTXDisplayInstance::instance().draw_vertical_pedal_bar(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.brake_percent, 17);
-    HTXDisplayInstance::instance().draw_battery_bar(ACUInterfaceInstance::instance().get_curr_data().pack_voltage * 100.0 / 530.0);
-    HTXDisplayInstance::instance().draw_icons(DrivebrainInterfaceInstance::instance().get_db_state_data().vn_status, VCRInterfaceInstance::instance().get_curr_car_state().drivetrain_state, DrivebrainInterfaceInstance::instance().get_db_state_data().drivebrain_in_ctrl);
-    HTXDisplayInstance::instance().display_speeds(VCRInterfaceInstance::instance().get_curr_wheel_data().actual_speed);
+    HTXDisplayInstance::instance().draw_vertical_pedal_bar(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.brake_percent * 100, 17);
+    HTXDisplayInstance::instance().draw_battery_bar((ACUInterfaceInstance::instance().get_curr_data().pack_voltage - 460) / 70 * 100.0 + 1);
+    HTXDisplayInstance::instance().draw_icons(1, VCRInterfaceInstance::instance().get_curr_car_state(), VCRInterfaceInstance::instance().get_drivebrain_in_control());
+    HTXDisplayInstance::instance().display_mode(VCFInterfaceInstance::instance().get_control_mode());
+    HTXDisplayInstance::instance().display_min_cell(ACUInterfaceInstance::instance().get_curr_data().min_cell_voltage);
+    //HTXDisplayInstance::instance().display_speeds(VCRInterfaceInstance::instance().get_curr_wheel_data().actual_speed);
+
+    if (ACUInterfaceInstance::instance().get_curr_data().imd_ok == false || ACUInterfaceInstance::instance().get_curr_data().bms_ok == false)
+    {
+        HTXDisplayInstance::instance().draw_popup("GET OUT!");
+    }
+
     HTXDisplayInstance::instance().send_display_buffer(&hspi2);
     spi_tx_complete = false;
     }
@@ -97,14 +97,19 @@ HT_TASK::TaskResponse screen_refresh(const unsigned long& sys_micros, const HT_T
 HT_TASK::TaskResponse init_can(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info)
 {
     // Create can singletons
-    CANInterfacesInstance::create(VCFInterfaceInstance::instance(), ACUInterfaceInstance::instance(), VCRInterfaceInstance::instance(), DrivebrainInterfaceInstance::instance());
+    CANInterfacesInstance::create(VCFInterfaceInstance::instance(), ACUInterfaceInstance::instance(), VCRInterfaceInstance::instance());
     
-    FDCAN_Init();   
+    FDCAN_Init();
+    
+    // Initialize static references for interrupt handler
+    FDCAN_read(CANInterfacesInstance::instance(), sys_time::hal_millis());
+    
     return HT_TASK::TaskResponse::YIELD;
 }
 
 HT_TASK::TaskResponse can_read(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info)
 {
-    FDCAN_read(CANInterfacesInstance::instance(), sys_time::hal_millis());
+    // CAN messages are now processed in interrupt handler
+    // This task just yields - interrupts handle message reception
     return HT_TASK::TaskResponse::YIELD;
 }

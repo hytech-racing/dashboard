@@ -15,10 +15,6 @@ struct MotorMechanics_s
     float actual_speed; //rpm
 };
 
-struct VehicleState_s
-{
-    uint8_t drivetrain_state;
-};
 
 class VCRInterface 
 {
@@ -31,15 +27,19 @@ class VCRInterface
 
         MotorMechanics_s get_curr_wheel_data() {return _wheel_data;}
 
-        void receive_vehicle_state(const CAN_message_t &can_msg, unsigned long curr_millis);
+        void receive_vehicle_state(const CAN_message_t &can_msg);
 
-        VehicleState_s get_curr_car_state() {return _car_state;}
+        VehicleState_e get_curr_car_state() {return _vehicle_state_value;}
+
+        bool get_drivebrain_in_control() {return _is_db_in_ctrl;}
 
     private:
         TorqueLimit_e _torque_limit = TorqueLimit_e::TCMUX_LOW_TORQUE;
         bool _is_in_pedals_calibration_state = false;
         MotorMechanics_s _wheel_data; 
-        VehicleState_s _car_state;
+        VehicleState_e _vehicle_state_value;
+        DrivetrainState_e _drivetrain_state_value;
+        bool _is_db_in_ctrl;
 };
 
 

@@ -15,7 +15,9 @@
 #include "HT_SPI.h"
 
 #include "bitmaps.h"
+#include "alysa_frames.h"
 
+#include "SharedFirmwareTypes.h"
 #include "etl/singleton.h"
 
 // Defines
@@ -32,17 +34,20 @@ public:
     HTX_Display(uint8_t cs) : _display(cs, 320, 240) {}
     void init(SPI_HandleTypeDef *hspi);
     void startup();
-    void hytech_animation();
+    void hytech_animation(); 
+    void alysa_animation();
     // void driver_animation(StartupAnimations);
     void draw_background();
     void clear_display_buffer() { _display.clearDisplayBuffer(); }
     void draw_vertical_pedal_bar(float val, int initial_x_coord);
     void draw_battery_bar(int percent);
     void display_speeds(float rpm);
-    void draw_icons(uint8_t vn_status, uint8_t car_state, bool db_in_ctrl);
+    void display_mode(int mode);
+    void draw_icons(uint8_t vn_status, VehicleState_e car_state, bool db_in_ctrl);
     void invert_display(bool invert_criteria);
     void draw_popup(String title);
     void send_display_buffer(SPI_HandleTypeDef *hspi);
+    void display_min_cell(float min_cell_voltage);
     uint8_t current_page = 0;
 
 private:

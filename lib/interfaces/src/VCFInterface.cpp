@@ -5,6 +5,7 @@
 void VCFInterface::receive_pedals_message(const CAN_message_t &msg, unsigned long curr_millis) {
     PEDALS_SYSTEM_DATA_t pedals_msg;
     Unpack_PEDALS_SYSTEM_DATA_hytech(&pedals_msg, &msg.buf[0], msg.len);
+
     _curr_data.stamped_pedals.pedals_data.implausibility_has_exceeded_max_duration =
         pedals_msg.implaus_exceeded_max_duration;
 
@@ -22,33 +23,12 @@ void VCFInterface::receive_pedals_message(const CAN_message_t &msg, unsigned lon
         HYTECH_accel_pedal_ro_fromS(static_cast<float>(pedals_msg.accel_pedal_ro));
     _curr_data.stamped_pedals.pedals_data.brake_percent =
         HYTECH_brake_pedal_ro_fromS(static_cast<float>(pedals_msg.brake_pedal_ro));
-    _curr_data.stamped_pedals.last_recv_millis = curr_millis;
-
-    // As long as we're using millis() function, loop overrun not a concern
-    
-    if(_curr_data.stamped_pedals.last_recv_millis == 0)
-    {
-        _first_received_message_heartbeat_init = true;
-    }
-    
-    _curr_data.stamped_pedals.last_recv_millis = curr_millis;
 }
 
-void VCFInterface::reset_pedals_heartbeat()
-{
-    _curr_data.stamped_pedals.heartbeat_ok = true;
-}
 
-VCFCANInterfaceData_s VCFInterface::get_curr_data() {
+void VCFInterface::receive_dashboard_message(const CAN_message_t &msg, unsigned long curr_millis) {
+    DASH_INPUT_t _dash_input_msg;
+    Unpack_DASH_INPUT_hytech(&_dash_input_msg, &msg.buf[0], msg.len);
 
-    // only in the situation where the hearbeat has yet to be established or the heartbeat is ok do we re-evaluate the heartbeat.
-    // if hearbeat is is not ok, the only thing that should be able to reset it is the state machine via the reset_pedals_heartbeat function
-    if(_first_received_message_heartbeat_init || _curr_data.stamped_pedals.heartbeat_ok)
-    {
-        _first_received_message_heartbeat_init = false;
-        _curr_data.stamped_pedals.heartbeat_ok = ((sys_time::hal_millis() - _curr_data.stamped_pedals.last_recv_millis) < _max_heartbeat_interval_ms);
-    } else {
-        _curr_data.stamped_pedals.heartbeat_ok = false;
-    }
-    return _curr_data;
-}
+    _control_mode = _dash_input_msg.dash_dial_mode;
+};

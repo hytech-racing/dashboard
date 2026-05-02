@@ -20,7 +20,7 @@ void HTX_Display::draw_background()
     _display.fillRect(0, 0, 320, 240, _white);
     _display.drawBitmap(0, 0, epd_bitmap_hytech_dashboard, 320, 240, _black);
     _display.fillRect(320 - 40, 30, 40, 200, _white);
-    _display.fillRect(283, 36, 305 - 283, 210 - 36, _black);
+    //_display.fillRect(283, 36, 305 - 283, 210 - 36, _black);
     _display.fillRect(283 - 3, (36 + 210 - 36) / 2 + 15, 25, 7, _white);
     _display.fillRect(0, 215, 130, 25, _white);
     _display.fillRect(100, 5, 100, 20, _black);
@@ -33,6 +33,20 @@ void HTX_Display::startup()
     // driver_animation(StartupAnimations::NONE);
 }
 
+void HTX_Display::alysa_animation()
+{
+    _display.setRotation(0);
+    for (int i = 0; i < ALYSA_FRAME_COUNT; i++)
+    {
+        const uint8_t *frame = alysa_animation_array[i];
+        _display.clearDisplayBuffer();
+        _display.drawBitmap(52, 0, frame, 216, 240, _black);
+        send_display_buffer(_hspi);
+        delay(400);
+    }
+    _display.clearDisplayBuffer();
+}
+
 /// @brief Function to display general hytech startup animation
 /// @note Taken from 2024 dash code
 
@@ -42,8 +56,8 @@ void HTX_Display::hytech_animation()
     _display.setRotation(0);
     _display.drawBitmap(hytech_logo_x, hytech_logo_y, epd_bitmap_Hytech_Logo, hytech_logo_size, hytech_logo_size, _black);
     send_display_buffer(_hspi);
-    delay(2000);
-    for (int i = 1; i > -116; i -= 3)
+    delay(500);
+    for (int i = 0; i > -116; i -= 3)
     {
         _display.clearDisplayBuffer();
         _display.drawBitmap(hytech_logo_x + i, hytech_logo_y, epd_bitmap_Hytech_Logo, hytech_logo_size, hytech_logo_size, _black);
@@ -54,14 +68,14 @@ void HTX_Display::hytech_animation()
     send_display_buffer(_hspi);
     delay(60);
     _display.setFont(&FreeSans12pt7b);
-    String greeting = "Cook";
+    String greeting = "NEEEOOOWWMM";
     int length = greeting.length();
     _display.setCursor(hytech_logo_x - length * 3, hytech_logo_y + hytech_logo_size + 30);
     _display.setTextColor(_black);
     _display.setTextSize(1);
     _display.println(greeting);
     send_display_buffer(_hspi);
-    delay(2000);
+    delay(1000);
     _display.clearDisplayBuffer();
 }
 
@@ -106,7 +120,33 @@ void HTX_Display::display_speeds(float rpm)
     _display.setFont(&FreeSans12pt7b);
 }
 
-void HTX_Display::draw_icons(uint8_t vn_status, uint8_t car_state, bool db_in_ctrl)
+void HTX_Display::display_mode(int mode)
+{
+    _display.setFont(&FreeSans24pt7b);
+    _display.setTextSize(2);
+    _display.setTextColor(_black);
+
+    _display.setCursor(100, 140);
+
+    _display.println(HTX_Display::twoDigits(mode));
+
+    // SerialUSB.println(mph);
+    
+}
+
+void HTX_Display::display_min_cell(float min_cell_voltage)
+{
+    _display.setFont(&FreeSans12pt7b);
+    _display.setTextSize(1);
+    _display.setTextColor(_black);
+
+    _display.setCursor(220, 100);
+
+    // SerialUSB.println(mph);
+    _display.print(min_cell_voltage);
+}
+
+void HTX_Display::draw_icons(uint8_t vn_status, VehicleState_e car_state, bool db_in_ctrl)
 {
 
     /* no gps icon   = 0 */
@@ -123,23 +163,23 @@ void HTX_Display::draw_icons(uint8_t vn_status, uint8_t car_state, bool db_in_ct
     int db_ctrl_icon_pos_x = rtd_icon_pos_x - icon_size - offset;
     int icon_pos_y = 40;
 
-    if (vn_status >= 2)
-    {
-        _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_gps, 27, 27, _black);
-    }
-    else if (vn_status == 1)
-    {
-        if (HTX_Display::blink())
-        {
-            _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_gps, 27, 27, _black);
-        }
-    }
-    else if (vn_status == 0)
-    {
-        _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_nogps, 27, 27, _black);
-    }
+    // if (vn_status >= 2)
+    // {
+    //     _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_gps, 27, 27, _black);
+    // }
+    // else if (vn_status == 1)
+    // {
+    //     if (HTX_Display::blink())
+    //     {
+    //         _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_gps, 27, 27, _black);
+    //     }
+    // }
+    // else if (vn_status == 0)
+    // {
+    //     _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_nogps, 27, 27, _black);
+    // }
 
-    if (car_state)
+    if (car_state == VehicleState_e::READY_TO_DRIVE)
     {
         _display.drawBitmap(rtd_icon_pos_x, icon_pos_y, epd_bitmap_rtd, 27, 27, _black);
     }
@@ -206,14 +246,14 @@ String HTX_Display::twoDigits(int number)
 
 void HTX_Display::draw_popup(String title)
 {
-    int width = 200;
+    int width = 300;
     int height = 150;
     _display.fillRect(160 - (width / 2), 120 - (height / 2), width, height, _black);
     width -= 10;
     height -= 10;
     _display.fillRect(160 - (width / 2), 120 - (height / 2), width, height, _white);
     _display.setFont(&FreeSansBold12pt7b);
-    _display.setCursor(160 - (width / 2) + 1, 120 - (height / 2) + 20);
+    _display.setCursor(160 - (width / 2) + 25, 120 - (height / 2) + 50);
     int x = _display.getCursorX();
     _display.println(title);
     _display.setFont(&FreeSans12pt7b);

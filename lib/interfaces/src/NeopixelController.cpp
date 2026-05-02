@@ -34,14 +34,19 @@ void NeopixelController::refresh_neopixels(CANInterfaces &interfaces) {
     if (interfaces.vcr_interface.is_in_pedals_calibration_state()) {
         set_neopixel_color(LED_ID_e::BRAKE, LED_color_e::RED);
         set_neopixel_color(LED_ID_e::TORQUE_MODE, LED_color_e::RED);
-        set_neopixel_color(LED_ID_e::LAUNCH_CTRL, LED_color_e::RED);
+        set_neopixel_color(LED_ID_e::LATCH, LED_color_e::RED);
         set_neopixel_color(LED_ID_e::CRIT_CHARGE, LED_color_e::RED);
-        set_neopixel_color(LED_ID_e::INERTIA, LED_color_e::RED);
-        set_neopixel_color(LED_ID_e::COCKPIT_BRB, LED_color_e::RED);
-        set_neopixel_color(LED_ID_e::BOTS, LED_color_e::OFF);
-        set_neopixel_color(LED_ID_e::MC_ERR, LED_color_e::RED);
+        set_neopixel_color(LED_ID_e::SHUTDOWN, LED_color_e::RED);
+        set_neopixel_color(LED_ID_e::IMPLAUSE, LED_color_e::RED);
+        set_neopixel_color(LED_ID_e::PACK, LED_color_e::RED);
+        set_neopixel_color(LED_ID_e::INVERTER_ERR, LED_color_e::RED);
         set_neopixel_color(LED_ID_e::RDY_DRIVE, LED_color_e::RED);
         set_neopixel_color(LED_ID_e::GLV, LED_color_e::RED);
+
+        set_neopixel_color(LED_ID_e::END1, LED_color_e::OFF);
+        set_neopixel_color(LED_ID_e::END2, LED_color_e::OFF);
+        set_neopixel_color(LED_ID_e::END3, LED_color_e::BLUE);
+        set_neopixel_color(LED_ID_e::END4, LED_color_e::BLUE);
         _neopixels.show();
         return;
     }
@@ -78,23 +83,70 @@ void NeopixelController::refresh_neopixels(CANInterfaces &interfaces) {
         }
     }
 
+    LED_color_e ready_drive_color = LED_color_e::OFF;
+    switch (interfaces.vcr_interface.get_curr_car_state())
+    {
+        case VehicleState_e::READY_TO_DRIVE:
+        {
+            interfaces.vcr_interface.get_drivebrain_in_control() ? ready_drive_color = LED_color_e::BLUE : ready_drive_color = LED_color_e::GREEN;
+            break;
+        }
+        case VehicleState_e::WANTING_READY_TO_DRIVE:
+        {
+            ready_drive_color = LED_color_e::YELLOW;
+            break;
+        }
+        default:
+        {
+            ready_drive_color = LED_color_e::RED;
+            break;
+        }
+    }
+
     constexpr float glv_critical_voltage = 22.0f;
 
-    set_neopixel_color(LED_ID_e::BRAKE, brake_light_color);
-    set_neopixel_color(LED_ID_e::LAUNCH_CTRL, LED_color_e::OFF); // Unused for now
-    set_neopixel_color(LED_ID_e::CRIT_CHARGE, interfaces.acu_interface.get_voltages_not_critical() ? LED_color_e::GREEN : LED_color_e::RED); // Unused for now
-    set_neopixel_color(LED_ID_e::INERTIA, LED_color_e::OFF); // Unused for now
-    set_neopixel_color(LED_ID_e::COCKPIT_BRB, LED_color_e::OFF); // Unused for now        bool _is_in_pedals_calibration_state = false;
-    set_neopixel_color(LED_ID_e::BOTS, LED_color_e::OFF); // Unused for now
-    set_neopixel_color(LED_ID_e::IMD, interfaces.acu_interface.imd_ok ? LED_color_e::GREEN : LED_color_e::RED);
-    set_neopixel_color(LED_ID_e::BMS, interfaces.acu_interface.bms_ok ? LED_color_e::GREEN : LED_color_e::RED);
-    set_neopixel_color(LED_ID_e::MC_ERR, LED_color_e::OFF); // Unused for now
-    set_neopixel_color(LED_ID_e::RDY_DRIVE, LED_color_e::RED);
-    set_neopixel_color(LED_ID_e::GLV, LED_color_e::OFF); // No sensor there yet
-    set_neopixel_color(LED_ID_e::TORQUE_MODE, torque_mode_color);
+    /* SHUTDOWN LEDS */
+    // set_neopixel_color(LED_ID_e::LATCH, LED_color_e::OFF); // Unused for now
+    // set_neopixel_color(LED_ID_e::IMD, interfaces.acu_interface.get_curr_data().imd_ok ? LED_color_e::GREEN : LED_color_e::RED);
+    // set_neopixel_color(LED_ID_e::BMS, interfaces.acu_interface.get_curr_data().bms_ok ? LED_color_e::GREEN : LED_color_e::RED);
+    // set_neopixel_color(LED_ID_e::SHUTDOWN, LED_color_e::OFF); // Unused for now
+    
+    // /* DRIVETRAIN LEDS */
+    // set_neopixel_color(LED_ID_e::BRAKE, brake_light_color);
+    // set_neopixel_color(LED_ID_e::INVERTER_ERR, LED_color_e::OFF);
+    // set_neopixel_color(LED_ID_e::RDY_DRIVE, ready_drive_color);
+    // set_neopixel_color(LED_ID_e::TORQUE_MODE, torque_mode_color);
+    // set_neopixel_color(LED_ID_e::IMPLAUSE, LED_color_e::OFF); // Unused for now
 
-    set_neopixel_color(LED_ID_e::MC_ERR, LED_color_e::BLUE);
-    set_neopixel_color(LED_ID_e::BOTS, LED_color_e::OFF);
+    // /* VOLTAGE MONITOR */
+    // set_neopixel_color(LED_ID_e::PACK, LED_color_e::OFF); // Unused for now
+    // set_neopixel_color(LED_ID_e::CRIT_CHARGE, LED_color_e::OFF); // Unused for now
+    // set_neopixel_color(LED_ID_e::GLV, interfaces.vcf_interface.get_control_mode() ? LED_color_e::GREEN : LED_color_e::RED); // No sensor there yet
+
+    // set_neopixel_color(LED_ID_e::END1, LED_color_e::OFF);
+    // set_neopixel_color(LED_ID_e::END2, LED_color_e::OFF);
+    // set_neopixel_color(LED_ID_e::END3, LED_color_e::BLUE);
+    // set_neopixel_color(LED_ID_e::END4, LED_color_e::BLUE);
+
+        set_neopixel_color(LED_ID_e::BRAKE, LED_color_e::RED);
+        set_neopixel_color(LED_ID_e::TORQUE_MODE, LED_color_e::RED);
+        set_neopixel_color(LED_ID_e::LATCH, LED_color_e::RED);
+        set_neopixel_color(LED_ID_e::CRIT_CHARGE, LED_color_e::RED);
+        set_neopixel_color(LED_ID_e::SHUTDOWN, LED_color_e::RED);
+        set_neopixel_color(LED_ID_e::IMPLAUSE, LED_color_e::RED);
+        set_neopixel_color(LED_ID_e::PACK, LED_color_e::RED);
+        set_neopixel_color(LED_ID_e::INVERTER_ERR, LED_color_e::RED);
+        set_neopixel_color(LED_ID_e::RDY_DRIVE, LED_color_e::RED);
+        set_neopixel_color(LED_ID_e::GLV, LED_color_e::RED);
+
+        set_neopixel_color(LED_ID_e::END1, LED_color_e::BLUE);
+        set_neopixel_color(LED_ID_e::END2, LED_color_e::BLUE);
+        set_neopixel_color(LED_ID_e::END3, LED_color_e::BLUE);
+        set_neopixel_color(LED_ID_e::END4, LED_color_e::BLUE);
+
+        set_neopixel_color(LED_ID_e::IMD, interfaces.acu_interface.get_curr_data().imd_ok ? LED_color_e::GREEN : LED_color_e::RED);
+        set_neopixel_color(LED_ID_e::BMS, interfaces.acu_interface.get_curr_data().bms_ok ? LED_color_e::GREEN : LED_color_e::RED);
+
     _neopixels.show();
 
 }

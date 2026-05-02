@@ -11,7 +11,7 @@ using VCRData_sInstance = etl::singleton<VCRData_s>;
 
 
 constexpr int NEOPIXEL_CONTROL_PIN = PC14;
-constexpr int NEOPIXEL_COUNT = 12; // 12 neopixeles on dashboard
+constexpr int NEOPIXEL_COUNT = 16; // 12 neopixeles on dashboard
 
 
 
