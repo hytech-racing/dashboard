@@ -47,6 +47,7 @@ public:
     void invert_display(bool invert_criteria);
     void draw_popup(String title);
     void send_display_buffer(SPI_HandleTypeDef *hspi);
+    void display_min_cell(float min_cell_voltage);
     uint8_t current_page = 0;
 
 private:

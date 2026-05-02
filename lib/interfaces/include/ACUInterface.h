@@ -23,6 +23,7 @@ class ACUInterface
         ACUInterface(){
             _acu_data.bms_ok = true;
             _acu_data.imd_ok = true;
+            _acu_data.pack_voltage = 460;
         }
 
         void receive_acu_ok_message(const CAN_message_t &msg);

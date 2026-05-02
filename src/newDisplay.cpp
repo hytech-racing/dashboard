@@ -128,8 +128,22 @@ void HTX_Display::display_mode(int mode)
 
     _display.setCursor(100, 140);
 
-    // SerialUSB.println(mph);
     _display.println(HTX_Display::twoDigits(mode));
+
+    // SerialUSB.println(mph);
+    
+}
+
+void HTX_Display::display_min_cell(float min_cell_voltage)
+{
+    _display.setFont(&FreeSans12pt7b);
+    _display.setTextSize(1);
+    _display.setTextColor(_black);
+
+    _display.setCursor(220, 100);
+
+    // SerialUSB.println(mph);
+    _display.print(min_cell_voltage);
 }
 
 void HTX_Display::draw_icons(uint8_t vn_status, VehicleState_e car_state, bool db_in_ctrl)
@@ -149,21 +163,21 @@ void HTX_Display::draw_icons(uint8_t vn_status, VehicleState_e car_state, bool d
     int db_ctrl_icon_pos_x = rtd_icon_pos_x - icon_size - offset;
     int icon_pos_y = 40;
 
-    if (vn_status >= 2)
-    {
-        _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_gps, 27, 27, _black);
-    }
-    else if (vn_status == 1)
-    {
-        if (HTX_Display::blink())
-        {
-            _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_gps, 27, 27, _black);
-        }
-    }
-    else if (vn_status == 0)
-    {
-        _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_nogps, 27, 27, _black);
-    }
+    // if (vn_status >= 2)
+    // {
+    //     _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_gps, 27, 27, _black);
+    // }
+    // else if (vn_status == 1)
+    // {
+    //     if (HTX_Display::blink())
+    //     {
+    //         _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_gps, 27, 27, _black);
+    //     }
+    // }
+    // else if (vn_status == 0)
+    // {
+    //     _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_nogps, 27, 27, _black);
+    // }
 
     if (car_state == VehicleState_e::READY_TO_DRIVE)
     {

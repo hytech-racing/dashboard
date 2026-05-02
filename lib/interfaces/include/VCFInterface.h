@@ -39,7 +39,7 @@ private:
 
     VCFCANInterfaceData_s _curr_data;
 
-    int _control_mode;
+    int _control_mode = 0;
 
     unsigned long _max_heartbeat_interval_ms;
     bool _first_received_message_heartbeat_init = false;
