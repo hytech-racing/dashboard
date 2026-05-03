@@ -18,7 +18,9 @@ void HTX_Display::draw_background()
 {
     _display.clearDisplayBuffer();
     _display.fillRect(0, 0, 320, 240, _white);
-    _display.drawBitmap(0, 0, epd_bitmap_hytech_dashboard, 320, 240, _black);
+    _display.fillRect(15, 33, 22, 179, _black);
+    _display.fillRect(44, 33, 22, 179, _black);
+    //_display.drawBitmap(0, 0, epd_bitmap_hytech_dashboard, 320, 240, _black);
     _display.fillRect(320 - 40, 30, 40, 200, _white);
     //_display.fillRect(283, 36, 305 - 283, 210 - 36, _black);
     _display.fillRect(283 - 3, (36 + 210 - 36) / 2 + 15, 25, 7, _white);
@@ -136,14 +138,51 @@ void HTX_Display::display_mode(int mode)
 
 void HTX_Display::display_min_cell(float min_cell_voltage)
 {
-    _display.setFont(&FreeSans12pt7b);
+    _display.setFont(&FreeSans9pt7b);
     _display.setTextSize(1);
     _display.setTextColor(_black);
 
-    _display.setCursor(220, 100);
+    _display.setCursor(230, 100);
+    _display.print("CEL:");
+    _display.setCursor(270, 100);
 
     // SerialUSB.println(mph);
     _display.print(min_cell_voltage);
+}
+
+
+
+void HTX_Display::display_max_temps(int inverter_temp, int motor_temp)
+{
+    _display.setFont(&FreeSans9pt7b);
+    _display.setTextSize(1);
+    _display.setTextColor(_black);
+    _display.setCursor(235, 130);
+    _display.print("TEMPS");
+    _display.setCursor(230, 150);
+    _display.print("INV:");
+    _display.setCursor(265, 150);
+    _display.print(inverter_temp);
+    _display.setCursor(230, 170);
+    _display.print("MTR:");
+    _display.setCursor(275, 170);
+    _display.print(motor_temp);
+}
+
+void HTX_Display::display_all_temps(veh_vec<int> temps)
+{
+    _display.setFont(&FreeSans9pt7b);
+    _display.setTextSize(1);
+    _display.setTextColor(_black);
+
+    _display.setCursor(220, 120);
+    _display.print(temps.FL);
+    _display.setCursor(250, 120);
+    _display.print(temps.FR);
+    _display.setCursor(220, 140);
+    _display.print(temps.RL);
+    _display.setCursor(250, 140);
+    _display.print(temps.RR);
 }
 
 void HTX_Display::draw_icons(uint8_t vn_status, VehicleState_e car_state, bool db_in_ctrl)
