@@ -18,14 +18,13 @@ void HTX_Display::draw_background()
 {
     _display.clearDisplayBuffer();
     _display.fillRect(0, 0, 320, 240, _white);
-    _display.fillRect(15, 33, 22, 179, _black);
-    _display.fillRect(44, 33, 22, 179, _black);
+
     //_display.drawBitmap(0, 0, epd_bitmap_hytech_dashboard, 320, 240, _black);
     _display.fillRect(320 - 40, 30, 40, 200, _white);
     //_display.fillRect(283, 36, 305 - 283, 210 - 36, _black);
     _display.fillRect(283 - 3, (36 + 210 - 36) / 2 + 15, 25, 7, _white);
     _display.fillRect(0, 215, 130, 25, _white);
-    _display.fillRect(100, 5, 100, 20, _black);
+    
 }
 
 void HTX_Display::startup()
@@ -35,19 +34,19 @@ void HTX_Display::startup()
     // driver_animation(StartupAnimations::NONE);
 }
 
-void HTX_Display::alysa_animation()
-{
-    _display.setRotation(0);
-    for (int i = 0; i < ALYSA_FRAME_COUNT; i++)
-    {
-        const uint8_t *frame = alysa_animation_array[i];
-        _display.clearDisplayBuffer();
-        _display.drawBitmap(52, 0, frame, 216, 240, _black);
-        send_display_buffer(_hspi);
-        delay(400);
-    }
-    _display.clearDisplayBuffer();
-}
+// void HTX_Display::alysa_animation()
+// {
+//     _display.setRotation(0);
+//     for (int i = 0; i < ALYSA_FRAME_COUNT; i++)
+//     {
+//         const uint8_t *frame = alysa_animation_array[i];
+//         _display.clearDisplayBuffer();
+//         _display.drawBitmap(52, 0, frame, 216, 240, _black);
+//         send_display_buffer(_hspi);
+//         delay(400);
+//     }
+//     _display.clearDisplayBuffer();
+// }
 
 /// @brief Function to display general hytech startup animation
 /// @note Taken from 2024 dash code
@@ -84,19 +83,20 @@ void HTX_Display::hytech_animation()
 // draws _white rect top down
 void HTX_Display::draw_vertical_pedal_bar(float val, int initial_x_coord)
 {
-    double ZERO_PERCENT_VAL = 175;
-    val = (val > 100) ? val = 100 : (val < 0) ? val = 0
-                                              : val = val;
+    _display.fillRect(initial_x_coord, 33, 22, 189, _black);
+    double ZERO_PERCENT_VAL = 185;
+    val = std::max(0.0f, std::min(100.0f, val));
     int i = (int)(100 - val) * (ZERO_PERCENT_VAL / 100.0);
-    _display.fillRect(initial_x_coord, 35, 18, i, _white);
+    _display.fillRect(initial_x_coord + 2, 35, 18, i, _white);
 }
 
 void HTX_Display::draw_battery_bar(int percent)
 {
     // 0%: 59
     // 100% 0
-    int w = (100 - percent) * (96.0 / 100);
-    HTX_Display::draw_rectangle_right_corner(197, 7, w, 16, _white);
+    _display.fillRect(60, 5, 250, 20, _black);
+    int w = (100 - percent) * (246 / 100);
+    HTX_Display::draw_rectangle_right_corner(306, 7, w, 16, _white);
 }
 
 void HTX_Display::display_speeds(float rpm)
@@ -122,13 +122,19 @@ void HTX_Display::display_speeds(float rpm)
     _display.setFont(&FreeSans12pt7b);
 }
 
+void HTX_Display::set_cursor(int x, int y)
+{
+    _display.setCursor(x, y);
+}
+
+
 void HTX_Display::display_mode(int mode)
 {
-    _display.setFont(&FreeSans24pt7b);
-    _display.setTextSize(2);
+    _display.setFont(&FreeSansBold18pt7b);
+    _display.setTextSize(1);
     _display.setTextColor(_black);
 
-    _display.setCursor(100, 140);
+    _display.setCursor(10, 27);
 
     _display.println(HTX_Display::twoDigits(mode));
 
@@ -138,15 +144,14 @@ void HTX_Display::display_mode(int mode)
 
 void HTX_Display::display_min_cell(float min_cell_voltage)
 {
-    _display.setFont(&FreeSans9pt7b);
+    _display.setFont(&FreeSansBold9pt7b);
     _display.setTextSize(1);
     _display.setTextColor(_black);
-
-    _display.setCursor(230, 100);
-    _display.print("CEL:");
-    _display.setCursor(270, 100);
-
-    // SerialUSB.println(mph);
+    int x_coord = 65;
+    _display.setCursor(x_coord, 50);
+    _display.print("CELL: ");
+    // _display.setCursor(x_coord + 55, 55);
+    _display.setFont(&FreeSans9pt7b);
     _display.print(min_cell_voltage);
 }
 
@@ -154,19 +159,24 @@ void HTX_Display::display_min_cell(float min_cell_voltage)
 
 void HTX_Display::display_max_temps(int inverter_temp, int motor_temp)
 {
-    _display.setFont(&FreeSans9pt7b);
+    _display.setFont(&FreeSansBold9pt7b);
     _display.setTextSize(1);
     _display.setTextColor(_black);
-    _display.setCursor(235, 130);
+    int x_coord = 65;
+    int y_coord = 66;
+    _display.setCursor(x_coord, y_coord);
     _display.print("TEMPS");
-    _display.setCursor(230, 150);
-    _display.print("INV:");
-    _display.setCursor(265, 150);
+
+    _display.setCursor(x_coord, y_coord + 16);
+    _display.print("INV: ");
+    _display.setFont(&FreeSans9pt7b);
     _display.print(inverter_temp);
-    _display.setCursor(230, 170);
-    _display.print("MTR:");
-    _display.setCursor(275, 170);
-    _display.print(motor_temp);
+
+    _display.setCursor(x_coord, y_coord + 32);
+    _display.setFont(&FreeSansBold9pt7b);
+    _display.print("MTR: ");
+    _display.setFont(&FreeSans9pt7b);
+    _display.println(motor_temp);
 }
 
 void HTX_Display::display_all_temps(veh_vec<int> temps)
