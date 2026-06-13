@@ -75,6 +75,11 @@ void DashCAN::dash_read_switch(CANInterfaces &interfaces, const CAN_message_t &m
                 interfaces.vcr_interface.receive_inverter_temperature_4(msg);
                 break;
             }
+            case STATE_OF_CHARGE_CANID:
+            {
+                interfaces.acu_interface.receive_state_of_charge(msg);
+                break;
+            }
               default:
                   break;
           }

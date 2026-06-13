@@ -13,6 +13,7 @@ struct ACUData_s
     bool imd_ok;
     volt pack_voltage;
     volt min_cell_voltage;
+    float state_of_charge;
 };
 
 class ACUInterface  
@@ -27,11 +28,11 @@ class ACUInterface
         }
 
         void receive_acu_ok_message(const CAN_message_t &msg);
-
+        void receive_acu_voltages(const CAN_message_t &msg);
+        void receive_state_of_charge(const CAN_message_t &msg);
 
         ACUData_s get_curr_data() {return _acu_data;}
 
-        void receive_acu_voltages(const CAN_message_t &msg);
 
 
     private: 
