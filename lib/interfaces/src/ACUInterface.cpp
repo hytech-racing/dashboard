@@ -18,3 +18,10 @@ void ACUInterface::receive_acu_voltages(const CAN_message_t &msg)
     _acu_data.pack_voltage = HYTECH_total_voltage_ro_fromS(unpacked_msg.total_voltage_ro);
     _acu_data.min_cell_voltage = HYTECH_min_cell_voltage_ro_fromS(unpacked_msg.min_cell_voltage_ro);
 }
+
+void ACUInterface::receive_state_of_charge(const CAN_message_t &msg)
+{
+    STATE_OF_CHARGE_t unpacked_msg;
+    Unpack_STATE_OF_CHARGE_hytech(&unpacked_msg, msg.buf, msg.len); // NOLINT (implicitly decay pointer)
+
+    _acu_data.state_of_charge = HYTECH_charge_percentage_ro_fromS(unpacked_msg.charge_percentage_ro);}
