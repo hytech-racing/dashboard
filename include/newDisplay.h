@@ -6,10 +6,12 @@
 #include "Adafruit_GFX.h"
 
 // Fonts
-#include <Fonts/FreeSans12pt7b.h>
-#include <Fonts/FreeSansBold12pt7b.h>
 #include <Fonts/FreeSans9pt7b.h>
+#include <Fonts/FreeSans12pt7b.h>
 #include <Fonts/FreeSans24pt7b.h>
+#include <Fonts/FreeSansBold9pt7b.h>
+#include <Fonts/FreeSansBold12pt7b.h>
+#include <Fonts/FreeSansBold18pt7b.h>
 #include <Fonts/FreeSansBold24pt7b.h>
 
 #include "HT_SPI.h"
@@ -47,6 +49,7 @@ public:
     void invert_display(bool invert_criteria);
     void draw_popup(String title);
     void send_display_buffer(SPI_HandleTypeDef *hspi);
+    void set_cursor(int x, int y);
     void display_min_cell(float min_cell_voltage);
     void display_all_temps(veh_vec<int> temps);
     void display_max_temps(int inverter_temp, int motor_temp);
