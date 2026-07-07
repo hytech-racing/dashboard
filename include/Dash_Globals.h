@@ -1,14 +1,19 @@
 #ifndef DASH_GLOBALS_H
 #define DASH_GLOBALS_H
 
-/* ETL Library */
 #include <etl/singleton.h>
-
-/* External Includes */
 #include "SharedFirmwareTypes.h"
+#include "variant_generic.h"
 
-/* Interface and System Data Structs */
+/* Interface and system data structs */
 using VCFData_sInstance = etl::singleton<VCFData_s>;
 using VCRData_sInstance = etl::singleton<VCRData_s>;
+
+
+constexpr int NEOPIXEL_CONTROL_PIN = PC14;
+constexpr int NEOPIXEL_COUNT = 16; // 12 neopixeles on dashboard
+
+
+
 
 #endif
