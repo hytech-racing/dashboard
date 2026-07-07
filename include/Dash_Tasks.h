@@ -1,29 +1,40 @@
 #ifndef DASH_TASKS_H
 #define DASH_TASKS_H
 
-#include "Dash_Constants.h"
-#include "Dash_Globals.h"
-
-/* External Includes */
-#include "SharedFirmwareTypes.h"
-#include <ht_task.hpp>
-
-/* Local Interface Includes */
-#include "bitmaps.h"
 #include "CANInterface.h"
 #include "DashCANInterfaceImpl.h"
-#include "DisplayInterface.h"
-#include "HT_FDCAN.h"
-#include "HT_SPI.h"
+#include <ht_sched.hpp>
+#include <ht_task.hpp>
+
+#include "Dash_Constants.h"
+#include "Dash_Globals.h"
 #include "NeopixelController.h"
+#include "SharedFirmwareTypes.h"
+
+#include "HT_SPI.h"
+#include "HT_FDCAN.h"
+
+// Interface Includes
 #include "VCFInterface.h"
 #include "VCRInterface.h"
+// #include "lcdInterface.h"
+#include "newDisplay.h"
+#include "bitmaps.h"
+#include "etl/delegate.h"
 
+HT_TASK::TaskResponse init_heartbeat(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
+HT_TASK::TaskResponse heartbeat(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
 
-void initalize_all_interfaces();
+HT_TASK::TaskResponse init_can(const unsigned long &sysMicros, const HT_TASK::TaskInfo &taskInfo);
+HT_TASK::TaskResponse can_read(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
 
-::HT_TASK::TaskResponse run_update_neopixels_task(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
-::HT_TASK::TaskResponse screen_refresh(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
-::HT_TASK::TaskResponse can_read(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+HT_TASK::TaskResponse init_neopixels_task(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
+HT_TASK::TaskResponse run_update_neopixels_task(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
 
-#endif /* DASH_TASKS_H */
+HT_TASK::TaskResponse init_screen(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
+HT_TASK::TaskResponse screen_refresh(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
+
+HT_TASK::TaskResponse init_can(const unsigned long& sys_micros, const HT_TASK::TaskInfo& task_info);
+HT_TASK::TaskResponse can_read(const unsigned long& sysMicros, const HT_TASK::TaskInfo& taskInfo);
+
+#endif /* DASH_TASKS_H */  

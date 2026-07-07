@@ -1,40 +1,68 @@
+#include <Arduino.h>
+
+#include <SPI.h>
+//#include "CANInterface.h"
+#include <cstdint>
 #include "Dash_Constants.h"
 #include "Dash_Globals.h"
+#include "DashCANInterfaceImpl.h"
+#include "SharedFirmwareTypes.h"
 #include "Dash_Tasks.h"
+#include "etl/singleton.h"
+
+#include "ht_task.hpp"
+#include "ht_sched.hpp"
+
+#include "CANInterface.h"
+//#include "lcdInterface.h"
+#include "newDisplay.h"
+#include "VCFInterface.h"
+#include "ACUInterface.h"
+#include "VCRInterface.h"
+
 #include "SysClock_Config.h"
 
-/* Schedular Dependencies */
-#include "ht_sched.hpp"
-#include "ht_task.hpp"
+#include "HT_SPI.h"
+#include "HT_Display.h"
+#include "HT_FDCAN.h"
 
-/* Scheduler Setup */
-HT_SCHED::Scheduler &scheduler = HT_SCHED::Scheduler::getInstance();
+
 
 bool spi_tx_complete = true;
 
+/* Scheduler setup */
+HT_SCHED::Scheduler &scheduler = HT_SCHED::Scheduler::getInstance();
 
-/* Task Declarations */
-HT_TASK::Task can_task(HT_TASK::DUMMY_FUNCTION, &can_read, 80, 10000); // 10 ms period
-// HT_TASK::Task neopixels_task(HT_TASK::DUMMY_FUNCTION, &run_update_neopixels_task, DashConstants::NEOPIXEL_UPDATE_PRIORITY, DashConstants::NEOPIXEL_UPDATE_PERIOD_US);
-HT_TASK::Task refresh_screen_task(HT_TASK::DUMMY_FUNCTION, &screen_refresh, DashConstants::SCREEN_REFRESH_PRIORITY, DashConstants::SCREEN_REFRESH_PERIOD_US); // 100 ms period
+// Task Init
+HT_TASK::Task heartbeat_task(&init_heartbeat, HT_TASK::DUMMY_FUNCTION, 1000, 500000); // .5 second period
+HT_TASK::Task can_task(&init_can, &can_read, 80, 10000); // 10 ms period
+//HT_TASK::Task neopixels_task(&init_neopixels_task, &run_update_neopixels_task, NEOPIXEL_UPDATE_PRIORITY, NEOPIXEL_UPDATE_PERIOD);
+HT_TASK::Task screen_task(&init_screen, &screen_refresh, SCREEN_REFRESH_PRIORITY, SCREEN_REFRESH_PERIOD); // 100 ms period
+
+//HTX_Display testDisplay(SHARP_CS); // Initialize display with CS pin, width, height, frequency, and no SPI pointer for now
+
+void setup() {
+  
+
+  //Global Data Singletons (should work on removing)
+  // VCRData_sInstance::create();
+  // VCFData_sInstance::create();
 
 
-void setup()
-{
-
-    scheduler.setTimingFunction(micros);
-    scheduler.schedule(can_task);
-    // scheduler.schedule(run_update_neopixels_task);
-    scheduler.schedule(refresh_screen_task);
-
-    spi_tx_complete = true;
+  scheduler.setTimingFunction(micros);
+  
+  HT_SCHED::Scheduler::getInstance().schedule(heartbeat_task);
+  HT_SCHED::Scheduler::getInstance().schedule(can_task);
+  //HT_SCHED::Scheduler::getInstance().schedule(neopixels_task);
+  HT_SCHED::Scheduler::getInstance().schedule(screen_task);
+  
+  spi_tx_complete = true;
 }
 
-void loop()
-{
-    scheduler.run();
+void loop() {
+  scheduler.run();
 
-    //Serial.println(ACUInterfaceInstance::instance().get_curr_data().pack_voltage);
-    //Serial.println(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.brake_percent);
+  //Serial.println(ACUInterfaceInstance::instance().get_curr_data().pack_voltage);
+  //Serial.println(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.brake_percent);
 }
 

@@ -1,7 +1,7 @@
 #ifndef NEOPIXEL_CONTROLLER_H
 #define NEOPIXEL_CONTROLLER_H
 
-/* Neopixel Controller Defines */
+/* Neopixel controller defines */
 #define MAX_BRIGHTNESS 255
 #define MIN_BRIGHTNESS 3
 #define BRIGHTNESS_STEPS 4
@@ -12,12 +12,9 @@
 // define a new type of struct, add an arg to the constructor, etc.
 // this is how it was implemented on STM32 dash and I want to be fast :)
 
-/* ETL Library */
-#include <etl/singleton.h>
-
-/* External Includes */
-#include <Adafruit_NeoPixel.h>
+#include "Adafruit_NeoPixel.h"
 #include "SharedFirmwareTypes.h"
+#include "etl/singleton.h"
 #include "DashCANInterfaceImpl.h"
 
 enum LED_ID_e
@@ -54,27 +51,23 @@ enum class LED_color_e
 
 class NeopixelController
 {
-public:
-
-    NeopixelController() = delete;
-
-    NeopixelController(uint32_t neopixel_count,
-                    uint32_t neopixel_pin
-    ) : _neopixels(neopixel_count, neopixel_pin, NEO_GRBW + NEO_KHZ800),
+    public:
+    NeopixelController(uint32_t neopixel_count, uint32_t neopixel_pin) :
+        _neopixels(neopixel_count, neopixel_pin, NEO_GRBW + NEO_KHZ800),
         _current_brightness(50),
         _neopixel_count(neopixel_count)
     {};
 
+    NeopixelController() = delete;
+    
     void init_neopixels();
-
     void dim_neopixels();
-
-    void refresh_neopixels(CANInterfaces_s &interfaces);
-
+    void set_neopixel(uint16_t id, uint32_t c);
+    void refresh_neopixels(CANInterfaces &interfaces);
     void set_neopixel_color(LED_ID_e led, LED_color_e color);
 
-private:
-
+    private:
+    
     Adafruit_NeoPixel _neopixels;
     uint8_t _current_brightness;
     uint8_t _neopixel_count;
