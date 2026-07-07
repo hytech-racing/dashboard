@@ -1,15 +1,19 @@
 #ifndef STM32_CAN_H
 #define STM32_CAN_H
 
-#include "stm32h7xx_hal.h"
-#include "stm32h750xx.h"
+#define FDCAN_TypeDef FDCAN_GlobalTypeDef
+
+/* Standard Library */
 #include <stdint.h>
 
-#define FDCAN_TypeDef FDCAN_GlobalTypeDef
-#include "stm32h7xx_hal_fdcan.h"
+/* External Includes */
+#include <stm32h7xx_hal.h>
+#include <stm32h750xx.h>
+#include <stm32h7xx_hal_fdcan.h>
 
 
-typedef struct {
+typedef struct
+{
     uint32_t id;
     uint8_t extended;
     uint8_t dlc;
