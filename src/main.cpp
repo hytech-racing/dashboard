@@ -42,7 +42,7 @@ HT_TASK::Task screen_task(&init_screen, &screen_refresh, SCREEN_REFRESH_PRIORITY
 //HTX_Display testDisplay(SHARP_CS); // Initialize display with CS pin, width, height, frequency, and no SPI pointer for now
 
 void setup() {
-  
+
 
   //Global Data Singletons (should work on removing)
   // VCRData_sInstance::create();
@@ -50,19 +50,19 @@ void setup() {
 
 
   scheduler.setTimingFunction(micros);
-  
+
   HT_SCHED::Scheduler::getInstance().schedule(heartbeat_task);
   HT_SCHED::Scheduler::getInstance().schedule(can_task);
   //HT_SCHED::Scheduler::getInstance().schedule(neopixels_task);
   HT_SCHED::Scheduler::getInstance().schedule(screen_task);
-  
+
   spi_tx_complete = true;
 }
 
 void loop() {
   scheduler.run();
 
-  //Serial.println(ACUInterfaceInstance::instance().get_curr_data().pack_voltage);
+  // Serial.println(ACUInterfaceInstance::instance().get_curr_data().pack_voltage);
   //Serial.println(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.brake_percent);
 }
 

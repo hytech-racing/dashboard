@@ -24,7 +24,7 @@ void HTX_Display::draw_background()
     //_display.fillRect(283, 36, 305 - 283, 210 - 36, _black);
     _display.fillRect(283 - 3, (36 + 210 - 36) / 2 + 15, 25, 7, _white);
     _display.fillRect(0, 215, 130, 25, _white);
-    
+
 }
 
 void HTX_Display::startup()
@@ -111,10 +111,10 @@ void HTX_Display::display_speeds(float rpm)
     // SerialUSB.println(wheelspeed);
     uint16_t mph = (int)(wheelspeed * conversions::METERS_PER_SECOND_TO_MPH);
     // SerialUSB.println(mph);
-    _display.println(HTX_Display::twoDigits(mph));
+    // _display.println(HTX_Display::twoDigits(mph));
     // _display.println(HYTECH_low_voltage_ro_fromS(bms_voltages->low_voltage_ro));
 
-    // _display.println(mph);
+    _display.println(HTX_Display::twoDigits(mph));
     _display.setTextSize(1);
     _display.setFont(&FreeSans12pt7b);
     _display.setCursor(125, 165);
@@ -127,7 +127,6 @@ void HTX_Display::set_cursor(int x, int y)
     _display.setCursor(x, y);
 }
 
-
 void HTX_Display::display_mode(int mode)
 {
     _display.setFont(&FreeSansBold18pt7b);
@@ -139,7 +138,7 @@ void HTX_Display::display_mode(int mode)
     _display.println(HTX_Display::twoDigits(mode));
 
     // SerialUSB.println(mph);
-    
+
 }
 
 void HTX_Display::display_min_cell(float min_cell_voltage)
@@ -147,7 +146,7 @@ void HTX_Display::display_min_cell(float min_cell_voltage)
     _display.setFont(&FreeSansBold9pt7b);
     _display.setTextSize(1);
     _display.setTextColor(_black);
-    int x_coord = 65;
+    int x_coord = 35;
     _display.setCursor(x_coord, 50);
     _display.print("CELL: ");
     // _display.setCursor(x_coord + 55, 55);
@@ -155,15 +154,25 @@ void HTX_Display::display_min_cell(float min_cell_voltage)
     _display.print(min_cell_voltage);
 }
 
-
+void HTX_Display::display_power(float power_watts)
+{
+    _display.setFont(&FreeSansBold9pt7b);
+    _display.setTextSize(1);
+    _display.setTextColor(_black);
+    _display.setCursor(35, 70);
+    _display.print("PWR: ");
+    _display.setFont(&FreeSans9pt7b);
+    _display.print((int)power_watts);
+    _display.print("W");
+}
 
 void HTX_Display::display_max_temps(int inverter_temp, int motor_temp)
 {
     _display.setFont(&FreeSansBold9pt7b);
     _display.setTextSize(1);
     _display.setTextColor(_black);
-    int x_coord = 65;
-    int y_coord = 66;
+    int x_coord = 35;
+    int y_coord = 200;
     _display.setCursor(x_coord, y_coord);
     _display.print("TEMPS");
 
@@ -312,7 +321,7 @@ void HTX_Display::draw_popup(String title)
 bool HTX_Display::blink()
 {
     if ((millis() - HTX_Display::last_blink_millis) > 200)
-    { 
+    {
         HTX_Display::last_blink = !last_blink;
         HTX_Display::last_blink_millis = millis();
     }

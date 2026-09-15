@@ -1,17 +1,51 @@
 #include "VCRInterface.h"
 
-void VCRInterface::receive_inv_dynamics(const CAN_message_t &can_msg, unsigned long curr_millis) 
+void VCRInterface::receive_inv_dynamics_1(const CAN_message_t &can_msg, unsigned long curr_millis)
 {
-    // Unpack the message
     INV1_DYNAMICS_t unpacked_msg;
     Unpack_INV1_DYNAMICS_hytech(&unpacked_msg, can_msg.buf, can_msg.len);
 
-    // Update inverter interface with new data
-    _wheel_data.actual_power = unpacked_msg.actual_power_w; // NOLINT (watts)
-    _wheel_data.actual_torque = HYTECH_actual_torque_nm_ro_fromS(unpacked_msg.actual_torque_nm_ro);
-    _wheel_data.actual_speed = unpacked_msg.actual_speed_rpm;
-    _wheel_data.new_data = true;
-    _wheel_data.last_recv_millis = curr_millis;
+    _wheels_data.FL.actual_power = unpacked_msg.actual_power_w; // NOLINT (watts)
+    _wheels_data.FL.actual_torque = HYTECH_actual_torque_nm_ro_fromS(unpacked_msg.actual_torque_nm_ro);
+    _wheels_data.FL.actual_speed = unpacked_msg.actual_speed_rpm;
+    _wheels_data.FL.new_data = true;
+    _wheels_data.FL.last_recv_millis = curr_millis;
+}
+
+void VCRInterface::receive_inv_dynamics_2(const CAN_message_t &can_msg, unsigned long curr_millis)
+{
+    INV2_DYNAMICS_t unpacked_msg;
+    Unpack_INV2_DYNAMICS_hytech(&unpacked_msg, can_msg.buf, can_msg.len);
+
+    _wheels_data.FR.actual_power = unpacked_msg.actual_power_w;
+    _wheels_data.FR.actual_torque = HYTECH_actual_torque_nm_ro_fromS(unpacked_msg.actual_torque_nm_ro);
+    _wheels_data.FR.actual_speed = unpacked_msg.actual_speed_rpm;
+    _wheels_data.FR.new_data = true;
+    _wheels_data.FR.last_recv_millis = curr_millis;
+}
+
+void VCRInterface::receive_inv_dynamics_3(const CAN_message_t &can_msg, unsigned long curr_millis)
+{
+    INV3_DYNAMICS_t unpacked_msg;
+    Unpack_INV3_DYNAMICS_hytech(&unpacked_msg, can_msg.buf, can_msg.len);
+
+    _wheels_data.RL.actual_power = unpacked_msg.actual_power_w;
+    _wheels_data.RL.actual_torque = HYTECH_actual_torque_nm_ro_fromS(unpacked_msg.actual_torque_nm_ro);
+    _wheels_data.RL.actual_speed = unpacked_msg.actual_speed_rpm;
+    _wheels_data.RL.new_data = true;
+    _wheels_data.RL.last_recv_millis = curr_millis;
+}
+
+void VCRInterface::receive_inv_dynamics_4(const CAN_message_t &can_msg, unsigned long curr_millis)
+{
+    INV4_DYNAMICS_t unpacked_msg;
+    Unpack_INV4_DYNAMICS_hytech(&unpacked_msg, can_msg.buf, can_msg.len);
+
+    _wheels_data.RR.actual_power = unpacked_msg.actual_power_w;
+    _wheels_data.RR.actual_torque = HYTECH_actual_torque_nm_ro_fromS(unpacked_msg.actual_torque_nm_ro);
+    _wheels_data.RR.actual_speed = unpacked_msg.actual_speed_rpm;
+    _wheels_data.RR.new_data = true;
+    _wheels_data.RR.last_recv_millis = curr_millis;
 }
 
 void VCRInterface::receive_vehicle_state(const CAN_message_t &can_msg)
@@ -45,7 +79,7 @@ void VCRInterface::receive_inverter_status_3(const CAN_message_t &can_msg)
     INV3_STATUS_t unpacked_msg;
     Unpack_INV3_STATUS_hytech(&unpacked_msg, can_msg.buf, can_msg.len); //NOLINT
     _inverter_status.error.RL = unpacked_msg.error;
-    _inverter_status.dc_bus_voltage.RL = unpacked_msg.dc_bus_voltage;    
+    _inverter_status.dc_bus_voltage.RL = unpacked_msg.dc_bus_voltage;
 }
 
 void VCRInterface::receive_inverter_status_4(const CAN_message_t &can_msg)

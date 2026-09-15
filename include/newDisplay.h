@@ -36,7 +36,7 @@ public:
     HTX_Display(uint8_t cs) : _display(cs, 320, 240) {}
     void init(SPI_HandleTypeDef *hspi);
     void startup();
-    void hytech_animation(); 
+    void hytech_animation();
     void alysa_animation();
     // void driver_animation(StartupAnimations);
     void draw_background();
@@ -52,6 +52,7 @@ public:
     void set_cursor(int x, int y);
     void display_min_cell(float min_cell_voltage);
     void display_all_temps(veh_vec<int> temps);
+    void display_power(float power_watts);
     void display_max_temps(int inverter_temp, int motor_temp);
 
     uint8_t current_page = 0;

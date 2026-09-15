@@ -74,7 +74,6 @@ void DashboardDisplay::draw_battery_bar(int percent) {
     DashboardDisplay::draw_rectangle_right_corner(197, 7, w, 16, _white);
 }
 
-
 void DashboardDisplay::display_speeds(float rpm) {
     _display.setFont(&FreeSans24pt7b);
     _display.setTextSize(2);
@@ -89,7 +88,7 @@ void DashboardDisplay::display_speeds(float rpm) {
     _display.println(DashboardDisplay::twoDigits(mph));
     // _display.println(HYTECH_low_voltage_ro_fromS(bms_voltages->low_voltage_ro));
 
-    // _display.println(mph);
+    _display.println(mph);
     _display.setTextSize(1);
     _display.setFont(&FreeSans12pt7b);
     _display.setCursor(125, 165);
@@ -121,12 +120,12 @@ void DashboardDisplay::draw_icons(uint8_t vn_status, uint8_t car_state,  bool db
         _display.drawBitmap(gps_icon_pos_x, icon_pos_y, epd_bitmap_nogps, 27, 27, _black);
     }
 
-    if (car_state) 
+    if (car_state)
     {
         _display.drawBitmap(rtd_icon_pos_x, icon_pos_y, epd_bitmap_rtd, 27, 27, _black);
-    } 
-    
-    else 
+    }
+
+    else
     {
       if (DashboardDisplay::blink()) { _display.drawBitmap(rtd_icon_pos_x, icon_pos_y, epd_bitmap_rtd, 27, 27, _black); }
     }
@@ -157,19 +156,19 @@ void DashboardDisplay::invert_display(bool invert_criteria)
 }
 
 
-void DashboardDisplay::display_refresh() 
+void DashboardDisplay::display_refresh()
 {
     _display.refresh();
 }
 
-void DashboardDisplay::draw_rectangle_right_corner(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) 
+void DashboardDisplay::draw_rectangle_right_corner(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
     for (int16_t i = x; i > x-w; i--) {
         _display.writeFastVLine(i, y, h, color);
     }
     // _display.refresh();
 }
-String DashboardDisplay::twoDigits(int number) 
+String DashboardDisplay::twoDigits(int number)
 {
     if(number <= 9) {
         return "0" + String(number);

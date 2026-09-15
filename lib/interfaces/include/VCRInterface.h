@@ -9,7 +9,7 @@
 struct MotorMechanics_s
 {
     bool new_data : 1;
-    unsigned long last_recv_millis = 0; 
+    unsigned long last_recv_millis = 0;
     float actual_power; //watts
     float actual_torque; //newton meters
     float actual_speed; //rpm
@@ -28,15 +28,24 @@ struct InverterStatus_s
     veh_vec<int> error_id;
 };
 
-class VCRInterface 
+class VCRInterface
 {
-    public:
+public:
+
         TorqueLimit_e get_torque_limit_mode() {return _torque_limit;}
 
         bool is_in_pedals_calibration_state() {return _is_in_pedals_calibration_state;}
 
-        void receive_inv_dynamics(const CAN_message_t &can_msg, unsigned long curr_millis);
-        MotorMechanics_s get_curr_wheel_data() {return _wheel_data;}
+        void receive_inv_dynamics_1(const CAN_message_t &can_msg, unsigned long curr_millis);
+        void receive_inv_dynamics_2(const CAN_message_t &can_msg, unsigned long curr_millis);
+        void receive_inv_dynamics_3(const CAN_message_t &can_msg, unsigned long curr_millis);
+        void receive_inv_dynamics_4(const CAN_message_t &can_msg, unsigned long curr_millis);
+
+        MotorMechanics_s get_curr_wheel_data() {return _wheels_data.FL;}
+        float get_total_power() {
+            return _wheels_data.FL.actual_power + _wheels_data.FR.actual_power
+                + _wheels_data.RL.actual_power + _wheels_data.RR.actual_power;
+        }
 
         void receive_vehicle_state(const CAN_message_t &can_msg);
         VehicleState_e get_curr_car_state() {return _vehicle_state_value;}
@@ -48,7 +57,7 @@ class VCRInterface
         void receive_inverter_status_2(const CAN_message_t &can_msg);
         void receive_inverter_status_3(const CAN_message_t &can_msg);
         void receive_inverter_status_4(const CAN_message_t &can_msg);
-        
+
         void receive_inverter_temperature_1(const CAN_message_t &can_msg);
         void receive_inverter_temperature_2(const CAN_message_t &can_msg);
         void receive_inverter_temperature_3(const CAN_message_t &can_msg);
@@ -59,7 +68,7 @@ class VCRInterface
     private:
         TorqueLimit_e _torque_limit = TorqueLimit_e::TCMUX_LOW_TORQUE;
         bool _is_in_pedals_calibration_state = false;
-        MotorMechanics_s _wheel_data; 
+        veh_vec<MotorMechanics_s> _wheels_data;
         VehicleState_e _vehicle_state_value;
         DrivetrainState_e _drivetrain_state_value;
         bool _is_db_in_ctrl;

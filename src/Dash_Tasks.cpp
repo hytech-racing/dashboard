@@ -6,7 +6,7 @@
 #define SHARP_CS PB4
 #define SHARP_CLK PB10
 #define SHARP_MOSI PB15
-    
+
 veh_vec<int> fake_temps = {30, 32, 28, 31};
 
 
@@ -59,16 +59,23 @@ HT_TASK::TaskResponse screen_refresh(const unsigned long& sys_micros, const HT_T
     {
     HTXDisplayInstance::instance().draw_background();
     HTXDisplayInstance::instance().invert_display(VCFInterfaceInstance::instance().is_mech_brake_pressed());
+
+    // PEDAL BARS
     HTXDisplayInstance::instance().draw_vertical_pedal_bar(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.brake_percent * 100, 5);
-    HTXDisplayInstance::instance().draw_vertical_pedal_bar(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.accel_percent * 100, 34);
-    
+    HTXDisplayInstance::instance().draw_vertical_pedal_bar(VCFInterfaceInstance::instance().get_curr_data().stamped_pedals.pedals_data.accel_percent * 100, 295);
+
+    // BATTERY SOC BAR
     HTXDisplayInstance::instance().draw_battery_bar((ACUInterfaceInstance::instance().get_curr_data().pack_voltage - 460) / 70 * 100.0 + 1);
+
+    // DB CONTROL + MODE
     HTXDisplayInstance::instance().draw_icons(1, VCRInterfaceInstance::instance().get_curr_car_state(), VCRInterfaceInstance::instance().get_drivebrain_in_control());
     HTXDisplayInstance::instance().display_mode(VCFInterfaceInstance::instance().get_control_mode());
-    // HTXDisplayInstance::instance().set_cursor(65, 50);
+
+    // TEMPS + SPEED + POWER
     HTXDisplayInstance::instance().display_min_cell(ACUInterfaceInstance::instance().get_curr_data().min_cell_voltage);
     HTXDisplayInstance::instance().display_max_temps(VCRInterfaceInstance::instance().get_inverter_max_temp(), VCRInterfaceInstance::instance().get_motor_max_temp());
-    //HTXDisplayInstance::instance().display_speeds(VCRInterfaceInstance::instance().get_curr_wheel_data().actual_speed);
+    HTXDisplayInstance::instance().display_speeds(VCRInterfaceInstance::instance().get_curr_wheel_data().actual_speed);
+    HTXDisplayInstance::instance().display_power(VCRInterfaceInstance::instance().get_total_power());
 
     if (ACUInterfaceInstance::instance().get_curr_data().imd_ok == false || ACUInterfaceInstance::instance().get_curr_data().bms_ok == false)
     {
@@ -104,12 +111,12 @@ HT_TASK::TaskResponse init_can(const unsigned long& sys_micros, const HT_TASK::T
 {
     // Create can singletons
     CANInterfacesInstance::create(VCFInterfaceInstance::instance(), ACUInterfaceInstance::instance(), VCRInterfaceInstance::instance());
-    
+
     FDCAN_Init();
-    
+
     // Initialize static references for interrupt handler
     FDCAN_read(CANInterfacesInstance::instance(), sys_time::hal_millis());
-    
+
     return HT_TASK::TaskResponse::YIELD;
 }
 
