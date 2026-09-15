@@ -34,19 +34,19 @@ void HTX_Display::startup()
     // driver_animation(StartupAnimations::NONE);
 }
 
-// void HTX_Display::alysa_animation()
-// {
-//     _display.setRotation(0);
-//     for (int i = 0; i < ALYSA_FRAME_COUNT; i++)
-//     {
-//         const uint8_t *frame = alysa_animation_array[i];
-//         _display.clearDisplayBuffer();
-//         _display.drawBitmap(52, 0, frame, 216, 240, _black);
-//         send_display_buffer(_hspi);
-//         delay(400);
-//     }
-//     _display.clearDisplayBuffer();
-// }
+void HTX_Display::alysa_animation()
+{
+    _display.setRotation(0);
+    for (int i = 0; i < ALYSA_FRAME_COUNT; i++)
+    {
+        const uint8_t *frame = alysa_animation_array[i];
+        _display.clearDisplayBuffer();
+        _display.drawBitmap(52, 0, frame, 216, 240, _black);
+        send_display_buffer(_hspi);
+        delay(400);
+    }
+    _display.clearDisplayBuffer();
+}
 
 /// @brief Function to display general hytech startup animation
 /// @note Taken from 2024 dash code
